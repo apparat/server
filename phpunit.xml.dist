@@ -1,0 +1,24 @@
+<phpunit bootstrap="./phpunit.php">
+    <testsuites>
+        <testsuite>
+            <directory>./src/Server/Tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <env name="REPOSITORY_URL" value="repo"/>
+    </php>
+
+    <logging>
+        <!--<log type="coverage-xml" target="build/logs/coverage/xml"/>-->
+    </logging>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+            <exclude>
+                <directory suffix=".php">src/Server/Tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

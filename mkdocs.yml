@@ -1,0 +1,8 @@
+site_name: apparat/server
+site_description: Apparat object server
+site_author: Joschi Kuphal
+repo_url: https://github.com/apparat/server/
+docs_dir: doc
+pages:
+- Home: 'index.md'
+- To-Do: 'todo.md'

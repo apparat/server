@@ -1,0 +1,53 @@
+{
+  "name": "apparat/server",
+  "description": "Apparat object server",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Joschi Kuphal",
+      "email": "joschi@kuphal.net"
+    }
+  ],
+  "minimum-stability": "RC",
+  "require": {
+    "php": ">=5.6.0",
+    "apparat/object": "@dev",
+    "apparat/resource": "@dev",
+    "apparat/kernel": "@dev",
+    "dominicsayers/isemail": "@dev"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.3"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:apparat/object.git",
+      "reference": "master"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:apparat/resource.git",
+      "reference": "master"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:apparat/kernel.git",
+      "reference": "master"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:dominicsayers/isemail.git",
+      "reference": "master"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Apparat\\": "src/"
+    },
+    "files": [
+      "src/Server/Module.php",
+      "src/Server/Autorun.php"
+    ]
+  }
+}
