@@ -5,4 +5,5 @@ repo_url: https://github.com/apparat/server/
 docs_dir: doc
 pages:
 - Home: 'index.md'
+- Resources: 'resources.md'
 - To-Do: 'todo.md'
