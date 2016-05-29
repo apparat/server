@@ -37,6 +37,10 @@
 namespace Apparat\Server\Tests;
 
 use Apparat\Kernel\Ports\Kernel;
+use Apparat\Server\Ports\Route;
+use Apparat\Server\Ports\Server;
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 /**
  * Basic server test
@@ -49,8 +53,27 @@ class BasicServerTest extends AbstractServerTest
     /**
      * Test the server instantiation
      */
-    public function testServerInstance() {
+    public function testServerInstance()
+    {
         $server = Kernel::create(\Apparat\Server\Domain\Model\Server::class);
         $this->assertInstanceOf(\Apparat\Server\Domain\Model\Server::class, $server);
+    }
+
+    /**
+     * Test registering and dispatching a route
+     */
+    public function testRegisterDispatchRoute()
+    {
+        $route = new Route('GET', 'default', '/default/{id}{format}', TestAction::class);
+        $route->setTokens([
+            'id' => '\d+',
+            'format' => '(\.[^/]+)?',
+        ]);
+        Server::registerRoute($route);
+
+        $uri = new Uri('http://apparat/blog/default/1.html');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+        Server::dispatchRequest($request);
     }
 }

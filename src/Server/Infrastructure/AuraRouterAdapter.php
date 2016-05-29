@@ -36,7 +36,14 @@
 
 namespace Apparat\Server\Infrastructure;
 
+use Apparat\Kernel\Ports\Kernel;
+use Apparat\Server\Domain\Contract\RouteInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
+use Aura\Router\Matcher;
+use Aura\Router\Route;
+use Aura\Router\RouterContainer;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Aura.Router adapter
@@ -46,5 +53,112 @@ use Apparat\Server\Domain\Contract\RouterContainerInterface;
  */
 class AuraRouterAdapter implements RouterContainerInterface
 {
-//parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH) ?: null
+    /**
+     * Aura.Router container
+     *
+     * @var RouterContainer
+     */
+    protected $routerContainer;
+
+    /**
+     * Constructor
+     *
+     * @param RouterContainer $routerContainer Router container
+     */
+    public function __construct(RouterContainer $routerContainer)
+    {
+        $this->routerContainer = $routerContainer;
+    }
+
+    /**
+     * Register a route
+     *
+     * @param RouteInterface $route Route
+     * @return RouterContainerInterface Self reference
+     */
+    public function registerRoute(RouteInterface $route)
+    {
+        $this->routerContainer->getMap()
+            ->route($route->getName(), $route->getPath(), $route->getAction())
+            ->allows($route->getVerbs())
+            ->tokens($route->getTokens())
+            ->defaults($route->getDefaults())
+            ->wildcard($route->getWildcard())
+            ->host($route->getHost())
+            ->accepts($route->getAccepts())
+            ->auth($route->getAuth())
+            ->secure($route->getSecure())
+            ->extras($route->getExtras());
+        return $this;
+    }
+
+    /**
+     * Dispatch a request
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface $response
+     */
+    public function dispatchRequest(ServerRequestInterface $request)
+    {
+        $matcher = $this->routerContainer->getMatcher();
+        $route = $matcher->match($request);
+
+        // If a registered Route could be matched
+        if ($route instanceof Route) {
+            return $this->handleRequestRoute($request, $route);
+        }
+
+        // Handle the request mismatch
+        return $this->handleRequestMismatch($request, $matcher);
+    }
+
+    /**
+     * Handle a matched route request
+     *
+     * @param ServerRequestInterface $request Server request
+     * @param Route $route Matched route
+     * @return ResponseInterface $response
+     */
+    protected function handleRequestRoute(ServerRequestInterface $request, Route $route) {
+        // Copy all route attributes to the server request
+        foreach ($route->attributes as $key => $val) {
+            $request = $request->withAttribute($key, $val);
+        }
+
+        // Instantiate and call the route handler
+        $handler = is_callable($route->handler) ? $route->handler : Kernel::create($route->handler);
+        return $handler($request);
+    }
+
+    /**
+     * Handle a mismatched request
+     *
+     * @param ServerRequestInterface $request Server request
+     * @param Matcher $matcher Matcher
+     * @return ResponseInterface Response
+     */
+    protected function handleRequestMismatch(ServerRequestInterface $request, Matcher $matcher) {
+        // TODO Error responder
+//        // Instantiate a response
+//        $response = Kernel::create(ResponseInterface::class);
+//
+//        // Get the first of the best-available non-matched routes
+//        $failedRoute = $matcher->getFailedRoute();
+//
+//        // Which matching rule failed?
+//        switch ($failedRoute->failedRule) {
+//            case 'Aura\Router\Rule\Allows':
+//                // 405 METHOD NOT ALLOWED
+//                // Send the $failedRoute->allows as 'Allow:'
+//                break;
+//            case 'Aura\Router\Rule\Accepts':
+//                // 406 NOT ACCEPTABLE
+//                break;
+//            default:
+//                // 404 NOT FOUND
+//                break;
+//        }
+//
+//        return $response;
+    }
 }

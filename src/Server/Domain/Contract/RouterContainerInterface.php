@@ -35,6 +35,8 @@
  ***********************************************************************************/
 
 namespace Apparat\Server\Domain\Contract;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Router container interface
@@ -44,5 +46,19 @@ namespace Apparat\Server\Domain\Contract;
  */
 interface RouterContainerInterface
 {
+    /**
+     * Register a route
+     *
+     * @param RouteInterface $route Route
+     * @return RouterContainerInterface Self reference
+     */
+    public function registerRoute(RouteInterface $route);
 
+    /**
+     * Dispatch a request
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface $response
+     */
+    public function dispatchRequest(ServerRequestInterface $request);
 }

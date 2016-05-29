@@ -41,6 +41,7 @@ use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
 use Apparat\Server\Domain\Model\Server;
 use Apparat\Server\Infrastructure\AuraRouterAdapter;
+use Aura\Router\RouterContainer;
 use Dotenv\Dotenv;
 
 /**
@@ -89,6 +90,13 @@ class Module extends AbstractModule
                 RouterContainerInterface::class => [
                     'instance' => AuraRouterAdapter::class,
                 ]
+            ]
+        ]);
+
+        // Configure the server
+        $diContainer->register(RouterContainer::class, [
+            'constructParams' => [
+                parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH) ?: null
             ]
         ]);
     }

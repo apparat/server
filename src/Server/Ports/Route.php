@@ -37,6 +37,7 @@
 namespace Apparat\Server\Ports;
 
 use Apparat\Server\Ports\Contract\ActionInterface;
+use Apparat\Server\Ports\Contract\RouteInterface;
 
 /**
  * Route
@@ -44,8 +45,57 @@ use Apparat\Server\Ports\Contract\ActionInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class Route
+class Route implements RouteInterface
 {
+    /**
+     * GET request
+     *
+     * @var string
+     */
+    const GET = 'GET';
+    /**
+     * POST request
+     *
+     * @var string
+     */
+    const POST = 'POST';
+    /**
+     * PATCH request
+     *
+     * @var string
+     */
+    const PATCH = 'PATCH';
+    /**
+     * DELETE request
+     *
+     * @var string
+     */
+    const DELETE = 'DELETE';
+    /**
+     * OPTIONS request
+     *
+     * @var string
+     */
+    const OPTIONS = 'OPTIONS';
+    /**
+     * HEAD request
+     *
+     * @var string
+     */
+    const HEAD = 'HEAD';
+    /**
+     * Allowed HTTP verbs
+     *
+     * @var array
+     */
+    protected static $validVerbs = [
+        self::GET => true,
+        self::POST => true,
+        self::PATCH => true,
+        self::DELETE => true,
+        self::OPTIONS => true,
+        self::HEAD => true
+    ];
     /**
      * Route name
      *
@@ -61,7 +111,7 @@ class Route
     /**
      * Route action
      *
-     * @var string
+     * @var string|callable
      */
     protected $action;
     /**
@@ -115,58 +165,9 @@ class Route
     /**
      * Custom extra parameters
      *
-     * @var mixed
-     */
-    protected $extras = null;
-    /**
-     * Allowed HTTP verbs
-     *
      * @var array
      */
-    protected static $validVerbs = [
-        self::GET => true,
-        self::POST => true,
-        self::PATCH => true,
-        self::DELETE => true,
-        self::OPTIONS => true,
-        self::HEAD => true
-    ];
-    /**
-     * GET request
-     *
-     * @var string
-     */
-    const GET = 'get';
-    /**
-     * POST request
-     *
-     * @var string
-     */
-    const POST = 'post';
-    /**
-     * PATCH request
-     *
-     * @var string
-     */
-    const PATCH = 'patch';
-    /**
-     * DELETE request
-     *
-     * @var string
-     */
-    const DELETE = 'delete';
-    /**
-     * OPTIONS request
-     *
-     * @var string
-     */
-    const OPTIONS = 'options';
-    /**
-     * HEAD request
-     *
-     * @var string
-     */
-    const HEAD = 'head';
+    protected $extras = [];
 
     /**
      * Route constructor
@@ -186,9 +187,131 @@ class Route
 
         // Set and validate the route path
         $this->setAndValidatePath($path);
-        
+
         // Set and validate the route action
         $this->setAndValidateAction($action);
+    }
+
+    /**
+     * Validate the allowed HTTP verbs
+     *
+     * @param string|array $verbs Allowed HTTP verbs
+     * @throws InvalidArgumentException If the HTTP verb list is empty
+     * @throws InvalidArgumentException If the HTTP verb is invalid
+     */
+    protected function setAndValidateVerbs($verbs)
+    {
+        $this->verbs = array_map('strtoupper', array_filter((array)$verbs));
+
+        // If the HTTP verb list is empty
+        if (!count($this->verbs)) {
+            throw new InvalidArgumentException(
+                'Empty route HTTP verbs',
+                InvalidArgumentException::EMPTY_ROUTE_HTTP_VERBS
+            );
+        }
+
+        // Run through all registered HTTP verbs
+        foreach ($this->verbs as $verb) {
+            // If the HTTP verb is invalid
+            if (!array_key_exists($verb, self::$validVerbs)) {
+                throw new InvalidArgumentException(
+                    sprintf('Invalid route HTTP verb "%s"', $verb),
+                    InvalidArgumentException::INVALID_ROUTE_HTTP_VERB
+                );
+            }
+        }
+    }
+
+    /**
+     * Set and validate the route name
+     *
+     * @param string $name Route name
+     * @throws InvalidArgumentException If the route name is empty
+     */
+    protected function setAndValidateName($name)
+    {
+        $this->name = trim($name);
+        // If the route name is empty
+        if (!strlen($this->name)) {
+            throw new InvalidArgumentException(
+                'Route name must not be empty',
+                InvalidArgumentException::EMPTY_ROUTE_NAME
+            );
+        }
+    }
+
+    /**
+     * Set and validate the route path
+     *
+     * @param string $path Route path
+     * @throws InvalidArgumentException If the route path is empty
+     */
+    protected function setAndValidatePath($path)
+    {
+        $this->path = trim($path);
+        // If the route path is empty
+        if (!strlen($this->path)) {
+            throw new InvalidArgumentException(
+                'Route path must not be empty',
+                InvalidArgumentException::EMPTY_ROUTE_NAME
+            );
+        }
+    }
+
+    /**
+     * Set and validate the route action
+     *
+     * @param string $action Route action
+     * @throws InvalidArgumentException If the route action is empty
+     * @throws InvalidArgumentException If the route action is not a class name
+     * @throws InvalidArgumentException If the route action is neither a callable nor an ActionInterface
+     */
+    protected function setAndValidateAction($action)
+    {
+        // If the action is given as string
+        if (is_string($action)) {
+            $this->action = trim($action);
+
+            // If the route action is empty
+            if (!strlen($this->action)) {
+                throw new InvalidArgumentException(
+                    'Route action must not be empty',
+                    InvalidArgumentException::EMPTY_ROUTE_ACTION
+                );
+            }
+
+            // If the route action is not a class name
+            if (!class_exists($this->action)) {
+                throw new InvalidArgumentException(
+                    'Route action must be an existing class name',
+                    InvalidArgumentException::ROUTE_ACTION_MUST_BE_CLASSNAME
+                );
+            }
+
+            // If the route action doesn't implement the ActionInterface
+            $actionReflection = new \ReflectionClass($this->action);
+            if (!$actionReflection->implementsInterface(ActionInterface::class)) {
+                throw new InvalidArgumentException(
+                    'Route action must implement '.ActionInterface::class,
+                    InvalidArgumentException::ROUTE_ACTION_MUST_IMPLEMENT_ACTION_INTERFACE
+                );
+            }
+
+            return;
+        }
+
+        // If the action is given as callable
+        if (is_callable($action)) {
+            $this->action = $action;
+            return;
+        }
+
+        // If the route action is neither a callable nor an ActionInterface
+        throw new InvalidArgumentException(
+            'Route action must be a callable or '.ActionInterface::class,
+            InvalidArgumentException::ROUTE_ACTION_NOT_CALLABLE_OR_ACTION_INTERFACE
+        );
     }
 
     /**
@@ -204,13 +327,18 @@ class Route
     /**
      * Get the route path
      *
-     * @return string
+     * @return string Route path
      */
     public function getPath()
     {
         return $this->path;
     }
 
+    /**
+     * Get the route action
+     *
+     * @return callable|string Route action
+     */
     public function getAction()
     {
         return $this->action;
@@ -395,7 +523,7 @@ class Route
     /**
      * Get the custom extra information
      *
-     * @return mixed Custom extra information
+     * @return array Custom extra information
      */
     public function getExtras()
     {
@@ -405,130 +533,12 @@ class Route
     /**
      * Set the custom extra information
      *
-     * @param mixed $extras Custom extra information
+     * @param array $extras Custom extra information
      * @return Route Self reference
      */
-    public function setExtras($extras)
+    public function setExtras(array $extras)
     {
         $this->extras = $extras;
         return $this;
-    }
-
-    /**
-     * Validate the allowed HTTP verbs
-     *
-     * @param string|array $verbs Allowed HTTP verbs
-     * @throws InvalidArgumentException If the HTTP verb list is empty
-     * @throws InvalidArgumentException If the HTTP verb is invalid
-     */
-    protected function setAndValidateVerbs($verbs) {
-        $this->verbs = array_map('strtolower', array_filter((array)$verbs));
-
-        // If the HTTP verb list is empty
-        if (!count($this->verbs)) {
-            throw new InvalidArgumentException(
-                'Empty route HTTP verbs',
-                InvalidArgumentException::EMPTY_ROUTE_HTTP_VERBS
-            );
-        }
-
-        // Run through all registered HTTP verbs
-        foreach ($this->verbs as $verb) {
-            // If the HTTP verb is invalid
-            if (!array_key_exists($verb, self::$validVerbs)) {
-                throw new InvalidArgumentException(
-                    sprintf('Invalid route HTTP verb "%s"', $verb),
-                    InvalidArgumentException::INVALID_ROUTE_HTTP_VERB
-                );
-            }
-        }
-    }
-
-    /**
-     * Set and validate the route name
-     *
-     * @param string $name Route name
-     * @throws InvalidArgumentException If the route name is empty
-     */
-    protected function setAndValidateName($name) {
-        $this->name = trim($name);
-        // If the route name is empty
-        if (!strlen($this->name)) {
-            throw new InvalidArgumentException(
-                'Route name must not be empty',
-                InvalidArgumentException::EMPTY_ROUTE_NAME
-            );
-        }
-    }
-
-    /**
-     * Set and validate the route path
-     *
-     * @param string $path Route path
-     * @throws InvalidArgumentException If the route path is empty
-     */
-    protected function setAndValidatePath($path) {
-        $this->path = trim($path);
-        // If the route path is empty
-        if (!strlen($this->path)) {
-            throw new InvalidArgumentException(
-                'Route path must not be empty',
-                InvalidArgumentException::EMPTY_ROUTE_NAME
-            );
-        }
-    }
-
-    /**
-     * Set and validate the route action
-     * 
-     * @param string $action Route action
-     * @throws InvalidArgumentException If the route action is empty
-     * @throws InvalidArgumentException If the route action is not a class name
-     * @throws InvalidArgumentException If the route action is neither a callable nor an ActionInterface
-     */
-    protected function setAndValidateAction($action) {
-        // If the action is given as string
-        if (is_string($action)) {
-            $this->action = trim($action);
-
-            // If the route action is empty
-            if (!strlen($this->action)) {
-                throw new InvalidArgumentException(
-                    'Route action must not be empty',
-                    InvalidArgumentException::EMPTY_ROUTE_ACTION
-                );
-            }
-
-            // If the route action is not a class name
-            if (!class_exists($this->action)) {
-                throw new InvalidArgumentException(
-                    'Route action must be an existing class name',
-                    InvalidArgumentException::ROUTE_ACTION_MUST_BE_CLASSNAME
-                );
-            }
-
-            // If the route action doesn't implement the ActionInterface
-            $actionReflection = new \ReflectionClass($this->action);
-            if (!$actionReflection->implementsInterface(ActionInterface::class)) {
-                throw new InvalidArgumentException(
-                    'Route action must implement '.ActionInterface::class,
-                    InvalidArgumentException::ROUTE_ACTION_MUST_IMPLEMENT_ACTION_INTERFACE
-                );
-            }
-
-            return;
-        }
-
-        // If the action is given as callable
-        if (is_callable($action)) {
-            $this->action = $action;
-            return;
-        }
-
-        // If the route action is neither a callable nor an ActionInterface
-        throw new InvalidArgumentException(
-            'Route action must be a callable or '.ActionInterface::class,
-            InvalidArgumentException::ROUTE_ACTION_NOT_CALLABLE_OR_ACTION_INTERFACE
-        );
     }
 }

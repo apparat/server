@@ -36,6 +36,9 @@
 
 namespace Apparat\Server\Ports\Contract;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 /**
  * Action interface
  *
@@ -44,5 +47,11 @@ namespace Apparat\Server\Ports\Contract;
  */
 interface ActionInterface
 {
-
+    /**
+     * Run the action
+     *
+     * @param ServerRequestInterface $request Server request
+     * @return ResponseInterface Response
+     */
+    public function __invoke(ServerRequestInterface $request);
 }

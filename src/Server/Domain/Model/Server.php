@@ -36,7 +36,10 @@
 
 namespace Apparat\Server\Domain\Model;
 
+use Apparat\Server\Domain\Contract\RouteInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Server
@@ -61,5 +64,26 @@ class Server
     public function __construct(RouterContainerInterface $routerContainer)
     {
         $this->routerContainer = $routerContainer;
+    }
+
+    /**
+     * Register a route
+     *
+     * @param RouteInterface $route
+     */
+    public function registerRoute(RouteInterface $route)
+    {
+        $this->routerContainer->registerRoute($route);
+    }
+
+    /**
+     * Dispatch a request
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface $response
+     */
+    public function dispatchRequest(ServerRequestInterface $request)
+    {
+        return $this->routerContainer->dispatchRequest($request);
     }
 }

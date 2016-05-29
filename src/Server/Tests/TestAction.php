@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\<Layer>
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,58 +34,30 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports;
+namespace Apparat\Server\Tests;
 
-use Apparat\Kernel\Ports\Kernel;
-use Apparat\Server\Domain\Contract\RouteInterface;
+
+use Apparat\Server\Ports\Contract\ActionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Server facade
+ * Test action
  *
- * @package Apparat\Server\Ports
+ * @package Apparat\Server
+ * @subpackage Apparat\Server\Tests
  */
-class Server
+class TestAction implements ActionInterface
 {
     /**
-     * Server instance
+     * Run the action
      *
-     * @var \Apparat\Server\Domain\Model\Server
+     * @param ServerRequestInterface $request Server request
+     * @return ResponseInterface Response
      */
-    protected static $server = null;
-
-    /**
-     * Register a route
-     *
-     * @param RouteInterface $route
-     */
-    public static function registerRoute(RouteInterface $route)
+    public function __invoke(ServerRequestInterface $request)
     {
-        self::getServer()->registerRoute($route);
-    }
-
-    /**
-     * Dispatch a request
-     *
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface $response
-     */
-    public static function dispatchRequest(ServerRequestInterface $request)
-    {
-        $response = self::getServer()->dispatchRequest($request);
-    }
-
-    /**
-     * Create and return the server instance
-     *
-     * @return \Apparat\Server\Domain\Model\Server Server instance
-     */
-    protected static function getServer()
-    {
-        if (self::$server === null) {
-            self::$server = Kernel::create(\Apparat\Server\Domain\Model\Server::class);
-        }
-        return self::$server;
+        print_r($request);
+        // @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Action/BlogBrowseAction.php
     }
 }

@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\<Layer>
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,58 +34,15 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports;
-
-use Apparat\Kernel\Ports\Kernel;
-use Apparat\Server\Domain\Contract\RouteInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+namespace Apparat\Server\Ports\Contract;
 
 /**
- * Server facade
+ * Route interface
  *
- * @package Apparat\Server\Ports
+ * @package Apparat\Server
+ * @subpackage Apparat\Server\Ports
  */
-class Server
+interface RouteInterface extends \Apparat\Server\Domain\Contract\RouteInterface
 {
-    /**
-     * Server instance
-     *
-     * @var \Apparat\Server\Domain\Model\Server
-     */
-    protected static $server = null;
 
-    /**
-     * Register a route
-     *
-     * @param RouteInterface $route
-     */
-    public static function registerRoute(RouteInterface $route)
-    {
-        self::getServer()->registerRoute($route);
-    }
-
-    /**
-     * Dispatch a request
-     *
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface $response
-     */
-    public static function dispatchRequest(ServerRequestInterface $request)
-    {
-        $response = self::getServer()->dispatchRequest($request);
-    }
-
-    /**
-     * Create and return the server instance
-     *
-     * @return \Apparat\Server\Domain\Model\Server Server instance
-     */
-    protected static function getServer()
-    {
-        if (self::$server === null) {
-            self::$server = Kernel::create(\Apparat\Server\Domain\Model\Server::class);
-        }
-        return self::$server;
-    }
 }
