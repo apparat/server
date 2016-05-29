@@ -38,6 +38,9 @@ namespace Apparat\Server;
 
 use Apparat\Kernel\Ports\AbstractModule;
 use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
+use Apparat\Server\Domain\Contract\RouterContainerInterface;
+use Apparat\Server\Domain\Model\Server;
+use Apparat\Server\Infrastructure\AuraRouterAdapter;
 use Dotenv\Dotenv;
 
 /**
@@ -79,20 +82,14 @@ class Module extends AbstractModule
     {
         parent::configureDependencyInjection($diContainer);
 
-        // Configure the repository service
-//        $diContainer->register(Service::class, [
-//            'shared' => true,
-//            'substitutions' => [
-//                AutoConnectorInterface::class => [
-//                    'instance' => AutoConnector::class,
-//                ],
-//                AdapterStrategyFactoryInterface::class => [
-//                    'instance' => AdapterStrategyFactory::class,
-//                ],
-//                ManagerInterface::class => [
-//                    'instance' => Manager::class,
-//                ],
-//            ]
-//        ]);
+        // Configure the server
+        $diContainer->register(Server::class, [
+            'shared' => true,
+            'substitutions' => [
+                RouterContainerInterface::class => [
+                    'instance' => AuraRouterAdapter::class,
+                ]
+            ]
+        ]);
     }
 }
