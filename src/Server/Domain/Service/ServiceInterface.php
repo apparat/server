@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Contract
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\Domain
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,24 +34,15 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Contract;
-
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+namespace Apparat\Server\Domain\Service;
 
 /**
- * Action interface
+ * Domain service interface
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports\Contract
+ * @subpackage Apparat\Server\Domain
  */
-interface ActionInterface
+interface ServiceInterface
 {
-    /**
-     * Run the action
-     *
-     * @param ServerRequestInterface $request Server request
-     * @return ResponseInterface Response
-     */
-    public function __invoke(ServerRequestInterface $request);
+
 }

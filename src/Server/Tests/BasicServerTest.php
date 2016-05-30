@@ -39,6 +39,8 @@ namespace Apparat\Server\Tests;
 use Apparat\Kernel\Ports\Kernel;
 use Apparat\Server\Ports\Route;
 use Apparat\Server\Ports\Server;
+use Apparat\Server\Tests\Adr\TestAction;
+use Apparat\Server\Tests\Adr\TestModule;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
@@ -50,6 +52,16 @@ use Zend\Diactoros\Uri;
  */
 class BasicServerTest extends AbstractServerTest
 {
+    /**
+     * This method is called before the first test of this test class is run.
+     *
+     * @since Method available since Release 3.4.0
+     */
+    public static function setUpBeforeClass()
+    {
+        TestModule::autorun();
+    }
+
     /**
      * Test the server instantiation
      */

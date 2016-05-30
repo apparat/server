@@ -41,8 +41,14 @@ use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
 use Apparat\Server\Domain\Model\Server;
 use Apparat\Server\Infrastructure\AuraRouterAdapter;
+use Apparat\Server\Ports\Responder\AbstractResponder;
+use Apparat\Server\Ports\Responder\View\TYPO3FluidView;
+use Apparat\Server\Ports\Responder\View\ViewInterface;
 use Aura\Router\RouterContainer;
 use Dotenv\Dotenv;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3Fluid\Fluid\View\AbstractTemplateView;
+use Zend\Diactoros\Response;
 
 /**
  * Object module
@@ -98,6 +104,23 @@ class Module extends AbstractModule
             'constructParams' => [
                 parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH) ?: null
             ]
+        ]);
+
+        // Configure the responder: Diactoros Response and TYPO3Fluid template view
+        $diContainer->register(AbstractResponder::class, [
+            'substitutions' => [
+                ResponseInterface::class => [
+                    'instance' => Response::class,
+                ],
+                ViewInterface::class => [
+                    'instance' => TYPO3FluidView::class,
+                ]
+            ]
+        ]);
+
+        // Configure the TYPO3Fluid template view
+        $diContainer->register(AbstractTemplateView::class, [
+            'constructParams' => [null]
         ]);
     }
 }

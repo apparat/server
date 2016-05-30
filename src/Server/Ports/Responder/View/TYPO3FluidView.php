@@ -34,15 +34,17 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Contract;
+namespace Apparat\Server\Ports\Responder\View;
+
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
- * Route interface
+ * TYPO3 Fluid view
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-interface RouteInterface extends \Apparat\Server\Domain\Contract\RouteInterface
+class TYPO3FluidView extends TemplateView implements ViewInterface
 {
 
 }

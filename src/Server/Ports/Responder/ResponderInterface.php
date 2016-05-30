@@ -34,15 +34,15 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Contract;
+namespace Apparat\Server\Ports\Responder;
 
 /**
- * Route interface
+ * Responder interface
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-interface RouteInterface extends \Apparat\Server\Domain\Contract\RouteInterface
+interface ResponderInterface
 {
 
 }

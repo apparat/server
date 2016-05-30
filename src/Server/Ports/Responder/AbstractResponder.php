@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\<Layer>
+ * @subpackage  Apparat\Server\Ports
  * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,30 +34,41 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Tests;
+namespace Apparat\Server\Ports\Responder;
 
-
-use Apparat\Server\Ports\Contract\ActionInterface;
+use Apparat\Server\Ports\Responder\View\ViewInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Test action
+ * Abstract responder
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Tests
+ * @subpackage Apparat\Server\Ports
  */
-class TestAction implements ActionInterface
+abstract class AbstractResponder implements ResponderInterface
 {
     /**
-     * Run the action
+     * View
      *
-     * @param ServerRequestInterface $request Server request
-     * @return ResponseInterface Response
+     * @var ViewInterface
      */
-    public function __invoke(ServerRequestInterface $request)
+    protected $view;
+    /**
+     * Response
+     *
+     * @var ResponseInterface
+     */
+    protected $response;
+
+    /**
+     * Constructor
+     *
+     * @param ResponseInterface $response
+     * @param ViewInterface $view
+     */
+    public function __construct(ResponseInterface $response, ViewInterface $view)
     {
-        print_r($request);
-        // @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Action/BlogBrowseAction.php
+        $this->response = $response;
+        $this->view = $view;
     }
 }

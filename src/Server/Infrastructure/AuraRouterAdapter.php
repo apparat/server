@@ -39,6 +39,7 @@ namespace Apparat\Server\Infrastructure;
 use Apparat\Kernel\Ports\Kernel;
 use Apparat\Server\Domain\Contract\RouteInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
+use Apparat\Server\Ports\Action\ActionInterface;
 use Aura\Router\Matcher;
 use Aura\Router\Route;
 use Aura\Router\RouterContainer;
@@ -125,9 +126,16 @@ class AuraRouterAdapter implements RouterContainerInterface
             $request = $request->withAttribute($key, $val);
         }
 
-        // Instantiate and call the route handler
-        $handler = is_callable($route->handler) ? $route->handler : Kernel::create($route->handler);
-        return $handler($request);
+        $handler = $route->handler;
+
+        // If the handler is a callable
+        if (is_callable($handler)) {
+            return $handler($request);
+        }
+
+        /** @var ActionInterface $handler */
+        $handler = Kernel::create($handler, [$request]);
+        return $handler();
     }
 
     /**

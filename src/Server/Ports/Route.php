@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Ports;
 
-use Apparat\Server\Ports\Contract\ActionInterface;
+use Apparat\Server\Ports\Action\ActionInterface;
 use Apparat\Server\Ports\Contract\RouteInterface;
 
 /**

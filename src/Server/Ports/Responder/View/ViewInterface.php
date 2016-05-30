@@ -34,15 +34,37 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Contract;
+namespace Apparat\Server\Ports\Responder\View;
 
 /**
- * Route interface
+ * View interface
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-interface RouteInterface extends \Apparat\Server\Domain\Contract\RouteInterface
+interface ViewInterface
 {
+    /**
+     * Add a variable to the view data collection
+     *
+     * @param string $key Key of variable
+     * @param mixed $value Value of object
+     * @return ViewInterface Self reference
+     */
+    public function assign($key, $value);
 
+    /**
+     * Add multiple variables to the view data collection
+     *
+     * @param array $values Variable / value list
+     * @return ViewInterface Self reference
+     */
+    public function assignMultiple(array $values);
+
+    /**
+     * Renders the view
+     *
+     * @return string The rendered view
+     */
+    public function render();
 }

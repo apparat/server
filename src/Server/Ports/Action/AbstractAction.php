@@ -34,15 +34,53 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Contract;
+namespace Apparat\Server\Ports\Action;
+
+use Apparat\Server\Domain\Service\ServiceInterface;
+use Apparat\Server\Ports\Responder\ResponderInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Route interface
+ * Abstract action
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-interface RouteInterface extends \Apparat\Server\Domain\Contract\RouteInterface
+abstract class AbstractAction implements ActionInterface
 {
+    /**
+     * Server request
+     *
+     * @var ServerRequestInterface
+     */
+    protected $request;
+    /**
+     * Domain service
+     *
+     * @var ServiceInterface
+     */
+    protected $domain;
+    /**
+     * Responder
+     *
+     * @var ResponderInterface
+     */
+    protected $responder;
 
+    /**
+     * Constructor
+     *
+     * @param ServerRequestInterface $request Server request
+     * @param ServiceInterface $domain Domain service
+     * @param ResponderInterface $responder Responder
+     */
+    public function __construct(
+        ServerRequestInterface $request,
+        ServiceInterface $domain,
+        ResponderInterface $responder
+    ) {
+        $this->request = $request;
+        $this->domain = $domain;
+        $this->responder = $responder;
+    }
 }
