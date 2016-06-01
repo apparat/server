@@ -51,8 +51,9 @@ interface RouteInterface
      * @param string $name Route name
      * @param string $path Route path
      * @param string|callable $action Route action
+     * @param bool $default Default route
      */
-    public function __construct($verbs, $name, $path, $action);
+    public function __construct($verbs, $name, $path, $action, $default = false);
 
     /**
      * Get the route name
@@ -209,4 +210,11 @@ interface RouteInterface
      * @return RouteInterface Self reference
      */
     public function setExtras(array $extras);
+
+    /**
+     * Return whether this is a default route
+     *
+     * @return boolean Default route
+     */
+    public function isDefault();
 }

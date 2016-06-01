@@ -79,9 +79,11 @@ class AuraRouterAdapter implements RouterContainerInterface
      */
     public function registerRoute(RouteInterface $route)
     {
-        $this->routerContainer->getMap()
-            ->route($route->getName(), $route->getPath(), $route->getAction())
-            ->allows($route->getVerbs())
+        $auraRoute = $route->isDefault() ?
+            $this->createDefaultRoute($route) :
+            $this->routerContainer->getMap()->route($route->getName(), $route->getPath(), $route->getAction());
+
+        $auraRoute->allows($route->getVerbs())
             ->tokens($route->getTokens())
             ->defaults($route->getDefaults())
             ->wildcard($route->getWildcard())
@@ -91,6 +93,21 @@ class AuraRouterAdapter implements RouterContainerInterface
             ->secure($route->getSecure())
             ->extras($route->getExtras());
         return $this;
+    }
+
+    /**
+     * Create a default route
+     *
+     * @param RouteInterface $route Route
+     * @return AuraDefaultRoute Default route
+     */
+    protected function createDefaultRoute(RouteInterface $route)
+    {
+        /** @var AuraDefaultRoute $auraRoute */
+        $auraRoute = Kernel::create(AuraDefaultRoute::class);
+        $auraRoute->name($route->getName())->path($route->getPath())->handler($route->getAction());
+        $this->routerContainer->getMap()->addRoute($auraRoute);
+        return $auraRoute;
     }
 
     /**
@@ -120,7 +137,13 @@ class AuraRouterAdapter implements RouterContainerInterface
      * @param Route $route Matched route
      * @return ResponseInterface $response
      */
-    protected function handleRequestRoute(ServerRequestInterface $request, Route $route) {
+    protected function handleRequestRoute(ServerRequestInterface $request, Route $route)
+    {
+        // If this is a default route: Preprocess the matched attributes
+        if ($route instanceof AuraDefaultRoute) {
+            $route->preprocessAttributes();
+        }
+
         // Copy all route attributes to the server request
         foreach ($route->attributes as $key => $val) {
             $request = $request->withAttribute($key, $val);
@@ -145,7 +168,8 @@ class AuraRouterAdapter implements RouterContainerInterface
      * @param Matcher $matcher Matcher
      * @return ResponseInterface Response
      */
-    protected function handleRequestMismatch(ServerRequestInterface $request, Matcher $matcher) {
+    protected function handleRequestMismatch(ServerRequestInterface $request, Matcher $matcher)
+    {
         // TODO Error responder
 //        // Instantiate a response
 //        $response = Kernel::create(ResponseInterface::class);

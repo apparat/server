@@ -84,6 +84,54 @@ class Route implements RouteInterface
      */
     const HEAD = 'HEAD';
     /**
+     * Year route
+     *
+     * @var string
+     */
+    const YEAR = 'year';
+    /**
+     * Month route
+     *
+     * @var string
+     */
+    const MONTH = 'month';
+    /**
+     * Day route
+     *
+     * @var string
+     */
+    const DAY = 'day';
+    /**
+     * Hour route
+     *
+     * @var string
+     */
+    const HOUR = 'hour';
+    /**
+     * Minute route
+     *
+     * @var string
+     */
+    const MINUTE = 'minute';
+    /**
+     * Second route
+     *
+     * @var string
+     */
+    const SECOND = 'second';
+    /**
+     * Object
+     *
+     * @var string
+     */
+    const OBJECT = 'object';
+    /**
+     * Type
+     *
+     * @var string
+     */
+    const TYPE = 'type';
+    /**
      * Allowed HTTP verbs
      *
      * @var array
@@ -168,6 +216,12 @@ class Route implements RouteInterface
      * @var array
      */
     protected $extras = [];
+    /**
+     * Default route
+     *
+     * @var bool
+     */
+    protected $default = false;
 
     /**
      * Route constructor
@@ -176,8 +230,9 @@ class Route implements RouteInterface
      * @param string $name Route name
      * @param string $path Route path
      * @param string $action Route action
+     * @param bool $default Default route
      */
-    public function __construct($verbs, $name, $path, $action)
+    public function __construct($verbs, $name, $path, $action, $default = false)
     {
         // Set and validate the allowed HTTP verbs
         $this->setAndValidateVerbs($verbs);
@@ -190,6 +245,9 @@ class Route implements RouteInterface
 
         // Set and validate the route action
         $this->setAndValidateAction($action);
+
+        // Set whether this is a default route
+        $this->default = !!$default;
     }
 
     /**
@@ -540,5 +598,15 @@ class Route implements RouteInterface
     {
         $this->extras = $extras;
         return $this;
+    }
+
+    /**
+     * Return whether this is a default route
+     *
+     * @return boolean Default route
+     */
+    public function isDefault()
+    {
+        return $this->default;
     }
 }
