@@ -36,25 +36,15 @@
 
 namespace Apparat\Server\Tests\Adr;
 
-
-use Apparat\Server\Ports\Action\AbstractAction;
-use Psr\Http\Message\ResponseInterface;
+use Apparat\Server\Ports\Responder\AbstractResponder;
 
 /**
- * Test action
+ * Test responder
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-class TestAction extends AbstractAction
+class TestResponder extends AbstractResponder
 {
-    /**
-     * Run the action
-     *
-     * @return ResponseInterface Response
-     */
-    public function __invoke()
-    {
-        // @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Action/BlogBrowseAction.php
-    }
+
 }

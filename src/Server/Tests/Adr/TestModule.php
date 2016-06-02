@@ -36,25 +36,39 @@
 
 namespace Apparat\Server\Tests\Adr;
 
-
-use Apparat\Server\Ports\Action\AbstractAction;
-use Psr\Http\Message\ResponseInterface;
+use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
+use Apparat\Server\Domain\Service\ServiceInterface;
+use Apparat\Server\Module;
+use Apparat\Server\Ports\Responder\ResponderInterface;
 
 /**
- * Test action
+ * Test module
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-class TestAction extends AbstractAction
+class TestModule extends Module
 {
     /**
-     * Run the action
+     * Configure the dependency injection container
      *
-     * @return ResponseInterface Response
+     * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
+     * @return void
      */
-    public function __invoke()
+    public function configureDependencyInjection(DependencyInjectionContainerInterface $diContainer)
     {
-        // @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Action/BlogBrowseAction.php
+        parent::configureDependencyInjection($diContainer);
+
+        // Configure the ADR test
+        $diContainer->register(TestAction::class, [
+            'substitutions' => [
+                ServiceInterface::class => [
+                    'instance' => TestService::class,
+                ],
+                ResponderInterface::class => [
+                    'instance' => TestResponder::class,
+                ]
+            ]
+        ]);
     }
 }
