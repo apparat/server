@@ -36,6 +36,9 @@
 
 namespace Apparat\Server\Ports\Responder;
 
+use Apparat\Server\Domain\Payload\PayloadInterface;
+use Psr\Http\Message\ResponseInterface;
+
 /**
  * Responder interface
  *
@@ -44,5 +47,11 @@ namespace Apparat\Server\Ports\Responder;
  */
 interface ResponderInterface
 {
-
+    /**
+     * Run the responder
+     *
+     * @param PayloadInterface $payload Domain payload
+     * @return ResponseInterface Response
+     */
+    public function __invoke(PayloadInterface $payload);
 }

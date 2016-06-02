@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Responder
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\Ports
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,15 +34,52 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+namespace Apparat\Server\Ports\Action;
+
+use Apparat\Server\Domain\Service\AbstractListService;
+use Apparat\Server\Ports\Responder\AbstractListResponder;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Day responder
+ * Abstract list action
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class DayResponder extends AbstractListResponder
+abstract class AbstractListAction extends AbstractAction
 {
+    /**
+     * Domain service
+     *
+     * @var AbstractListService
+     */
+    protected $domain;
+    /**
+     * Responder
+     *
+     * @var AbstractListResponder
+     */
+    protected $responder;
 
+    /**
+     * Run the action
+     *
+     * @return ResponseInterface Response
+     */
+    public function __invoke()
+    {
+        $payload = $this->domain->findObjects(
+            $this->request->getAttribute('year'),
+            $this->request->getAttribute('month'),
+            $this->request->getAttribute('day'),
+            $this->request->getAttribute('hour'),
+            $this->request->getAttribute('minute'),
+            $this->request->getAttribute('second'),
+            $this->request->getAttribute('hidden'),
+            $this->request->getAttribute('type'),
+            $this->request->getAttribute('draft'),
+            $this->request->getAttribute('revision')
+        );
+        return $this->responder->__invoke($payload);
+    }
 }

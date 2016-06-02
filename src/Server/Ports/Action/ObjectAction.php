@@ -54,6 +54,5 @@ class ObjectAction extends AbstractAction
     public function __invoke()
     {
         // TODO: Implement __invoke() method.
-//        print_r($this);
     }
 }

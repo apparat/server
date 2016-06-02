@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Responder
+ * @subpackage  Apparat\Server\Domain
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,51 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+namespace Apparat\Server\Domain\Payload;
 
 /**
- * Day responder
+ * Abstract payload
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Domain
  */
-class DayResponder extends AbstractListResponder
+abstract class AbstractPayload implements PayloadInterface
 {
+    /**
+     * Payload properties
+     *
+     * @var array
+     */
+    protected $payload = array();
 
+    /**
+     * Constructor
+     *
+     * @param array $payload
+     */
+    public function __construct(array $payload)
+    {
+        $this->payload = $payload;
+    }
+
+    /**
+     * Return a payload property
+     *
+     * @param string|null $key Property key
+     * @return array|mixed|null Payload value
+     */
+    public function get($key = null)
+    {
+        // Return the complete payload if no property key given
+        if ($key === null) {
+            return $this->payload;
+        }
+
+        // Return a particular payload property if requested and valid
+        if (isset($this->payload[$key])) {
+            return $this->payload[$key];
+        }
+
+        return null;
+    }
 }

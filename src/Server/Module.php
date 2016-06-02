@@ -47,6 +47,7 @@ use Apparat\Server\Domain\Service\MonthService;
 use Apparat\Server\Domain\Service\ObjectService;
 use Apparat\Server\Domain\Service\SecondService;
 use Apparat\Server\Domain\Service\ServiceInterface;
+use Apparat\Server\Domain\Service\TypeService;
 use Apparat\Server\Domain\Service\YearService;
 use Apparat\Server\Infrastructure\AuraRouterAdapter;
 use Apparat\Server\Ports\Action\DayAction;
@@ -55,6 +56,7 @@ use Apparat\Server\Ports\Action\MinuteAction;
 use Apparat\Server\Ports\Action\MonthAction;
 use Apparat\Server\Ports\Action\ObjectAction;
 use Apparat\Server\Ports\Action\SecondAction;
+use Apparat\Server\Ports\Action\TypeAction;
 use Apparat\Server\Ports\Action\YearAction;
 use Apparat\Server\Ports\Responder\AbstractResponder;
 use Apparat\Server\Ports\Responder\DayResponder;
@@ -64,6 +66,7 @@ use Apparat\Server\Ports\Responder\MonthResponder;
 use Apparat\Server\Ports\Responder\ObjectResponder;
 use Apparat\Server\Ports\Responder\ResponderInterface;
 use Apparat\Server\Ports\Responder\SecondResponder;
+use Apparat\Server\Ports\Responder\TypeResponder;
 use Apparat\Server\Ports\Responder\View\TYPO3FluidView;
 use Apparat\Server\Ports\Responder\View\ViewInterface;
 use Apparat\Server\Ports\Responder\YearResponder;
@@ -122,7 +125,7 @@ class Module extends AbstractModule
             ]
         ]);
 
-        // Configure the server
+        // Configure the router
         $diContainer->register(RouterContainer::class, [
             'constructParams' => [
                 parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH) ?: null
@@ -224,6 +227,16 @@ class Module extends AbstractModule
                 ],
                 ResponderInterface::class => [
                     'instance' => ObjectResponder::class,
+                ]
+            ]
+        ]);
+        $diContainer->register(TypeAction::class, [
+            'substitutions' => [
+                ServiceInterface::class => [
+                    'instance' => TypeService::class,
+                ],
+                ResponderInterface::class => [
+                    'instance' => TypeResponder::class,
                 ]
             ]
         ]);

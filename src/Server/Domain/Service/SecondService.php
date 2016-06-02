@@ -42,7 +42,7 @@ namespace Apparat\Server\Domain\Service;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  */
-class SecondService implements ServiceInterface
+class SecondService extends AbstractListService
 {
 
 }

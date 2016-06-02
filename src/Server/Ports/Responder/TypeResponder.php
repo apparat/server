@@ -37,12 +37,12 @@
 namespace Apparat\Server\Ports\Responder;
 
 /**
- * Day responder
+ * Type responder
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class DayResponder extends AbstractListResponder
+class TypeResponder extends AbstractListResponder
 {
 
 }

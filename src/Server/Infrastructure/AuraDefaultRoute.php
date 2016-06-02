@@ -59,9 +59,11 @@ class AuraDefaultRoute extends Route
     public function preprocessAttributes()
     {
         $this->attributes['hidden'] = !empty($this->attributes['hidden']);
-        $this->attributes['id'] = ($this->attributes['id'] === self::WILDCARD) ?: intval($this->attributes['id']);
+        $this->attributes['id'] = ($this->attributes['id'] == self::WILDCARD) ?
+            self::WILDCARD :
+            intval($this->attributes['id']);
         $this->attributes['type'] = empty($this->attributes['type']) ?
-            self::WILDCARD : ltrim($this->attributes['hidden'], '-');
+            self::WILDCARD : ltrim($this->attributes['type'], '-');
         $this->attributes['draft'] = !empty($this->attributes['draft']) && strpos($this->attributes['draft'], '.');
         $this->attributes['revision'] = (empty($this->attributes['revision']) || $this->attributes['draft']) ?
             null : intval(ltrim($this->attributes['revision'], '-'));

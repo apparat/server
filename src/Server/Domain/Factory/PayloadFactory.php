@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Responder
+ * @subpackage  Apparat\Server\Domain\Factory
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,27 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+namespace Apparat\Server\Domain\Factory;
+
+use Apparat\Kernel\Ports\Kernel;
+use Apparat\Server\Domain\Payload\Found;
 
 /**
- * Day responder
+ * Payload factory
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Domain
  */
-class DayResponder extends AbstractListResponder
+class PayloadFactory
 {
-
+    /**
+     * Create a new Found payload
+     *
+     * @param array $payload Payload properties
+     * @return Found Found payload
+     */
+    public function found(array $payload)
+    {
+        return Kernel::create(Found::class, [$payload]);
+    }
 }

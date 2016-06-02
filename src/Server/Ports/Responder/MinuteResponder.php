@@ -42,7 +42,7 @@ namespace Apparat\Server\Ports\Responder;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class MinuteResponder extends AbstractResponder
+class MinuteResponder extends AbstractListResponder
 {
 
 }

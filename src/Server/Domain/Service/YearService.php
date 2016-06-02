@@ -42,7 +42,7 @@ namespace Apparat\Server\Domain\Service;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  */
-class YearService implements ServiceInterface
+class YearService extends AbstractListService
 {
 
 }

@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Responder
+ * @subpackage  Apparat\Server\Domain
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,32 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+namespace Apparat\Server\Domain\Service;
+
+use Apparat\Server\Domain\Factory\PayloadFactory;
 
 /**
- * Day responder
+ * Abstract domain service
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Domain
  */
-class DayResponder extends AbstractListResponder
+class AbstractService implements ServiceInterface
 {
+    /**
+     * Payload factory
+     *
+     * @var PayloadFactory
+     */
+    protected $payloadFactory;
 
+    /**
+     * Service constructor
+     *
+     * @param PayloadFactory $payloadFactory
+     */
+    public function __construct(PayloadFactory $payloadFactory)
+    {
+        $this->payloadFactory = $payloadFactory;
+    }
 }

@@ -44,15 +44,6 @@ use Psr\Http\Message\ResponseInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class DayAction extends AbstractAction
+class DayAction extends AbstractListAction
 {
-    /**
-     * Run the action
-     *
-     * @return ResponseInterface Response
-     */
-    public function __invoke()
-    {
-        // TODO: Implement __invoke() method.
-    }
 }

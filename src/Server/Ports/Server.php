@@ -45,6 +45,7 @@ use Apparat\Server\Ports\Action\MinuteAction;
 use Apparat\Server\Ports\Action\MonthAction;
 use Apparat\Server\Ports\Action\ObjectAction;
 use Apparat\Server\Ports\Action\SecondAction;
+use Apparat\Server\Ports\Action\TypeAction;
 use Apparat\Server\Ports\Action\YearAction;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -126,11 +127,11 @@ class Server
         // Repository route prefix
         $prefix = rtrim('/'.$repositoryPath, '/');
 
-        // Build the list of base routes
-        $dateDefaultRoutes = self::buildDefaultDateRoutes($prefix, getenv('OBJECT_DATE_PRECISION'));
-        $baseDateRoute = count($dateDefaultRoutes) ? current($dateDefaultRoutes) : ['/', []];
-        $defaultRoutes = self::buildDefaultObjectRoutes($prefix, $baseDateRoute, count($dateDefaultRoutes))
-            + $dateDefaultRoutes;
+        // Build the list of default routes
+        $defaultDateRoutes = self::buildDefaultDateRoutes($prefix, getenv('OBJECT_DATE_PRECISION'));
+        $baseDateRoute = count($defaultDateRoutes) ? current($defaultDateRoutes) : ['/', []];
+        $defaultObjectRoutes = self::buildDefaultObjectRoutes($prefix, $baseDateRoute, count($defaultDateRoutes));
+        $defaultRoutes = $defaultObjectRoutes + $defaultDateRoutes;
 
         // Iterate through and register all base routes
         foreach ($defaultRoutes as $routeName => $routeConfig) {
@@ -147,7 +148,7 @@ class Server
      */
     public static function dispatchRequest(ServerRequestInterface $request)
     {
-        self::getServer()->dispatchRequest($request);
+        return self::getServer()->dispatchRequest($request);
     }
 
     /**
@@ -237,19 +238,33 @@ class Server
         // Build a regular expression for all supported object types
         $enabledObjectTypes = '(?:-(?:(?:'.implode(')|(?:', array_map('preg_quote', Object::getSupportedTypes())).')))';
 
-        // Build the default object route
-        $objectRoute = [
-            $baseDateRoute[0].'/{hidden}{id}{type}{draft}{revision}{format}',
-            $baseDateRoute[1] + [
-                'hidden' => '\.?',
-                'id' => self::REGEX_ASTERISK.'|(?:\d+)',
-                'type' => $enabledObjectTypes.'?',
-                'draft' => '(?:/(\.)?\\'.(2 + $numDefaultRoutes).')?',
-                'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+)?)',
-                'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote(getenv('OBJECT_RESOURCE_EXTENSION')).')?)',
+        return [
+            // Default object route
+            Route::OBJECT => [
+                $prefix.$baseDateRoute[0].'/{hidden}{id}{type}{draft}{revision}{format}',
+                $baseDateRoute[1] + [
+                    'hidden' => '\.?',
+                    'id' => '\d+',
+                    'type' => $enabledObjectTypes.'?',
+                    'draft' => '(?:/(\.)?\\'.(2 + $numDefaultRoutes).')?',
+                    'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+)?)',
+                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote(getenv('OBJECT_RESOURCE_EXTENSION')).')?)',
+                ],
+                ObjectAction::class
             ],
-            ObjectAction::class
+            // Default type route
+            Route::TYPE => [
+                $baseDateRoute[0].'/{hidden}{id}{type}{draft}{revision}{format}',
+                $baseDateRoute[1] + [
+                    'hidden' => '\.?',
+                    'id' => self::REGEX_ASTERISK,
+                    'type' => $enabledObjectTypes.'?',
+                    'draft' => '(?:/(\.)?'.self::REGEX_ASTERISK.')?',
+                    'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+)?)',
+                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote(getenv('OBJECT_RESOURCE_EXTENSION')).')?)',
+                ],
+                TypeAction::class
+            ]
         ];
-        return [Route::OBJECT => $objectRoute];
     }
 }

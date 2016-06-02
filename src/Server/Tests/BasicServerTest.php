@@ -98,6 +98,7 @@ class BasicServerTest extends AbstractServerTest
         $uri = new Uri('http://apparat/blog/*/12/*/.*-article/*.md');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
-        Server::dispatchRequest($request);
+        $response = Server::dispatchRequest($request);
+        echo get_class($response);
     }
 }
