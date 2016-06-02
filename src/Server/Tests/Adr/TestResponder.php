@@ -48,7 +48,12 @@ use Psr\Http\Message\ResponseInterface;
  */
 class TestResponder extends AbstractResponder
 {
-
+    /**
+     * Action name
+     *
+     * @var string
+     */
+    const ACTION = 'Test';
     /**
      * Run the responder
      *

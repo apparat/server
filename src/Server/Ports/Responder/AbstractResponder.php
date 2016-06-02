@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Ports\Responder;
 
-use Apparat\Server\Ports\Responder\View\ViewInterface;
+use Apparat\Server\Ports\View\ViewInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -59,6 +59,12 @@ abstract class AbstractResponder implements ResponderInterface
      * @var ResponseInterface
      */
     protected $response;
+    /**
+     * Action name
+     *
+     * @var string
+     */
+    const ACTION = 'Abstract';
 
     /**
      * Constructor
@@ -69,6 +75,6 @@ abstract class AbstractResponder implements ResponderInterface
     public function __construct(ResponseInterface $response, ViewInterface $view)
     {
         $this->response = $response;
-        $this->view = $view;
+        $this->view = $view->setAction(static::ACTION);
     }
 }

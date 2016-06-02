@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Action
+ * @subpackage  Apparat\Server\Infrastructure\Responder
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,16 +34,22 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Action;
+namespace Apparat\Server\Infrastructure\Responder;
 
-use Psr\Http\Message\ResponseInterface;
+use Apparat\Server\Ports\Responder\AbstractListResponder;
 
 /**
- * Hour action
+ * Second responder
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class HourAction extends AbstractListAction
+class SecondResponder extends AbstractListResponder
 {
+    /**
+     * Action name
+     *
+     * @var string
+     */
+    const ACTION = 'Second';
 }

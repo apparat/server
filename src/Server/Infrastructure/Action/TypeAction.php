@@ -34,25 +34,16 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Action;
+namespace Apparat\Server\Infrastructure\Action;
 
-use Psr\Http\Message\ResponseInterface;
+use Apparat\Server\Ports\Action\AbstractListAction;
 
 /**
- * Object action
+ * Type action
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class ObjectAction extends AbstractAction
+class TypeAction extends AbstractListAction
 {
-    /**
-     * Run the action
-     *
-     * @return ResponseInterface Response
-     */
-    public function __invoke()
-    {
-        // TODO: Implement __invoke() method.
-    }
 }

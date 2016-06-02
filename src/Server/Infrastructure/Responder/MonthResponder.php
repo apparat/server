@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports
- * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage  Apparat\Server\Infrastructure\Responder
+ * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,17 +34,22 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder\View;
+namespace Apparat\Server\Infrastructure\Responder;
 
-use TYPO3Fluid\Fluid\View\TemplateView;
+use Apparat\Server\Ports\Responder\AbstractListResponder;
 
 /**
- * TYPO3 Fluid view
+ * Month responder
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class TYPO3FluidView extends TemplateView implements ViewInterface
+class MonthResponder extends AbstractListResponder
 {
-
+    /**
+     * Action name
+     *
+     * @var string
+     */
+    const ACTION = 'Month';
 }

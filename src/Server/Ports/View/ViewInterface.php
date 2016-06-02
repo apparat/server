@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Responder
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\Ports
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,15 +34,45 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+namespace Apparat\Server\Ports\View;
 
 /**
- * Object responder
+ * View interface
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class ObjectResponder extends AbstractResponder
+interface ViewInterface
 {
+    /**
+     * Add a variable to the view data collection
+     *
+     * @param string $key Key of variable
+     * @param mixed $value Value of object
+     * @return ViewInterface Self reference
+     */
+    public function assign($key, $value);
 
+    /**
+     * Add multiple variables to the view data collection
+     *
+     * @param array $values Variable / value list
+     * @return ViewInterface Self reference
+     */
+    public function assignMultiple(array $values);
+
+    /**
+     * Renders the view
+     *
+     * @return string The rendered view
+     */
+    public function render();
+
+    /**
+     * Set the action name
+     *
+     * @param string $action Action name
+     * @return ViewInterface Self reference
+     */
+    public function setAction($action);
 }

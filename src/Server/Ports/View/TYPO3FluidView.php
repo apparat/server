@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Action
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\Ports
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,17 +34,54 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Action;
+namespace Apparat\Server\Ports\View;
 
-use Psr\Http\Message\ResponseInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
- * Year action
+ * TYPO3 Fluid view
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class YearAction extends AbstractListAction
+class TYPO3FluidView extends TemplateView implements ViewInterface
 {
-    
+    /**
+     * Constructor
+     *
+     * @param null|RenderingContextInterface $context
+     */
+    public function __construct(RenderingContextInterface $context = null)
+    {
+        // TODO Why gets this called twice?
+//        var_dump($context);
+        parent::__construct($context);
+        $this->setTemplatePaths();
+    }
+
+    /**
+     * Set the action name
+     *
+     * @param string $action Action name
+     * @return ViewInterface Self reference
+     */
+    public function setAction($action)
+    {
+        $this->getRenderingContext()->setControllerAction($action);
+        return $this;
+    }
+
+    /**
+     * Set the template paths
+     *
+     * @todo Enable externally configured paths
+     */
+    protected function setTemplatePaths()
+    {
+        $paths = $this->getTemplatePaths();
+        $paths->setLayoutRootPaths([__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Layouts']);
+        $paths->setTemplateRootPaths([__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Templates']);
+        $paths->setPartialRootPaths([__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Partials']);
+    }
 }

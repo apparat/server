@@ -34,16 +34,16 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Action;
+namespace Apparat\Server\Infrastructure\Action;
 
-use Psr\Http\Message\ResponseInterface;
+use Apparat\Server\Ports\Action\AbstractListAction;
 
 /**
- * Second action
+ * Month action
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class SecondAction extends AbstractListAction
+class MonthAction extends AbstractListAction
 {
 }

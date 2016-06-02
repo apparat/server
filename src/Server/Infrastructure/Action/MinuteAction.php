@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports
- * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage  Apparat\Server\Ports\Action
+ * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,37 +34,16 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder\View;
+namespace Apparat\Server\Infrastructure\Action;
+
+use Apparat\Server\Ports\Action\AbstractListAction;
 
 /**
- * View interface
+ * Minute action
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-interface ViewInterface
+class MinuteAction extends AbstractListAction
 {
-    /**
-     * Add a variable to the view data collection
-     *
-     * @param string $key Key of variable
-     * @param mixed $value Value of object
-     * @return ViewInterface Self reference
-     */
-    public function assign($key, $value);
-
-    /**
-     * Add multiple variables to the view data collection
-     *
-     * @param array $values Variable / value list
-     * @return ViewInterface Self reference
-     */
-    public function assignMultiple(array $values);
-
-    /**
-     * Renders the view
-     *
-     * @return string The rendered view
-     */
-    public function render();
 }

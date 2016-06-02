@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Responder
+ * @subpackage  Apparat\Server\Infrastructure\Responder
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,34 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+namespace Apparat\Server\Infrastructure\Responder;
+
+use Apparat\Server\Domain\Payload\PayloadInterface;
+use Apparat\Server\Ports\Responder\AbstractResponder;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Day responder
+ * Object responder
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class DayResponder extends AbstractListResponder
+class ObjectResponder extends AbstractResponder
 {
-
+    /**
+     * Action name
+     *
+     * @var string
+     */
+    const ACTION = 'Object';
+    /**
+     * Run the responder
+     *
+     * @param PayloadInterface $payload Domain payload
+     * @return ResponseInterface Response
+     */
+    public function __invoke(PayloadInterface $payload)
+    {
+        // TODO: Implement __invoke() method.
+    }
 }

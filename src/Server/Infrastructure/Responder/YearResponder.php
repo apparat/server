@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Responder
+ * @subpackage  Apparat\Server\Infrastructure\Responder
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,22 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+namespace Apparat\Server\Infrastructure\Responder;
+
+use Apparat\Server\Ports\Responder\AbstractListResponder;
 
 /**
- * Minute responder
+ * Year responder
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class MinuteResponder extends AbstractListResponder
+class YearResponder extends AbstractListResponder
 {
-
+    /**
+     * Action name
+     *
+     * @var string
+     */
+    const ACTION = 'Year';
 }

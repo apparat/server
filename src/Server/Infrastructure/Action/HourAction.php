@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Responder
+ * @subpackage  Apparat\Server\Ports\Action
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,16 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+namespace Apparat\Server\Infrastructure\Action;
+
+use Apparat\Server\Ports\Action\AbstractListAction;
 
 /**
- * Month responder
+ * Hour action
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class MonthResponder extends AbstractListResponder
+class HourAction extends AbstractListAction
 {
-
 }

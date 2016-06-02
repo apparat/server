@@ -55,6 +55,8 @@ abstract class AbstractListResponder extends AbstractResponder
      */
     public function __invoke(PayloadInterface $payload)
     {
+        $this->view->assign('payload', $payload);
+        echo $this->view->render();
         return $this->response;
     }
 }
