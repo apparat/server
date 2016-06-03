@@ -1,0 +1,930 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers">
+    <xsd:element name="alias">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Declares new variables which are aliases of other variables.
+Takes a "map"-Parameter which is an associative array which defines the shorthand mapping.
+
+The variables are only declared inside the <f:alias>...</f:alias>-tag. After the
+closing tag, all declared variables are removed again.
+
+= Examples =
+
+<code title="Single alias">
+<f:alias map="{x: 'foo'}">{x}</f:alias>
+</code>
+<output>
+foo
+</output>
+
+<code title="Multiple mappings">
+<f:alias map="{x: foo.bar.baz, y: foo.bar.baz.name}">
+  {x.name} or {y}
+</f:alias>
+</code>
+<output>
+[name] or [name]
+depending on {foo.bar.baz}
+</output>
+
+Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
+you might want to fine-tune your "view model" (the data you assign to the view).
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:array" name="map" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[Array that specifies which variables should be mapped to which alias]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="case">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Case view helper that is only usable within the SwitchViewHelper.
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:mixed" name="value" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Value to match in this case]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="comment">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[This ViewHelper prevents rendering of any content inside the tag
+Note: Contents of the comment will still be **parsed** thus throwing an
+Exception if it contains syntax errors. You can put child nodes in
+CDATA tags to avoid this.
+
+= Examples =
+
+<code title="Commenting out fluid code">
+Before
+<f:comment>
+  This is completely hidden.
+  <f:debug>This does not get rendered</f:debug>
+</f:comment>
+After
+</code>
+<output>
+Before
+After
+</output>
+
+<code title="Prevent parsing">
+<f:comment><![CDATA[
+ <f:some.invalid.syntax />
+]]]]><![CDATA[></f:comment>
+</code>
+<output>
+</output>
+
+Note: Using this view helper won't have a notable effect on performance, especially once the template is parsed.
+However it can lead to reduced readability. You can use layouts and partials to split a large template into smaller
+parts. Using self-descriptive names for the partials can make comments redundant.
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="count">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[This ViewHelper counts elements of the specified array or countable object.
+
+= Examples =
+
+<code title="Count array elements">
+<f:count subject="{0:1, 1:2, 2:3, 3:4}" />
+</code>
+<output>
+4
+</output>
+
+<code title="inline notation">
+{objects -> f:count()}
+</code>
+<output>
+10 (depending on the number of items in {objects})
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:array" name="subject" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Countable subject, array or \Countable]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="cycle">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[This ViewHelper cycles through the specified values.
+This can be often used to specify CSS classes for example.
+**Note:** To achieve the "zebra class" effect in a loop you can also use the "iteration" argument of the **for** ViewHelper.
+
+= Examples =
+
+<code title="Simple">
+<f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo"><f:cycle values="{0: 'foo', 1: 'bar', 2: 'baz'}" as="cycle">{cycle}</f:cycle></f:for>
+</code>
+<output>
+foobarbazfoo
+</output>
+
+<code title="Alternating CSS class">
+<ul>
+  <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo">
+    <f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
+      <li class="{zebraClass}">{foo}</li>
+    </f:cycle>
+  </f:for>
+</ul>
+</code>
+<output>
+<ul>
+  <li class="odd">1</li>
+  <li class="even">2</li>
+  <li class="odd">3</li>
+  <li class="even">4</li>
+</ul>
+</output>
+
+Note: The above examples could also be achieved using the "iteration" argument of the ForViewHelper
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:array" name="values" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[The array or object implementing \ArrayAccess (for example \SplObjectStorage) to iterated over]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:anySimpleType" name="as" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[The name of the iteration variable]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="debug">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[View helper that outputs its child nodes with \TYPO3Fluid\Flow\var_dump()
+
+= Examples =
+
+<code>
+<f:debug>{object}</f:debug>
+</code>
+<output>
+all properties of {object} nicely highlighted
+</output>
+
+<code title="inline notation and custom title">
+{object -> f:debug(title: 'Custom title')}
+</code>
+<output>
+all properties of {object} nicely highlighted (with custom title)
+</output>
+
+<code title="only output the type">
+{object -> f:debug(typeOnly: true)}
+</code>
+<output>
+the type or class name of {object}
+</output>
+
+Note: This view helper is only meant to be used during development
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:boolean" name="typeOnly" default="false">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[If TRUE, debugs only the type of variables]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="defaultCase">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[A view helper which specifies the "default" case when used within the SwitchViewHelper.
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="else">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Else-Branch of a condition. Only has an effect inside of "If". See the If-ViewHelper for documentation.
+
+= Examples =
+
+<code title="Output content if condition is not met">
+<f:if condition="{someCondition}">
+  <f:else>
+    condition was not true
+  </f:else>
+</f:if>
+</code>
+<output>
+Everything inside the "else" tag is displayed if the condition evaluates to FALSE.
+Otherwise nothing is outputted in this example.
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:boolean" name="if" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[Condition expression conforming to Fluid boolean rules]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="for">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Loop view helper which can be used to iterate over arrays.
+Implements what a basic foreach()-PHP-method does.
+
+= Examples =
+
+<code title="Simple Loop">
+<f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo">{foo}</f:for>
+</code>
+<output>
+1234
+</output>
+
+<code title="Output array key">
+<ul>
+  <f:for each="{fruit1: 'apple', fruit2: 'pear', fruit3: 'banana', fruit4: 'cherry'}" as="fruit" key="label">
+    <li>{label}: {fruit}</li>
+  </f:for>
+</ul>
+</code>
+<output>
+<ul>
+  <li>fruit1: apple</li>
+  <li>fruit2: pear</li>
+  <li>fruit3: banana</li>
+  <li>fruit4: cherry</li>
+</ul>
+</output>
+
+<code title="Iteration information">
+<ul>
+  <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo" iteration="fooIterator">
+    <li>Index: {fooIterator.index} Cycle: {fooIterator.cycle} Total: {fooIterator.total}{f:if(condition: fooIterator.isEven, then: ' Even')}{f:if(condition: fooIterator.isOdd, then: ' Odd')}{f:if(condition: fooIterator.isFirst, then: ' First')}{f:if(condition: fooIterator.isLast, then: ' Last')}</li>
+  </f:for>
+</ul>
+</code>
+<output>
+<ul>
+  <li>Index: 0 Cycle: 1 Total: 4 Odd First</li>
+  <li>Index: 1 Cycle: 2 Total: 4 Even</li>
+  <li>Index: 2 Cycle: 3 Total: 4 Odd</li>
+  <li>Index: 3 Cycle: 4 Total: 4 Even Last</li>
+</ul>
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:array" name="each" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[The array or \SplObjectStorage to iterated over]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="as" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[The name of the iteration variable]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="key" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Variable to assign array key to]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:boolean" name="reverse" default="false">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[If TRUE, iterates in reverse]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="iteration" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Name of iteration variable to assign]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="groupedFor">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Grouped loop view helper.
+Loops through the specified values.
+
+The groupBy argument also supports property paths.
+
+= Examples =
+
+<code title="Simple">
+<f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}" as="fruitsOfThisColor" groupBy="color">
+  <f:for each="{fruitsOfThisColor}" as="fruit">
+    {fruit.name}
+  </f:for>
+</f:groupedFor>
+</code>
+<output>
+apple cherry strawberry banana
+</output>
+
+<code title="Two dimensional list">
+<ul>
+  <f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}" as="fruitsOfThisColor" groupBy="color" groupKey="color">
+    <li>
+      {color} fruits:
+      <ul>
+        <f:for each="{fruitsOfThisColor}" as="fruit" key="label">
+          <li>{label}: {fruit.name}</li>
+        </f:for>
+      </ul>
+    </li>
+  </f:groupedFor>
+</ul>
+</code>
+<output>
+<ul>
+  <li>green fruits
+    <ul>
+      <li>0: apple</li>
+    </ul>
+  </li>
+  <li>red fruits
+    <ul>
+      <li>1: cherry</li>
+    </ul>
+    <ul>
+      <li>3: strawberry</li>
+    </ul>
+  </li>
+  <li>yellow fruits
+    <ul>
+      <li>2: banana</li>
+    </ul>
+  </li>
+</ul>
+</output>
+
+Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
+you might want to fine-tune your "view model" (the data you assign to the view).
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:array" name="each" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[The array or \SplObjectStorage to iterated over]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="as" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[The name of the iteration variable]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="groupBy" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Group by this property]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="groupKey" default="'groupKey'">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[The name of the variable to store the current group]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="if">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[This view helper implements an if/else condition.
+Check \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to see how boolean arguments are evaluated
+
+**Conditions:**
+
+As a condition is a boolean value, you can just use a boolean argument.
+Alternatively, you can write a boolean expression there.
+Boolean expressions have the following form:
+XX Comparator YY
+Comparator is one of: ==, !=, <, <=, >, >= and %
+The % operator converts the result of the % operation to boolean.
+
+XX and YY can be one of:
+- number
+- Object Accessor
+- Array
+- a ViewHelper
+Note: Strings at XX/YY are NOT allowed, however, for the time being,
+a string comparison can be achieved with comparing arrays (see example
+below).
+::
+
+  <f:if condition="{rank} > 100">
+    Will be shown if rank is > 100
+  </f:if>
+  <f:if condition="{rank} % 2">
+    Will be shown if rank % 2 != 0.
+  </f:if>
+  <f:if condition="{rank} == {k:bar()}">
+    Checks if rank is equal to the result of the ViewHelper "k:bar"
+  </f:if>
+  <f:if condition="{0: foo.bar} == {0: 'stringToCompare'}">
+    Will result true if {foo.bar}'s represented value equals 'stringToCompare'.
+  </f:if>
+
+= Examples =
+
+<code title="Basic usage">
+<f:if condition="somecondition">
+  This is being shown in case the condition matches
+</f:if>
+</code>
+<output>
+Everything inside the <f:if> tag is being displayed if the condition evaluates to TRUE.
+</output>
+
+<code title="If / then / else">
+<f:if condition="somecondition">
+  <f:then>
+    This is being shown in case the condition matches.
+  </f:then>
+  <f:else>
+    This is being displayed in case the condition evaluates to FALSE.
+  </f:else>
+</f:if>
+</code>
+<output>
+Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
+Otherwise, everything inside the "else"-tag is displayed.
+</output>
+
+<code title="inline notation">
+{f:if(condition: someCondition, then: 'condition is met', else: 'condition is not met')}
+</code>
+<output>
+The value of the "then" attribute is displayed if the condition evaluates to TRUE.
+Otherwise, everything the value of the "else"-attribute is displayed.
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:mixed" name="then" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Value to be returned if the condition if met.]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:mixed" name="else" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Value to be returned if the condition if not met.]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:boolean" name="condition" default="false">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[Condition expression conforming to Fluid boolean rules]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="if">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[This view helper implements an if/else condition.
+Check \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to see how boolean arguments are evaluated
+
+**Conditions:**
+
+As a condition is a boolean value, you can just use a boolean argument.
+Alternatively, you can write a boolean expression there.
+Boolean expressions have the following form:
+XX Comparator YY
+Comparator is one of: ==, !=, <, <=, >, >= and %
+The % operator converts the result of the % operation to boolean.
+
+XX and YY can be one of:
+- number
+- Object Accessor
+- Array
+- a ViewHelper
+Note: Strings at XX/YY are NOT allowed, however, for the time being,
+a string comparison can be achieved with comparing arrays (see example
+below).
+::
+
+  <f:if condition="{rank} > 100">
+    Will be shown if rank is > 100
+  </f:if>
+  <f:if condition="{rank} % 2">
+    Will be shown if rank % 2 != 0.
+  </f:if>
+  <f:if condition="{rank} == {k:bar()}">
+    Checks if rank is equal to the result of the ViewHelper "k:bar"
+  </f:if>
+  <f:if condition="{0: foo.bar} == {0: 'stringToCompare'}">
+    Will result true if {foo.bar}'s represented value equals 'stringToCompare'.
+  </f:if>
+
+= Examples =
+
+<code title="Basic usage">
+<f:if condition="somecondition">
+  This is being shown in case the condition matches
+</f:if>
+</code>
+<output>
+Everything inside the <f:if> tag is being displayed if the condition evaluates to TRUE.
+</output>
+
+<code title="If / then / else">
+<f:if condition="somecondition">
+  <f:then>
+    This is being shown in case the condition matches.
+  </f:then>
+  <f:else>
+    This is being displayed in case the condition evaluates to FALSE.
+  </f:else>
+</f:if>
+</code>
+<output>
+Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
+Otherwise, everything inside the "else"-tag is displayed.
+</output>
+
+<code title="inline notation">
+{f:if(condition: someCondition, then: 'condition is met', else: 'condition is not met')}
+</code>
+<output>
+The value of the "then" attribute is displayed if the condition evaluates to TRUE.
+Otherwise, everything the value of the "else"-attribute is displayed.
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:mixed" name="then" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Value to be returned if the condition if met.]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:mixed" name="else" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Value to be returned if the condition if not met.]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:boolean" name="condition" default="false">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[Condition expression conforming to Fluid boolean rules]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="layout">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[With this tag, you can select a layout to be used for the current template.
+
+= Examples =
+
+<code>
+<f:layout name="main" />
+</code>
+<output>
+(no output)
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:string" name="name" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[Name of layout to use. If none given, "Default" is used.]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="or">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[If content is empty use alternative text
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:mixed" name="content" default="''">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Content to check if empty]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:mixed" name="alternative" default="''">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Alternative if content is empty]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:array" name="arguments" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[Arguments to be replaced in the resulting string, using sprintf]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="render">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[A ViewHelper to render a section or a specified partial in a template.
+
+= Examples =
+
+<code title="Rendering partials">
+<f:render partial="SomePartial" arguments="{foo: someVariable}" />
+</code>
+<output>
+the content of the partial "SomePartial". The content of the variable {someVariable} will be available in the partial as {foo}
+</output>
+
+<code title="Rendering sections">
+<f:section name="someSection">This is a section. {foo}</f:section>
+<f:render section="someSection" arguments="{foo: someVariable}" />
+</code>
+<output>
+the content of the section "someSection". The content of the variable {someVariable} will be available in the partial as {foo}
+</output>
+
+<code title="Rendering recursive sections">
+<f:section name="mySection">
+ <ul>
+   <f:for each="{myMenu}" as="menuItem">
+     <li>
+       {menuItem.text}
+       <f:if condition="{menuItem.subItems}">
+         <f:render section="mySection" arguments="{myMenu: menuItem.subItems}" />
+       </f:if>
+     </li>
+   </f:for>
+ </ul>
+</f:section>
+<f:render section="mySection" arguments="{myMenu: menu}" />
+</code>
+<output>
+<ul>
+  <li>menu1
+    <ul>
+      <li>menu1a</li>
+      <li>menu1b</li>
+    </ul>
+  </li>
+[...]
+(depending on the value of {menu})
+</output>
+
+
+<code title="Passing all variables to a partial">
+<f:render partial="somePartial" arguments="{_all}" />
+</code>
+<output>
+the content of the partial "somePartial".
+Using the reserved keyword "_all", all available variables will be passed along to the partial
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:string" name="section" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[Section to render - combine with partial to render section in partial]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="partial" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Partial to render, with or without section]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:array" name="arguments" default="array (&#10;)">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[Array of variables to be transferred. Use {_all} for all variables]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:boolean" name="optional" default="false">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[If TRUE, considers the *section* optional. Partial never is.]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:mixed" name="default" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[Value (usually string) to be displayed if the section or partial does not exist]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="contentAs" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[If used, renders the child content and adds it as a template variable with this name for use in the partial/section]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="section">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[A ViewHelper to declare sections in templates for later use with e.g. the RenderViewHelper.
+
+= Examples =
+
+<code title="Rendering sections">
+<f:section name="someSection">This is a section. {foo}</f:section>
+<f:render section="someSection" arguments="{foo: someVariable}" />
+</code>
+<output>
+the content of the section "someSection". The content of the variable {someVariable} will be available in the partial as {foo}
+</output>
+
+<code title="Rendering recursive sections">
+<f:section name="mySection">
+ <ul>
+   <f:for each="{myMenu}" as="menuItem">
+     <li>
+       {menuItem.text}
+       <f:if condition="{menuItem.subItems}">
+         <f:render section="mySection" arguments="{myMenu: menuItem.subItems}" />
+       </f:if>
+     </li>
+   </f:for>
+ </ul>
+</f:section>
+<f:render section="mySection" arguments="{myMenu: menu}" />
+</code>
+<output>
+<ul>
+  <li>menu1
+    <ul>
+      <li>menu1a</li>
+      <li>menu1b</li>
+    </ul>
+  </li>
+[...]
+(depending on the value of {menu})
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:string" name="name" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Name of the section]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="spaceless">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Space Removal ViewHelper
+
+Removes redundant spaces between HTML tags while
+preserving the whitespace that may be inside HTML
+tags. Trims the final result before output.
+
+Heavily inspired by Twig's corresponding node type.
+
+<code title="Usage of f:spaceless">
+<f:spaceless>
+<div>
+    <div>
+        <div>text
+
+text</div>
+    </div>
+</div>
+</code>
+<output>
+<div><div><div>text
+
+text</div></div></div>
+</output>
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="switch">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Switch view helper which can be used to render content depending on a value or expression.
+Implements what a basic switch()-PHP-method does.
+
+An optional default case can be specified which is rendered if none of the "f:case" conditions matches.
+
+= Examples =
+
+<code title="Simple Switch statement">
+<f:switch expression="{person.gender}">
+  <f:case value="male">Mr.</f:case>
+  <f:case value="female">Mrs.</f:case>
+  <f:defaultCase>Mr. / Mrs.</f:defaultCase>
+</f:switch>
+</code>
+<output>
+"Mr.", "Mrs." or "Mr. / Mrs." (depending on the value of {person.gender})
+</output>
+
+Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
+you might want to consider restructuring your controllers/actions and/or use partials and sections.
+E.g. the above example could be achieved with <f:render partial="title.{person.gender}" /> and the partials
+"title.male.html", "title.female.html", ...
+Depending on the scenario this can be easier to extend and possibly contains less duplication.
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:mixed" name="expression" default="NULL" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Expression to switch]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="then">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA["THEN" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
