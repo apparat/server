@@ -58,6 +58,12 @@ use Psr\Http\Message\ServerRequestInterface;
 class Server
 {
     /**
+     * Asterisk regular expression
+     *
+     * @var string
+     */
+    const REGEX_ASTERISK = '(?:\%2A)';
+    /**
      * Server instance
      *
      * @var \Apparat\Server\Domain\Model\Server
@@ -99,22 +105,6 @@ class Server
      * @var array
      */
     protected static $TOKEN_SECOND = ['second' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-4]\d)|(?:5[0-9])'];
-    /**
-     * Asterisk regular expression
-     *
-     * @var string
-     */
-    const REGEX_ASTERISK = '(?:\%2A)';
-
-    /**
-     * Register a route
-     *
-     * @param RouteInterface $route
-     */
-    public static function registerRoute(RouteInterface $route)
-    {
-        self::getServer()->registerRoute($route);
-    }
 
     /**
      * Register the default routes for a particular repository
@@ -138,30 +128,6 @@ class Server
             $route = new Route(Route::GET, $routeName, $routeConfig[0], $routeConfig[2], true);
             self::registerRoute($route->setTokens($routeConfig[1]));
         }
-    }
-
-    /**
-     * Dispatch a request
-     *
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface $response
-     */
-    public static function dispatchRequest(ServerRequestInterface $request)
-    {
-        return self::getServer()->dispatchRequest($request);
-    }
-
-    /**
-     * Create and return the server instance
-     *
-     * @return \Apparat\Server\Domain\Model\Server Server instance
-     */
-    protected static function getServer()
-    {
-        if (self::$server === null) {
-            self::$server = Kernel::create(\Apparat\Server\Domain\Model\Server::class);
-        }
-        return self::$server;
     }
 
     /**
@@ -236,7 +202,8 @@ class Server
     protected static function buildDefaultObjectRoutes($prefix, $baseDateRoute, $numDefaultRoutes)
     {
         // Build a regular expression for all supported object types
-        $enabledObjectTypes = '(?:-(?:(?:'.implode(')|(?:', array_map('preg_quote', Object::getSupportedTypes())).')))';
+        $enabledObjectTypes = '(?:-(?:(?:'.
+            implode(')|(?:', array_map('preg_quote', \Apparat\Object\Ports\Types\Object::getSupportedTypes())).')))';
 
         return [
             // Default object route
@@ -248,7 +215,8 @@ class Server
                     'type' => $enabledObjectTypes.'?',
                     'draft' => '(?:/(\.)?\\'.(2 + $numDefaultRoutes).')?',
                     'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+)?)',
-                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote(getenv('OBJECT_RESOURCE_EXTENSION')).')?)',
+                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote(getenv('OBJECT_RESOURCE_EXTENSION')).
+                        ')?)',
                 ],
                 ObjectAction::class
             ],
@@ -261,10 +229,45 @@ class Server
                     'type' => $enabledObjectTypes.'?',
                     'draft' => '(?:/(\.)?'.self::REGEX_ASTERISK.')?',
                     'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+)?)',
-                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote(getenv('OBJECT_RESOURCE_EXTENSION')).')?)',
+                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote(getenv('OBJECT_RESOURCE_EXTENSION')).
+                        ')?)',
                 ],
                 TypeAction::class
             ]
         ];
+    }
+
+    /**
+     * Register a route
+     *
+     * @param RouteInterface $route
+     */
+    public static function registerRoute(RouteInterface $route)
+    {
+        self::getServer()->registerRoute($route);
+    }
+
+    /**
+     * Create and return the server instance
+     *
+     * @return \Apparat\Server\Domain\Model\Server Server instance
+     */
+    protected static function getServer()
+    {
+        if (self::$server === null) {
+            self::$server = Kernel::create(\Apparat\Server\Domain\Model\Server::class);
+        }
+        return self::$server;
+    }
+
+    /**
+     * Dispatch a request
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface $response
+     */
+    public static function dispatchRequest(ServerRequestInterface $request)
+    {
+        return self::getServer()->dispatchRequest($request);
     }
 }
