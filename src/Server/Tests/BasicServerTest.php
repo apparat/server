@@ -37,8 +37,9 @@
 namespace Apparat\Server\Tests;
 
 use Apparat\Kernel\Ports\Kernel;
-use Apparat\Server\Ports\Route;
-use Apparat\Server\Ports\Server;
+use Apparat\Server\Domain\Model\Server;
+use Apparat\Server\Ports\Facade\ServerFacade;
+use Apparat\Server\Ports\Route\Route;
 use Apparat\Server\Tests\Adr\TestAction;
 use Apparat\Server\Tests\Adr\TestModule;
 use Zend\Diactoros\ServerRequest;
@@ -67,8 +68,8 @@ class BasicServerTest extends AbstractServerTest
      */
     public function testServerInstance()
     {
-        $server = Kernel::create(\Apparat\Server\Domain\Model\Server::class);
-        $this->assertInstanceOf(\Apparat\Server\Domain\Model\Server::class, $server);
+        $server = Kernel::create(Server::class);
+        $this->assertInstanceOf(Server::class, $server);
     }
 
     /**
@@ -81,24 +82,25 @@ class BasicServerTest extends AbstractServerTest
             'id' => '\d+',
             'format' => '(\.[^/]+)?',
         ]);
-        Server::registerRoute($route);
+        ServerFacade::registerRoute($route);
 
         $uri = new Uri('http://apparat/blog/default/1.html');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
-        Server::dispatchRequest($request);
+        ServerFacade::dispatchRequest($request);
     }
 
     /**
      * Test registering the default routes
      */
-    public function testRegisterDefaultRoutes() {
-        Server::registerRepositoryDefaultRoutes();
+    public function testRegisterDefaultRoutes()
+    {
+        ServerFacade::registerRepositoryDefaultRoutes();
 
 //        $uri = new Uri('http://apparat/blog/*/12/*/.*-article/*.md');
         $uri = new Uri('http://apparat/blog/2016/06/08/1-article');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
-        Server::dispatchRequest($request);
+        ServerFacade::dispatchRequest($request);
     }
 }

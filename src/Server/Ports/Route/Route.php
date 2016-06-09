@@ -34,7 +34,7 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports;
+namespace Apparat\Server\Ports\Route;
 
 use Apparat\Server\Ports\Action\ActionInterface;
 use Apparat\Server\Ports\Contract\RouteInterface;

@@ -34,7 +34,7 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports;
+namespace Apparat\Server\Ports\Facade;
 
 use Apparat\Kernel\Ports\Kernel;
 use Apparat\Object\Ports\Object;
@@ -47,6 +47,7 @@ use Apparat\Server\Infrastructure\Action\ObjectAction;
 use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
+use Apparat\Server\Ports\Route\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -55,7 +56,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @package Apparat\Server\Ports
  */
-class Server
+class ServerFacade
 {
     /**
      * Asterisk regular expression
