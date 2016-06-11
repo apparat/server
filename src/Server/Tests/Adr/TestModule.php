@@ -37,9 +37,9 @@
 namespace Apparat\Server\Tests\Adr;
 
 use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
+use Apparat\Server\Domain\Contract\ResponderInterface;
 use Apparat\Server\Domain\Service\ServiceInterface;
 use Apparat\Server\Module;
-use Apparat\Server\Domain\Contract\ResponderInterface;
 
 /**
  * Test module
@@ -59,7 +59,7 @@ class TestModule extends Module
     {
         parent::configureDependencyInjection($diContainer);
 
-        // Configure the ADR test
+        // Configure the Adr test
         $diContainer->register(TestAction::class, [
             'substitutions' => [
                 ServiceInterface::class => [
