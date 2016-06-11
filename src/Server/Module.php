@@ -57,7 +57,7 @@ use Apparat\Server\Infrastructure\Action\ObjectAction;
 use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
-use Apparat\Server\Infrastructure\AuraRouterAdapter;
+use Apparat\Server\Infrastructure\Route\AuraRouterAdapter;
 use Apparat\Server\Infrastructure\Responder\DayResponder;
 use Apparat\Server\Infrastructure\Responder\HourResponder;
 use Apparat\Server\Infrastructure\Responder\MinuteResponder;

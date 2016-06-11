@@ -34,7 +34,7 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Infrastructure;
+namespace Apparat\Server\Infrastructure\Route;
 
 use Aura\Router\Route;
 
