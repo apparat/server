@@ -42,6 +42,7 @@ namespace Apparat\Server\Domain\Contract;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  * @property array $attributes Attributes
+ * @property-read mixed $handler Action handler
  */
 interface ActionRouteInterface
 {

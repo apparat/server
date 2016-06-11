@@ -66,4 +66,3 @@ class ObjectsResponder extends AbstractListResponder
         // TODO: Implement __invoke() method.
     }
 }
-

@@ -81,7 +81,7 @@ class DefaultRoutesTest extends AbstractServerTest
     {
         parent::setUpBeforeClass();
 
-        self::$objectDatePrecision = getenv('OBJECT_DATE_PRECISION');
+        self::$objectDatePrecision = intval(getenv('OBJECT_DATE_PRECISION'));
         putenv('OBJECT_DATE_PRECISION=6');
 
         self::$server = Kernel::create(Server::class);

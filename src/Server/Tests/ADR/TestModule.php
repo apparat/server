@@ -59,7 +59,7 @@ class TestModule extends Module
     {
         parent::configureDependencyInjection($diContainer);
 
-        // Configure the ADR test
+        // Configure the Adr test
         $diContainer->register(TestAction::class, [
             'substitutions' => [
                 ServiceInterface::class => [

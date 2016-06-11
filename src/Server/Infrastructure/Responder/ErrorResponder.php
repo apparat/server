@@ -66,4 +66,3 @@ class ErrorResponder extends AbstractResponder
         // TODO: Implement __invoke() method.
     }
 }
-

@@ -46,5 +46,5 @@ use Apparat\Kernel\Tests\AbstractTest;
  */
 abstract class AbstractServerTest extends AbstractTest
 {
-
+    
 }

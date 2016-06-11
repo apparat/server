@@ -291,7 +291,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
      * @param ActionRouteInterface $route Route
      * @return ActionInterface|Callable $action Action
      */
-    public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route = null)
+    public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route)
     {
         return $this->routerContainer->getRouteAction($request, $route);
     }
