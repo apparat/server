@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Domain\Service
+ * @subpackage  Apparat\Server\Domain
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,15 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Domain\Service;
+namespace Apparat\Server\Domain\Contract;
 
 /**
- * Year result service
+ * Payload factory interface
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  */
-class YearService extends AbstractListService
+interface PayloadFactoryInterface
 {
 
 }

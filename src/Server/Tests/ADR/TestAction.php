@@ -55,6 +55,7 @@ class TestAction extends AbstractAction
      */
     public function __invoke()
     {
+        return $this->responder;
         // @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Action/BlogBrowseAction.php
     }
 }

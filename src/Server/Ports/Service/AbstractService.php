@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Domain\Service
+ * @subpackage  Apparat\Server\Ports
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,15 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Domain\Service;
+namespace Apparat\Server\Ports\Service;
 
 /**
- * Type result service
+ * Abstract service
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Domain
+ * @subpackage Apparat\Server\Ports
  */
-class TypeService extends AbstractListService
+class AbstractService extends \Apparat\Server\Domain\Service\AbstractService
 {
 
 }

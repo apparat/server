@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Domain\Service;
 
-use Apparat\Server\Domain\Factory\PayloadFactory;
+use Apparat\Server\Domain\Contract\PayloadFactoryInterface;
 
 /**
  * Abstract domain service
@@ -44,21 +44,21 @@ use Apparat\Server\Domain\Factory\PayloadFactory;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  */
-class AbstractService implements ServiceInterface
+abstract class AbstractService implements ServiceInterface
 {
     /**
      * Payload factory
      *
-     * @var PayloadFactory
+     * @var PayloadFactoryInterface
      */
     protected $payloadFactory;
 
     /**
      * Service constructor
      *
-     * @param PayloadFactory $payloadFactory
+     * @param PayloadFactoryInterface $payloadFactory
      */
-    public function __construct(PayloadFactory $payloadFactory)
+    public function __construct(PayloadFactoryInterface $payloadFactory)
     {
         $this->payloadFactory = $payloadFactory;
     }

@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Domain\Factory
+ * @subpackage  Apparat\Server\Domain\Service
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,27 +34,43 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Domain\Factory;
+namespace Apparat\Server\Ports\Service;
 
-use Apparat\Kernel\Ports\Kernel;
-use Apparat\Server\Domain\Payload\Found;
+use Apparat\Server\Application\Factory\PayloadFactory;
+use Apparat\Server\Domain\Payload\PayloadInterface;
 
 /**
- * Payload factory
+ * Abstract list service
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  */
-class PayloadFactory
+class AbstractListService extends AbstractService
 {
     /**
-     * Create a new Found payload
+     * Payload factory
      *
-     * @param array $payload Payload properties
-     * @return Found Found payload
+     * @var PayloadFactory
      */
-    public function found(array $payload)
+    protected $payloadFactory;
+
+    /**
+     * Find objects by parameters
+     *
+     * @param int|string $year Year
+     * @param int|string $month Month
+     * @param int|string $day Day
+     * @param int|string $hour Hour
+     * @param int|string $minute Minute
+     * @param int|string $second Second
+     * @param boolean $hidden Find hidden objects
+     * @param string $type Object type
+     * @param boolean $draft Find object drafts
+     * @param int|null $revision Object revision
+     * @return PayloadInterface Payload
+     */
+    public function findObjects($year, $month, $day, $hour, $minute, $second, $hidden, $type, $draft, $revision)
     {
-        return Kernel::create(Found::class, [$payload]);
+        return $this->payloadFactory->found([]);
     }
 }

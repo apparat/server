@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Tests\Adr;
 
-use Apparat\Server\Domain\Service\ServiceInterface;
+use Apparat\Server\Ports\Service\AbstractService;
 
 /**
  * Test domain service
@@ -44,7 +44,7 @@ use Apparat\Server\Domain\Service\ServiceInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-class TestService implements ServiceInterface
+class TestService extends AbstractService
 {
 
 }

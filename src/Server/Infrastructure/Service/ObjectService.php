@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Domain\Service
+ * @subpackage  Apparat\Server\Infrastructure\Service
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,17 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Domain\Service;
+namespace Apparat\Server\Infrastructure\Service;
+
+use Apparat\Server\Domain\Service\ServiceInterface;
 
 /**
- * Month result service
+ * Object result service
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  */
-class MonthService extends AbstractListService
+class ObjectService implements ServiceInterface
 {
 
 }

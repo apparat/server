@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Domain\Service
+ * @subpackage  Apparat\Server\Application
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,28 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Domain\Service;
+namespace Apparat\Server\Application\Factory;
+
+use Apparat\Kernel\Ports\Kernel;
+use Apparat\Server\Domain\Contract\PayloadFactoryInterface;
+use Apparat\Server\Application\Payload\Found;
 
 /**
- * Object result service
+ * Payload factory
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Domain
+ * @subpackage Apparat\Server\Application
  */
-class ObjectService implements ServiceInterface
+class PayloadFactory implements PayloadFactoryInterface
 {
-
+    /**
+     * Create a new Found payload
+     *
+     * @param array $payload Payload properties
+     * @return Found Found payload
+     */
+    public function found(array $payload)
+    {
+        return Kernel::create(Found::class, [$payload]);
+    }
 }

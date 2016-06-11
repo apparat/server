@@ -38,18 +38,13 @@ namespace Apparat\Server;
 
 use Apparat\Kernel\Ports\AbstractModule;
 use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
+use Apparat\Server\Application\Factory\PayloadFactory;
+use Apparat\Server\Domain\Contract\PayloadFactoryInterface;
+use Apparat\Server\Domain\Contract\ResponderInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
 use Apparat\Server\Domain\Model\Server;
-use Apparat\Server\Domain\Service\DayService;
-use Apparat\Server\Domain\Service\ErrorService;
-use Apparat\Server\Domain\Service\HourService;
-use Apparat\Server\Domain\Service\MinuteService;
-use Apparat\Server\Domain\Service\MonthService;
-use Apparat\Server\Domain\Service\ObjectService;
-use Apparat\Server\Domain\Service\SecondService;
+use Apparat\Server\Domain\Service\AbstractService;
 use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Domain\Service\TypeService;
-use Apparat\Server\Domain\Service\YearService;
 use Apparat\Server\Infrastructure\Action\DayAction;
 use Apparat\Server\Infrastructure\Action\ErrorAction;
 use Apparat\Server\Infrastructure\Action\HourAction;
@@ -69,8 +64,16 @@ use Apparat\Server\Infrastructure\Responder\SecondResponder;
 use Apparat\Server\Infrastructure\Responder\TypeResponder;
 use Apparat\Server\Infrastructure\Responder\YearResponder;
 use Apparat\Server\Infrastructure\Route\AuraRouterAdapter;
+use Apparat\Server\Infrastructure\Service\DayService;
+use Apparat\Server\Infrastructure\Service\ErrorService;
+use Apparat\Server\Infrastructure\Service\HourService;
+use Apparat\Server\Infrastructure\Service\MinuteService;
+use Apparat\Server\Infrastructure\Service\MonthService;
+use Apparat\Server\Infrastructure\Service\ObjectService;
+use Apparat\Server\Infrastructure\Service\SecondService;
+use Apparat\Server\Infrastructure\Service\TypeService;
+use Apparat\Server\Infrastructure\Service\YearService;
 use Apparat\Server\Ports\Responder\AbstractResponder;
-use Apparat\Server\Domain\Contract\ResponderInterface;
 use Apparat\Server\Ports\View\TYPO3FluidView;
 use Apparat\Server\Ports\View\ViewInterface;
 use Aura\Router\RouterContainer;
@@ -132,6 +135,15 @@ class Module extends AbstractModule
         $diContainer->register(RouterContainer::class, [
             'constructParams' => [
                 parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH) ?: null
+            ]
+        ]);
+
+        // Configure the service
+        $diContainer->register(AbstractService::class, [
+            'substitutions' => [
+                PayloadFactoryInterface::class => [
+                    'instance' => PayloadFactory::class,
+                ]
             ]
         ]);
 

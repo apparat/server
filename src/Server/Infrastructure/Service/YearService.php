@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Domain\Service
+ * @subpackage  Apparat\Server\Infrastructure\Service
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,35 +34,17 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Domain\Service;
+namespace Apparat\Server\Infrastructure\Service;
 
-use Apparat\Server\Domain\Payload\PayloadInterface;
+use Apparat\Server\Ports\Service\AbstractListService;
 
 /**
- * Abstract list service
+ * Year result service
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  */
-class AbstractListService extends AbstractService
+class YearService extends AbstractListService
 {
-    /**
-     * Find objects by parameters
-     *
-     * @param int|string $year Year
-     * @param int|string $month Month
-     * @param int|string $day Day
-     * @param int|string $hour Hour
-     * @param int|string $minute Minute
-     * @param int|string $second Second
-     * @param boolean $hidden Find hidden objects
-     * @param string $type Object type
-     * @param boolean $draft Find object drafts
-     * @param int|null $revision Object revision
-     * @return PayloadInterface Payload
-     */
-    public function findObjects($year, $month, $day, $hour, $minute, $second, $hidden, $type, $draft, $revision)
-    {
-        return $this->payloadFactory->found([]);
-    }
+
 }
