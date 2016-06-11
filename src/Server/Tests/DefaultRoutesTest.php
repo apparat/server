@@ -48,7 +48,6 @@ use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Infrastructure\Model\Server;
 use Apparat\Server\Infrastructure\Route\AuraDefaultRoute;
-use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
@@ -157,21 +156,68 @@ class DefaultRoutesTest extends AbstractServerTest
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-*/1', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-*/*', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-*/.1', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-*/.*', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-1', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-*', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-*', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-1', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-*', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*-1', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*-*', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-1', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-*', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1.md', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-1.md', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-1.*', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-1.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*-1.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-1.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-*.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*-1.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-*.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-*.md', ObjectAction::class],
+
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/.*-article', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*-1', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*-*', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*-1', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*-*', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*.md', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*-1.md', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*.md', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*-1.md', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*-1.md', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*-*.md', TypeAction::class],
 
             ['http://apparat/blog/2016/06/08/19/14/52/*', ObjectsAction::class],
-
-//            ['http://apparat/blog/2016/06/08/19/14/52/*-article', TypeAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/.*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*/*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*/.*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/*-1', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/*-*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*-1', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*-*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/*.md', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/*-1.md', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*.md', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*-1.md', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/*-1.md', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*-*.md', ObjectsAction::class],
         ];
 
 //
     }
 
-    public function getFaultyDefaultRouteRequestAction() {
+    public function getFaultyDefaultRouteRequestAction()
+    {
         return [
 //            ['http://apparat/blog/2016/06/08/19/14/52/1', ObjectAction::class],
 //            ['http://apparat/blog/2016/06/08/19/14/52/.1', ObjectAction::class],

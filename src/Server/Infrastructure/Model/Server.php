@@ -50,7 +50,6 @@ use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Ports\Action\ActionInterface;
 use Apparat\Server\Ports\Route\Route;
 use Apparat\Server\Ports\Types\DefaultRoute;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -103,6 +102,32 @@ class Server extends \Apparat\Server\Domain\Model\Server
      * @var array
      */
     protected static $TOKEN_SECOND = ['second' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-4]\d)|(?:5[0-9])'];
+
+    /**
+     * Register the default routes for a particular repository
+     *
+     * @param string $repositoryPath Repository path
+     * @param int $enable Enable / disable default routes
+     */
+    public function registerRepositoryDefaultRoutes($repositoryPath = '', $enable = DefaultRoute::ALL)
+    {
+        // Repository route prefix
+        $prefix = rtrim('/'.$repositoryPath, '/');
+
+        // Build the list of default routes
+        $defaultDateRoutes = $this->buildDefaultDateRoutes($prefix, getenv('OBJECT_DATE_PRECISION'));
+        $baseDateRoute = count($defaultDateRoutes) ? current($defaultDateRoutes) : ['/', []];
+        $defaultObjectRoutes = $this->buildDefaultObjectRoutes($prefix, $baseDateRoute);
+        $defaultRoutes = $defaultObjectRoutes + $defaultDateRoutes;
+
+        // Iterate through and register all base routes
+        foreach ($defaultRoutes as $routeName => $routeConfig) {
+            if ($enable & DefaultRoute::nameToBit($routeName)) {
+                $route = new Route(Route::GET, $routeName, $routeConfig[0], $routeConfig[2], true);
+                $this->registerRoute($route->setTokens($routeConfig[1]));
+            }
+        }
+    }
 
     /**
      * Build and return the default date routes
@@ -170,82 +195,93 @@ class Server extends \Apparat\Server\Domain\Model\Server
      *
      * @param string $prefix Repository route prefix
      * @param array $baseDateRoute Base date route
-     * @param int $numDefaultRoutes Total number of date routes
      * @return array Default object routes
      */
-    protected function buildDefaultObjectRoutes($prefix, $baseDateRoute, $numDefaultRoutes)
+    protected function buildDefaultObjectRoutes($prefix, $baseDateRoute)
     {
         // Build a regular expression for all supported object types
-        $enabledObjectTypes = '(?:-(?:(?:'.implode(')|(?:', array_map('preg_quote', Object::getSupportedTypes())).')))';
+        $enabledObjectTypes = '(?:(?:'.implode(')|(?:', array_map('preg_quote', Object::getSupportedTypes())).'))';
         $objectResourceExt = getenv('OBJECT_RESOURCE_EXTENSION');
 
         return [
             // Default object route
             DefaultRoute::OBJECT_STR => [
-                $prefix.$baseDateRoute[0].'/{hidden}{id}{type}{draft}{revision}{format}',
+                $prefix.$baseDateRoute[0].'/{hidden}{id}{dashtype}{draftid}{dashrevision}{format}',
                 $baseDateRoute[1] + [
+
+                    // Optionally hidden object
                     'hidden' => '\.?',
+
+                    // Object ID must be given
                     'id' => '\d+',
-                    'type' => '(?:-'.self::REGEX_ASTERISK.')|'.$enabledObjectTypes.'?',
-                    'draft' => '(?:/(\.)?(?:\\'.(2 + $numDefaultRoutes).'|'.self::REGEX_ASTERISK.'))?',
-                    'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+|'.self::REGEX_ASTERISK.')?)',
-                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote($objectResourceExt).')?)',
+
+                    // Optional object type (or wildcard)
+                    'dashtype' => '(?:-(?:'.self::REGEX_ASTERISK.'|'.$enabledObjectTypes.'))?',
+
+                    // Draft and (repeated) object ID
+                    'draftid' => '(?:(?P<draftslash>/)(?P<draft>\.)?(?P<idrep>(?:(?P=id)|'.self::REGEX_ASTERISK.')))?',
+
+                    // Object revision
+                    'dashrevision' => '(?(idrep)(?:-(?P<revision>(?:(?:\d+)|'.self::REGEX_ASTERISK.')))?)',
+
+                    // Resource format
+                    'format' => '(?(idrep)(?:\.'.preg_quote($objectResourceExt).')?)',
                 ],
                 ObjectAction::class
             ],
+
+            // Default types route
+            DefaultRoute::TYPE_STR => [
+                $prefix.$baseDateRoute[0].'/{hidden}{id}{dashtype}{draftid}{dashrevision}{format}',
+                $baseDateRoute[1] + [
+
+                    // Optionally hidden object
+                    'hidden' => '\.?',
+
+                    // Object ID must be given
+                    'id' => self::REGEX_ASTERISK,
+
+                    // Optional object type (or wildcard)
+                    'dashtype' => '-'.$enabledObjectTypes,
+
+                    // Draft and (repeated) object ID
+                    'draftid' => '(?:(?P<draftslash>/)(?P<draft>\.)?(?P<idrep>'.self::REGEX_ASTERISK.'))?',
+
+                    // Object revision
+                    'dashrevision' => '(?(idrep)(?:-(?P<revision>(?:(?:\d+)|'.self::REGEX_ASTERISK.')))?)',
+
+                    // Resource format
+                    'format' => '(?(idrep)(?:\.'.preg_quote($objectResourceExt).')?)',
+                ],
+                TypeAction::class
+            ],
+
             // Default objects route
             DefaultRoute::OBJECTS_STR => [
-                $prefix.$baseDateRoute[0].'/{hidden}{id}{type}{draft}{revision}{format}',
+                $prefix.$baseDateRoute[0].'/{hidden}{id}{dashtype}{draftid}{dashrevision}{format}',
                 $baseDateRoute[1] + [
+
+                    // Optionally hidden object
                     'hidden' => '\.?',
+
+                    // Object ID must be given
                     'id' => self::REGEX_ASTERISK,
-                    'type' => $enabledObjectTypes.'?',
-                    'draft' => '(?:/(\.)?\\'.(2 + $numDefaultRoutes).')?',
-                    'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+)?)',
-                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote($objectResourceExt).')?)',
+
+                    // Optional object type (or wildcard)
+                    'dashtype' => '(?:-(?:'.self::REGEX_ASTERISK.'|'.$enabledObjectTypes.'))?',
+
+                    // Draft and (repeated) object ID
+                    'draftid' => '(?:(?P<draftslash>/)(?P<draft>\.)?(?P<idrep>'.self::REGEX_ASTERISK.'))?',
+
+                    // Object revision
+                    'dashrevision' => '(?(idrep)(?:-(?P<revision>(?:(?:\d+)|'.self::REGEX_ASTERISK.')))?)',
+
+                    // Resource format
+                    'format' => '(?(idrep)(?:\.'.preg_quote($objectResourceExt).')?)',
                 ],
                 ObjectsAction::class
             ],
-            // Default type route
-            DefaultRoute::TYPE_STR => [
-                $baseDateRoute[0].'/{hidden}{id}{type}{draft}{revision}{format}',
-                $baseDateRoute[1] + [
-                    'hidden' => '\.?',
-                    'id' => self::REGEX_ASTERISK,
-                    'type' => $enabledObjectTypes.'?',
-                    'draft' => '(?:/(\.)?'.self::REGEX_ASTERISK.')?',
-                    'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+)?)',
-                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote($objectResourceExt).')?)',
-                ],
-                TypeAction::class
-            ]
         ];
-    }
-
-    /**
-     * Register the default routes for a particular repository
-     *
-     * @param string $repositoryPath Repository path
-     * @param int $enable Enable / disable default routes
-     */
-    public function registerRepositoryDefaultRoutes($repositoryPath = '', $enable = DefaultRoute::ALL)
-    {
-        // Repository route prefix
-        $prefix = rtrim('/'.$repositoryPath, '/');
-
-        // Build the list of default routes
-        $defaultDateRoutes = $this->buildDefaultDateRoutes($prefix, getenv('OBJECT_DATE_PRECISION'));
-        $baseDateRoute = count($defaultDateRoutes) ? current($defaultDateRoutes) : ['/', []];
-        $defaultObjectRoutes = $this->buildDefaultObjectRoutes($prefix, $baseDateRoute, count($defaultDateRoutes));
-        $defaultRoutes = $defaultObjectRoutes + $defaultDateRoutes;
-
-        // Iterate through and register all base routes
-        foreach ($defaultRoutes as $routeName => $routeConfig) {
-            if ($enable & DefaultRoute::nameToBit($routeName)) {
-                $route = new Route(Route::GET, $routeName, $routeConfig[0], $routeConfig[2], true);
-                $this->registerRoute($route->setTokens($routeConfig[1]));
-            }
-        }
     }
 
     /**

@@ -126,7 +126,7 @@ class Module extends AbstractModule
 
         // Configure the server
         $diContainer->register(Server::class, [
-            'shared' => true,
+            'shared' => false,
             'substitutions' => [
                 RouterContainerInterface::class => [
                     'instance' => AuraRouterAdapter::class,
