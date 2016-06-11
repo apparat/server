@@ -37,6 +37,7 @@
 namespace Apparat\Server\Infrastructure\Route;
 
 use Apparat\Kernel\Ports\Kernel;
+use Apparat\Server\Domain\Contract\ActionRouteInterface;
 use Apparat\Server\Domain\Contract\RouteInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
 use Apparat\Server\Ports\Action\ActionInterface;
@@ -79,11 +80,12 @@ class AuraRouterAdapter implements RouterContainerInterface
      */
     public function registerRoute(RouteInterface $route)
     {
-        $auraRoute = $route->isDefault() ?
-            $this->createDefaultRoute($route) :
-            $this->routerContainer->getMap()->route($route->getName(), $route->getPath(), $route->getAction());
-
-        $auraRoute->allows($route->getVerbs())
+        /** @var AuraRoute $auraRoute */
+        $auraRoute = Kernel::create($route->isDefault() ? AuraDefaultRoute::class : AuraRoute::class);
+        $auraRoute->name($route->getName())
+            ->path($route->getPath())
+            ->handler($route->getAction())
+            ->allows($route->getVerbs())
             ->tokens($route->getTokens())
             ->defaults($route->getDefaults())
             ->wildcard($route->getWildcard())
@@ -92,105 +94,60 @@ class AuraRouterAdapter implements RouterContainerInterface
             ->auth($route->getAuth())
             ->secure($route->getSecure())
             ->extras($route->getExtras());
+        $this->routerContainer->getMap()->addRoute($auraRoute);
+
         return $this;
     }
 
     /**
-     * Create a default route
-     *
-     * @param RouteInterface $route Route
-     * @return AuraDefaultRoute Default route
-     */
-    protected function createDefaultRoute(RouteInterface $route)
-    {
-        /** @var AuraDefaultRoute $auraRoute */
-        $auraRoute = Kernel::create(AuraDefaultRoute::class);
-        $auraRoute->name($route->getName())->path($route->getPath())->handler($route->getAction());
-        $this->routerContainer->getMap()->addRoute($auraRoute);
-        return $auraRoute;
-    }
-
-    /**
-     * Dispatch a request
+     * Dispatch a request to a route
      *
      * @param ServerRequestInterface $request
-     * @return ResponseInterface $response
+     * @return ActionRouteInterface $route
      */
-    public function dispatchRequest(ServerRequestInterface $request)
+    public function dispatchRequestToRoute(ServerRequestInterface $request)
     {
         $matcher = $this->routerContainer->getMatcher();
         $route = $matcher->match($request);
 
-        // If a registered Route could be matched
-        if ($route instanceof Route) {
-            return $this->handleRequestRoute($request, $route);
+        // If a matching route was found
+        if ($route instanceof ActionRouteInterface) {
+            return $route;
         }
 
-        // Handle the request mismatch
-        return $this->handleRequestMismatch($request, $matcher);
+        // Else create an error route
+        return AuraErrorRoute::cast($matcher->getFailedRoute());
     }
 
     /**
-     * Handle a matched route request
+     * Prepare and return a route action
      *
-     * @param ServerRequestInterface $request Server request
-     * @param Route $route Matched route
-     * @return ResponseInterface $response
+     * @param ServerRequestInterface $request Request
+     * @param ActionRouteInterface $route Route
+     * @return ActionInterface|Callable $action Action
      */
-    protected function handleRequestRoute(ServerRequestInterface $request, Route $route)
+    public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route)
     {
-        // If this is a default route: Preprocess the matched attributes
-        if ($route instanceof AuraDefaultRoute) {
-            $route->preprocessAttributes();
-        }
+        // Preprocess the matched attributes
+        $route->preprocessAttributes();
 
         // Copy all route attributes to the server request
         foreach ($route->attributes as $key => $val) {
             $request = $request->withAttribute($key, $val);
         }
 
+        /** @var AbstractActionRoute $route */
         $handler = $route->handler;
 
         // If the handler is a callable
         if (is_callable($handler)) {
-            return $handler($request);
+            return function () use ($handler, $request) {
+                /** @var ResponseInterface $response */
+                $response = $handler($request);
+                return $response;
+            };
         }
 
-        /** @var ActionInterface $handler */
-        $handler = Kernel::create($handler, [$request]);
-        return $handler();
-    }
-
-    /**
-     * Handle a mismatched request
-     *
-     * @param ServerRequestInterface $request Server request
-     * @param Matcher $matcher Matcher
-     * @return ResponseInterface Response
-     */
-    protected function handleRequestMismatch(ServerRequestInterface $request, Matcher $matcher)
-    {
-        // TODO Error responder
-//        // Instantiate a response
-//        $response = Kernel::create(ResponseInterface::class);
-//
-//        // Get the first of the best-available non-matched routes
-//        $failedRoute = $matcher->getFailedRoute();
-//
-//        // Which matching rule failed?
-//        switch ($failedRoute->failedRule) {
-//            case 'Aura\Router\Rule\Allows':
-//                // 405 METHOD NOT ALLOWED
-//                // Send the $failedRoute->allows as 'Allow:'
-//                break;
-//            case 'Aura\Router\Rule\Accepts':
-//                // 406 NOT ACCEPTABLE
-//                break;
-//            default:
-//                // 404 NOT FOUND
-//                break;
-//        }
-//
-//        return $response;
+        return Kernel::create($handler, [$request]);
     }
 }

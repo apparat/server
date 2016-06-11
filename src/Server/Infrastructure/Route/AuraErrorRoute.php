@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Tests
- * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage  Apparat\Server\Infrastructure\Route
+ * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,41 +34,44 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Tests\Adr;
+namespace Apparat\Server\Infrastructure\Route;
 
-use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
-use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Module;
-use Apparat\Server\Domain\Contract\ResponderInterface;
+use Apparat\Kernel\Ports\Kernel;
+use Apparat\Server\Domain\Contract\ErrorRouteInterface;
+use Apparat\Server\Infrastructure\Action\ErrorAction;
+use Aura\Router\Route;
 
 /**
- * Test module
+ * Error action route
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Tests
+ * @subpackage Apparat\Server\Infrastructure
  */
-class TestModule extends Module
+class AuraErrorRoute extends AbstractActionRoute implements ErrorRouteInterface
 {
     /**
-     * Configure the dependency injection container
-     *
-     * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
-     * @return void
+     * Pre-process the route attributes
      */
-    public function configureDependencyInjection(DependencyInjectionContainerInterface $diContainer)
+    public function preprocessAttributes()
     {
-        parent::configureDependencyInjection($diContainer);
+        parent::preprocessAttributes();
 
-        // Configure the ADR test
-        $diContainer->register(TestAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => TestService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => TestResponder::class,
-                ]
-            ]
-        ]);
+        $this->attributes['failure'] = $this->failedRule;
+    }
+
+    /**
+     * Cast an regular route as an error route
+     *
+     * @param Route $route Regular route
+     * @return AuraErrorRoute Error route
+     */
+    public static function cast(Route $route)
+    {
+        /** @var AuraErrorRoute $errorRoute */
+        $errorRoute = Kernel::create(static::class, []);
+        foreach (get_object_vars($route) as $property => $value) {
+            $errorRoute->$property = $value;
+        }
+        return $errorRoute->handler(ErrorAction::class);
     }
 }

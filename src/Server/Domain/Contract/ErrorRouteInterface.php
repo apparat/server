@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Tests
- * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage  Apparat\Server\Domain
+ * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,41 +34,15 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Tests\Adr;
-
-use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
-use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Module;
-use Apparat\Server\Domain\Contract\ResponderInterface;
+namespace Apparat\Server\Domain\Contract;
 
 /**
- * Test module
+ * Error route interface
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Tests
+ * @subpackage Apparat\Server\Domain
  */
-class TestModule extends Module
+interface ErrorRouteInterface
 {
-    /**
-     * Configure the dependency injection container
-     *
-     * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
-     * @return void
-     */
-    public function configureDependencyInjection(DependencyInjectionContainerInterface $diContainer)
-    {
-        parent::configureDependencyInjection($diContainer);
 
-        // Configure the ADR test
-        $diContainer->register(TestAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => TestService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => TestResponder::class,
-                ]
-            ]
-        ]);
-    }
 }

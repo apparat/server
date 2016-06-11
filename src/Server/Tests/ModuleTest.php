@@ -34,41 +34,25 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Tests\Adr;
+namespace Apparat\Server\Tests;
 
-use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
-use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Module;
-use Apparat\Server\Domain\Contract\ResponderInterface;
+use Apparat\Dev\Tests\AbstractTest;
+use Apparat\Resource\Module;
 
 /**
- * Test module
+ * Module tests
  *
- * @package Apparat\Server
- * @subpackage Apparat\Server\Tests
+ * @package Apparat\Kernel
+ * @subpackage Apparat\Kernel\Tests
  */
-class TestModule extends Module
+class ModuleTest extends AbstractTest
 {
     /**
-     * Configure the dependency injection container
-     *
-     * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
-     * @return void
+     * Test the module's auto-run feature
      */
-    public function configureDependencyInjection(DependencyInjectionContainerInterface $diContainer)
+    public function testModuleAutorun()
     {
-        parent::configureDependencyInjection($diContainer);
-
-        // Configure the ADR test
-        $diContainer->register(TestAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => TestService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => TestResponder::class,
-                ]
-            ]
-        ]);
+        include dirname(__DIR__).DIRECTORY_SEPARATOR.'Autorun.php';
+        $this->assertEquals(Module::NAME, (new Module())->getName());
     }
 }

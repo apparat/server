@@ -36,15 +36,13 @@
 
 namespace Apparat\Server\Infrastructure\Route;
 
-use Aura\Router\Route;
-
 /**
  * Aura default route
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
  */
-class AuraDefaultRoute extends Route
+class AuraDefaultRoute extends AbstractActionRoute
 {
     /**
      * Wildcard
@@ -58,6 +56,8 @@ class AuraDefaultRoute extends Route
      */
     public function preprocessAttributes()
     {
+        parent::preprocessAttributes();
+
         $this->attributes['hidden'] = !empty($this->attributes['hidden']);
         $this->attributes['id'] = ($this->attributes['id'] == self::WILDCARD) ?
             self::WILDCARD :

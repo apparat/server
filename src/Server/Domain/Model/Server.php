@@ -36,6 +36,7 @@
 
 namespace Apparat\Server\Domain\Model;
 
+use Apparat\Server\Domain\Contract\ActionRouteInterface;
 use Apparat\Server\Domain\Contract\RouteInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -77,13 +78,13 @@ class Server
     }
 
     /**
-     * Dispatch a request
+     * Dispatch a request to a route
      *
      * @param ServerRequestInterface $request
-     * @return ResponseInterface $response
+     * @return ActionRouteInterface $route
      */
-    public function dispatchRequest(ServerRequestInterface $request)
+    public function dispatchRequestToRoute(ServerRequestInterface $request)
     {
-        return $this->routerContainer->dispatchRequest($request);
+        return $this->routerContainer->dispatchRequestToRoute($request);
     }
 }

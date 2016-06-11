@@ -38,8 +38,8 @@ namespace Apparat\Server\Ports\Facade;
 
 use Apparat\Kernel\Ports\Kernel;
 use Apparat\Object\Ports\Object;
-use Apparat\Server\Domain\Contract\RouteInterface;
 use Apparat\Server\Infrastructure\Model\Server;
+use Apparat\Server\Ports\Contract\RouteInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -88,7 +88,14 @@ class ServerFacade
      */
     public static function dispatchRequest(ServerRequestInterface $request)
     {
-        return self::getServer()->dispatchRequest($request);
+        // Dispatch the request to a route
+        $route = self::getServer()->dispatchRequestToRoute($request);
+
+        // Get the appropriate route action
+        $action = self::getServer()->getRouteAction($request, $route);
+
+        // Run the action response
+        return $action();
     }
 
     /**

@@ -56,10 +56,19 @@ interface RouterContainerInterface
     public function registerRoute(RouteInterface $route);
 
     /**
-     * Dispatch a request
+     * Dispatch a request to a route
      *
      * @param ServerRequestInterface $request
-     * @return ResponseInterface $response
+     * @return ActionRouteInterface $route
      */
-    public function dispatchRequest(ServerRequestInterface $request);
+    public function dispatchRequestToRoute(ServerRequestInterface $request);
+
+    /**
+     * Prepare and return a route action
+     *
+     * @param ServerRequestInterface $request Request
+     * @param ActionRouteInterface $route Route
+     * @return ActionInterface|Callable $action Action
+     */
+    public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route);
 }

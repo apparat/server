@@ -36,36 +36,13 @@
 
 namespace Apparat\Server\Ports\Action;
 
-use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Ports\Responder\ResponderInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-
 /**
  * Action interface
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-interface ActionInterface
+interface ActionInterface extends \Apparat\Server\Domain\Contract\ActionInterface
 {
-    /**
-     * Constructor
-     *
-     * @param ServerRequestInterface $request Server request
-     * @param ServiceInterface $domain Domain service
-     * @param ResponderInterface $responder Responder
-     */
-    public function __construct(
-        ServerRequestInterface $request,
-        ServiceInterface $domain,
-        ResponderInterface $responder
-    );
 
-    /**
-     * Run the action
-     *
-     * @return ResponseInterface Response
-     */
-    public function __invoke();
 }

@@ -37,6 +37,7 @@
 namespace Apparat\Server\Infrastructure\Model;
 
 use Apparat\Object\Ports\Types\Object;
+use Apparat\Server\Domain\Contract\ActionRouteInterface;
 use Apparat\Server\Infrastructure\Action\DayAction;
 use Apparat\Server\Infrastructure\Action\HourAction;
 use Apparat\Server\Infrastructure\Action\MinuteAction;
@@ -45,7 +46,10 @@ use Apparat\Server\Infrastructure\Action\ObjectAction;
 use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
+use Apparat\Server\Ports\Action\ActionInterface;
 use Apparat\Server\Ports\Route\Route;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Server instance
@@ -225,5 +229,17 @@ class Server extends \Apparat\Server\Domain\Model\Server
             $route = new Route(Route::GET, $routeName, $routeConfig[0], $routeConfig[2], true);
             $this->registerRoute($route->setTokens($routeConfig[1]));
         }
+    }
+
+    /**
+     * Prepare and return a route action
+     *
+     * @param ServerRequestInterface $request Request
+     * @param ActionRouteInterface $route Route
+     * @return ActionInterface|Callable $action Action
+     */
+    public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route = null)
+    {
+        return $this->routerContainer->getRouteAction($request, $route);
     }
 }

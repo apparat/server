@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Tests
- * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage  Apparat\Server\Domain\Contract
+ * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,41 +34,37 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Tests\Adr;
+namespace Apparat\Server\Domain\Contract;
 
-use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
 use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Module;
-use Apparat\Server\Domain\Contract\ResponderInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Test module
+ * Action interface
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Tests
+ * @subpackage Apparat\Server\Domain
  */
-class TestModule extends Module
+interface ActionInterface
 {
     /**
-     * Configure the dependency injection container
+     * Constructor
      *
-     * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
-     * @return void
+     * @param ServerRequestInterface $request Server request
+     * @param ServiceInterface $domain Domain service
+     * @param ResponderInterface $responder Responder
      */
-    public function configureDependencyInjection(DependencyInjectionContainerInterface $diContainer)
-    {
-        parent::configureDependencyInjection($diContainer);
+    public function __construct(
+        ServerRequestInterface $request,
+        ServiceInterface $domain,
+        ResponderInterface $responder
+    );
 
-        // Configure the ADR test
-        $diContainer->register(TestAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => TestService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => TestResponder::class,
-                ]
-            ]
-        ]);
-    }
+    /**
+     * Run the action
+     *
+     * @return ResponseInterface Response
+     */
+    public function __invoke();
 }

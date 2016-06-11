@@ -41,6 +41,7 @@ use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
 use Apparat\Server\Domain\Model\Server;
 use Apparat\Server\Domain\Service\DayService;
+use Apparat\Server\Domain\Service\ErrorService;
 use Apparat\Server\Domain\Service\HourService;
 use Apparat\Server\Domain\Service\MinuteService;
 use Apparat\Server\Domain\Service\MonthService;
@@ -50,6 +51,7 @@ use Apparat\Server\Domain\Service\ServiceInterface;
 use Apparat\Server\Domain\Service\TypeService;
 use Apparat\Server\Domain\Service\YearService;
 use Apparat\Server\Infrastructure\Action\DayAction;
+use Apparat\Server\Infrastructure\Action\ErrorAction;
 use Apparat\Server\Infrastructure\Action\HourAction;
 use Apparat\Server\Infrastructure\Action\MinuteAction;
 use Apparat\Server\Infrastructure\Action\MonthAction;
@@ -57,8 +59,8 @@ use Apparat\Server\Infrastructure\Action\ObjectAction;
 use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
-use Apparat\Server\Infrastructure\Route\AuraRouterAdapter;
 use Apparat\Server\Infrastructure\Responder\DayResponder;
+use Apparat\Server\Infrastructure\Responder\ErrorResponder;
 use Apparat\Server\Infrastructure\Responder\HourResponder;
 use Apparat\Server\Infrastructure\Responder\MinuteResponder;
 use Apparat\Server\Infrastructure\Responder\MonthResponder;
@@ -66,8 +68,9 @@ use Apparat\Server\Infrastructure\Responder\ObjectResponder;
 use Apparat\Server\Infrastructure\Responder\SecondResponder;
 use Apparat\Server\Infrastructure\Responder\TypeResponder;
 use Apparat\Server\Infrastructure\Responder\YearResponder;
+use Apparat\Server\Infrastructure\Route\AuraRouterAdapter;
 use Apparat\Server\Ports\Responder\AbstractResponder;
-use Apparat\Server\Ports\Responder\ResponderInterface;
+use Apparat\Server\Domain\Contract\ResponderInterface;
 use Apparat\Server\Ports\View\TYPO3FluidView;
 use Apparat\Server\Ports\View\ViewInterface;
 use Aura\Router\RouterContainer;
@@ -237,6 +240,16 @@ class Module extends AbstractModule
                 ],
                 ResponderInterface::class => [
                     'instance' => TypeResponder::class,
+                ]
+            ]
+        ]);
+        $diContainer->register(ErrorAction::class, [
+            'substitutions' => [
+                ServiceInterface::class => [
+                    'instance' => ErrorService::class,
+                ],
+                ResponderInterface::class => [
+                    'instance' => ErrorResponder::class,
                 ]
             ]
         ]);

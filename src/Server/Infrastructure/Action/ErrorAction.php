@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Tests
- * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage  Apparat\Server\Ports\Action
+ * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,41 +34,49 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Tests\Adr;
+namespace Apparat\Server\Infrastructure\Action;
 
-use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
-use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Module;
-use Apparat\Server\Domain\Contract\ResponderInterface;
+use Apparat\Server\Ports\Action\AbstractAction;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Test module
+ * Object action
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Tests
+ * @subpackage Apparat\Server\Ports
  */
-class TestModule extends Module
+class ErrorAction extends AbstractAction
 {
     /**
-     * Configure the dependency injection container
+     * Run the action
      *
-     * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
-     * @return void
+     * @return ResponseInterface Response
      */
-    public function configureDependencyInjection(DependencyInjectionContainerInterface $diContainer)
+    public function __invoke()
     {
-        parent::configureDependencyInjection($diContainer);
+        // TODO: Implement __invoke() method.
 
-        // Configure the ADR test
-        $diContainer->register(TestAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => TestService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => TestResponder::class,
-                ]
-            ]
-        ]);
+        // TODO Error responder
+//        // Instantiate a response
+//        $response = Kernel::create(ResponseInterface::class);
+//
+//        // Get the first of the best-available non-matched routes
+//        $failedRoute = $matcher->getFailedRoute();
+//
+//        // Which matching rule failed?
+//        switch ($failedRoute->failedRule) {
+//            case 'Aura\Router\Rule\Allows':
+//                // 405 METHOD NOT ALLOWED
+//                // Send the $failedRoute->allows as 'Allow:'
+//                break;
+//            case 'Aura\Router\Rule\Accepts':
+//                // 406 NOT ACCEPTABLE
+//                break;
+//            default:
+//                // 404 NOT FOUND
+//                break;
+//        }
+//
+//        return $response;
     }
 }
