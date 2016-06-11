@@ -71,37 +71,37 @@ class Server extends \Apparat\Server\Domain\Model\Server
      *
      * @var array
      */
-    protected static $TOKEN_YEAR = ['year' => self::REGEX_ASTERISK.'|(?:\d{4})'];
+    protected static $tokenYear = ['year' => self::REGEX_ASTERISK.'|(?:\d{4})'];
     /**
      * Month route token
      *
      * @var array
      */
-    protected static $TOKEN_MONTH = ['month' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:1[0-2])'];
+    protected static $tokenMonth = ['month' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:1[0-2])'];
     /**
      * Day route token
      *
      * @var array
      */
-    protected static $TOKEN_DAY = ['day' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-2]\d)|(?:3[0-1])'];
+    protected static $tokenDay = ['day' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-2]\d)|(?:3[0-1])'];
     /**
      * Hour route token
      *
      * @var array
      */
-    protected static $TOKEN_HOUR = ['hour' => self::REGEX_ASTERISK.'|(?:[01]\d)|(?:2[0-3])'];
+    protected static $tokenHour = ['hour' => self::REGEX_ASTERISK.'|(?:[01]\d)|(?:2[0-3])'];
     /**
      * Day route token
      *
      * @var array
      */
-    protected static $TOKEN_MINUTE = ['minute' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-4]\d)|(?:5[0-9])'];
+    protected static $tokenMinute = ['minute' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-4]\d)|(?:5[0-9])'];
     /**
      * Second route token
      *
      * @var array
      */
-    protected static $TOKEN_SECOND = ['second' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-4]\d)|(?:5[0-9])'];
+    protected static $tokenSecond = ['second' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-4]\d)|(?:5[0-9])'];
 
     /**
      * Register the default routes for a particular repository
@@ -142,47 +142,47 @@ class Server extends \Apparat\Server\Domain\Model\Server
             [
                 DefaultRoute::SECOND_STR => [
                     $prefix.'/{year}/{month}/{day}/{hour}/{minute}/{second}',
-                    self::$TOKEN_YEAR +
-                    self::$TOKEN_MONTH +
-                    self::$TOKEN_DAY +
-                    self::$TOKEN_HOUR +
-                    self::$TOKEN_MINUTE +
-                    self::$TOKEN_SECOND,
+                    self::$tokenYear +
+                    self::$tokenMonth +
+                    self::$tokenDay +
+                    self::$tokenHour +
+                    self::$tokenMinute +
+                    self::$tokenSecond,
                     SecondAction::class
                 ],
                 DefaultRoute::MINUTE_STR => [
                     $prefix.'/{year}/{month}/{day}/{hour}/{minute}',
-                    self::$TOKEN_YEAR +
-                    self::$TOKEN_MONTH +
-                    self::$TOKEN_DAY +
-                    self::$TOKEN_HOUR +
-                    self::$TOKEN_MINUTE,
+                    self::$tokenYear +
+                    self::$tokenMonth +
+                    self::$tokenDay +
+                    self::$tokenHour +
+                    self::$tokenMinute,
                     MinuteAction::class
                 ],
                 DefaultRoute::HOUR_STR => [
                     $prefix.'/{year}/{month}/{day}/{hour}',
-                    self::$TOKEN_YEAR +
-                    self::$TOKEN_MONTH +
-                    self::$TOKEN_DAY +
-                    self::$TOKEN_HOUR,
+                    self::$tokenYear +
+                    self::$tokenMonth +
+                    self::$tokenDay +
+                    self::$tokenHour,
                     HourAction::class
                 ],
                 DefaultRoute::DAY_STR => [
                     $prefix.'/{year}/{month}/{day}',
-                    self::$TOKEN_YEAR +
-                    self::$TOKEN_MONTH +
-                    self::$TOKEN_DAY,
+                    self::$tokenYear +
+                    self::$tokenMonth +
+                    self::$tokenDay,
                     DayAction::class
                 ],
                 DefaultRoute::MONTH_STR => [
                     $prefix.'/{year}/{month}',
-                    self::$TOKEN_YEAR +
-                    self::$TOKEN_MONTH,
+                    self::$tokenYear +
+                    self::$tokenMonth,
                     MonthAction::class
                 ],
                 DefaultRoute::YEAR_STR => [
                     $prefix.'/{year}',
-                    self::$TOKEN_YEAR,
+                    self::$tokenYear,
                     YearAction::class
                 ]
             ],

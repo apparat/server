@@ -57,3 +57,4 @@ class ObjectsAction extends AbstractAction
         // TODO: Implement __invoke() method.
     }
 }
+

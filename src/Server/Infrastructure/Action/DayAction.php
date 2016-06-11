@@ -46,4 +46,5 @@ use Apparat\Server\Ports\Action\AbstractListAction;
  */
 class DayAction extends AbstractListAction
 {
+    
 }

@@ -46,4 +46,5 @@ use Apparat\Server\Ports\Action\AbstractListAction;
  */
 class HourAction extends AbstractListAction
 {
+    
 }

@@ -36,7 +36,6 @@
 
 namespace Apparat\Server\Tests\Adr;
 
-
 use Apparat\Server\Ports\Action\AbstractAction;
 use Psr\Http\Message\ResponseInterface;
 
