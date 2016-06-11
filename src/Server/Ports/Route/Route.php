@@ -90,48 +90,6 @@ class Route implements RouteInterface
      */
     const YEAR = 'year';
     /**
-     * Month route
-     *
-     * @var string
-     */
-    const MONTH = 'month';
-    /**
-     * Day route
-     *
-     * @var string
-     */
-    const DAY = 'day';
-    /**
-     * Hour route
-     *
-     * @var string
-     */
-    const HOUR = 'hour';
-    /**
-     * Minute route
-     *
-     * @var string
-     */
-    const MINUTE = 'minute';
-    /**
-     * Second route
-     *
-     * @var string
-     */
-    const SECOND = 'second';
-    /**
-     * Object
-     *
-     * @var string
-     */
-    const OBJECT = 'object';
-    /**
-     * Type
-     *
-     * @var string
-     */
-    const TYPE = 'type';
-    /**
      * Allowed HTTP verbs
      *
      * @var array

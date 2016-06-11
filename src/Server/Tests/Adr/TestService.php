@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Tests\Adr;
 
-use Apparat\Server\Domain\Service\AbstractService;
+use Apparat\Server\Ports\Service\AbstractService;
 
 /**
  * Test domain service

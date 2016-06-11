@@ -94,7 +94,7 @@ class BasicServerTest extends AbstractServerTest
     /**
      * Test registering the default routes
      */
-    public function testRegisterDefaultRoutes()
+    public function testDefaultRoutes()
     {
         ServerFacade::registerRepositoryDefaultRoutes();
 

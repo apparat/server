@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Infrastructure
+ * @subpackage  Apparat\Server\Infrastructure\Service
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,50 +34,17 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Infrastructure\Route;
+namespace Apparat\Server\Infrastructure\Service;
+
+use Apparat\Server\Domain\Service\ServiceInterface;
 
 /**
- * Aura default route
+ * Objects result service
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Infrastructure
+ * @subpackage Apparat\Server\Domain
  */
-class AuraDefaultRoute extends AuraRoute
+class ObjectsService implements ServiceInterface
 {
-    /**
-     * Wildcard
-     *
-     * @var string
-     */
-    const WILDCARD = '*';
 
-    /**
-     * Pre-process the route attributes
-     */
-    public function preprocessAttributes()
-    {
-        parent::preprocessAttributes();
-
-        // Hidden objects
-        $this->attributes['hidden'] = !empty($this->attributes['hidden']);
-
-        // Object ID
-        $this->attributes['id'] = ((empty($this->attributes['id']) || ($this->attributes['id'] == self::WILDCARD)) ?
-            self::WILDCARD : intval($this->attributes['id']));
-
-        // Object type
-        $this->attributes['type'] = empty($this->attributes['type']) ?
-            self::WILDCARD : ltrim($this->attributes['type'], '-');
-
-        // Draft objects
-        $this->attributes['draft'] = !empty($this->attributes['draft']) && strpos($this->attributes['draft'], '.');
-
-        // Object revisions
-        $this->attributes['revision'] = (empty($this->attributes['revision']) || $this->attributes['draft']) ?
-            null : intval(ltrim($this->attributes['revision'], '-'));
-
-        // Object resource format
-        $this->attributes['format'] = empty($this->attributes['format']) ?
-            null : ltrim($this->attributes['format'], '.');
-    }
 }

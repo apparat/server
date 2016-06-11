@@ -51,6 +51,7 @@ use Apparat\Server\Infrastructure\Action\HourAction;
 use Apparat\Server\Infrastructure\Action\MinuteAction;
 use Apparat\Server\Infrastructure\Action\MonthAction;
 use Apparat\Server\Infrastructure\Action\ObjectAction;
+use Apparat\Server\Infrastructure\Action\ObjectsAction;
 use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
@@ -60,6 +61,7 @@ use Apparat\Server\Infrastructure\Responder\HourResponder;
 use Apparat\Server\Infrastructure\Responder\MinuteResponder;
 use Apparat\Server\Infrastructure\Responder\MonthResponder;
 use Apparat\Server\Infrastructure\Responder\ObjectResponder;
+use Apparat\Server\Infrastructure\Responder\ObjectsResponder;
 use Apparat\Server\Infrastructure\Responder\SecondResponder;
 use Apparat\Server\Infrastructure\Responder\TypeResponder;
 use Apparat\Server\Infrastructure\Responder\YearResponder;
@@ -70,6 +72,7 @@ use Apparat\Server\Infrastructure\Service\HourService;
 use Apparat\Server\Infrastructure\Service\MinuteService;
 use Apparat\Server\Infrastructure\Service\MonthService;
 use Apparat\Server\Infrastructure\Service\ObjectService;
+use Apparat\Server\Infrastructure\Service\ObjectsService;
 use Apparat\Server\Infrastructure\Service\SecondService;
 use Apparat\Server\Infrastructure\Service\TypeService;
 use Apparat\Server\Infrastructure\Service\YearService;
@@ -242,6 +245,16 @@ class Module extends AbstractModule
                 ],
                 ResponderInterface::class => [
                     'instance' => ObjectResponder::class,
+                ]
+            ]
+        ]);
+        $diContainer->register(ObjectsAction::class, [
+            'substitutions' => [
+                ServiceInterface::class => [
+                    'instance' => ObjectsService::class,
+                ],
+                ResponderInterface::class => [
+                    'instance' => ObjectsResponder::class,
                 ]
             ]
         ]);

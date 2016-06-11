@@ -43,11 +43,13 @@ use Apparat\Server\Infrastructure\Action\HourAction;
 use Apparat\Server\Infrastructure\Action\MinuteAction;
 use Apparat\Server\Infrastructure\Action\MonthAction;
 use Apparat\Server\Infrastructure\Action\ObjectAction;
+use Apparat\Server\Infrastructure\Action\ObjectsAction;
 use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Ports\Action\ActionInterface;
 use Apparat\Server\Ports\Route\Route;
+use Apparat\Server\Ports\Types\DefaultRoute;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -88,7 +90,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
      *
      * @var array
      */
-    protected static $TOKEN_HOUR = ['hour' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:1[0-2])'];
+    protected static $TOKEN_HOUR = ['hour' => self::REGEX_ASTERISK.'|(?:[01]\d)|(?:2[0-3])'];
     /**
      * Day route token
      *
@@ -113,7 +115,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
     {
         return array_slice(
             [
-                Route::SECOND => [
+                DefaultRoute::SECOND_STR => [
                     $prefix.'/{year}/{month}/{day}/{hour}/{minute}/{second}',
                     self::$TOKEN_YEAR +
                     self::$TOKEN_MONTH +
@@ -123,7 +125,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
                     self::$TOKEN_SECOND,
                     SecondAction::class
                 ],
-                Route::MINUTE => [
+                DefaultRoute::MINUTE_STR => [
                     $prefix.'/{year}/{month}/{day}/{hour}/{minute}',
                     self::$TOKEN_YEAR +
                     self::$TOKEN_MONTH +
@@ -132,7 +134,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
                     self::$TOKEN_MINUTE,
                     MinuteAction::class
                 ],
-                Route::HOUR => [
+                DefaultRoute::HOUR_STR => [
                     $prefix.'/{year}/{month}/{day}/{hour}',
                     self::$TOKEN_YEAR +
                     self::$TOKEN_MONTH +
@@ -140,20 +142,20 @@ class Server extends \Apparat\Server\Domain\Model\Server
                     self::$TOKEN_HOUR,
                     HourAction::class
                 ],
-                Route::DAY => [
+                DefaultRoute::DAY_STR => [
                     $prefix.'/{year}/{month}/{day}',
                     self::$TOKEN_YEAR +
                     self::$TOKEN_MONTH +
                     self::$TOKEN_DAY,
                     DayAction::class
                 ],
-                Route::MONTH => [
+                DefaultRoute::MONTH_STR => [
                     $prefix.'/{year}/{month}',
                     self::$TOKEN_YEAR +
                     self::$TOKEN_MONTH,
                     MonthAction::class
                 ],
-                Route::YEAR => [
+                DefaultRoute::YEAR_STR => [
                     $prefix.'/{year}',
                     self::$TOKEN_YEAR,
                     YearAction::class
@@ -179,20 +181,33 @@ class Server extends \Apparat\Server\Domain\Model\Server
 
         return [
             // Default object route
-            Route::OBJECT => [
+            DefaultRoute::OBJECT_STR => [
                 $prefix.$baseDateRoute[0].'/{hidden}{id}{type}{draft}{revision}{format}',
                 $baseDateRoute[1] + [
                     'hidden' => '\.?',
                     'id' => '\d+',
+                    'type' => '(?:-'.self::REGEX_ASTERISK.')|'.$enabledObjectTypes.'?',
+                    'draft' => '(?:/(\.)?(?:\\'.(2 + $numDefaultRoutes).'|'.self::REGEX_ASTERISK.'))?',
+                    'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+|'.self::REGEX_ASTERISK.')?)',
+                    'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote($objectResourceExt).')?)',
+                ],
+                ObjectAction::class
+            ],
+            // Default objects route
+            DefaultRoute::OBJECTS_STR => [
+                $prefix.$baseDateRoute[0].'/{hidden}{id}{type}{draft}{revision}{format}',
+                $baseDateRoute[1] + [
+                    'hidden' => '\.?',
+                    'id' => self::REGEX_ASTERISK,
                     'type' => $enabledObjectTypes.'?',
                     'draft' => '(?:/(\.)?\\'.(2 + $numDefaultRoutes).')?',
                     'revision' => '(?('.(5 + $numDefaultRoutes).')|(?:-\d+)?)',
                     'format' => '(?('.(4 + $numDefaultRoutes).')(?:\.'.preg_quote($objectResourceExt).')?)',
                 ],
-                ObjectAction::class
+                ObjectsAction::class
             ],
             // Default type route
-            Route::TYPE => [
+            DefaultRoute::TYPE_STR => [
                 $baseDateRoute[0].'/{hidden}{id}{type}{draft}{revision}{format}',
                 $baseDateRoute[1] + [
                     'hidden' => '\.?',
@@ -211,9 +226,9 @@ class Server extends \Apparat\Server\Domain\Model\Server
      * Register the default routes for a particular repository
      *
      * @param string $repositoryPath Repository path
-     * @param bool $enable Enable / disable default routes
+     * @param int $enable Enable / disable default routes
      */
-    public function registerRepositoryDefaultRoutes($repositoryPath = '', $enable = true)
+    public function registerRepositoryDefaultRoutes($repositoryPath = '', $enable = DefaultRoute::ALL)
     {
         // Repository route prefix
         $prefix = rtrim('/'.$repositoryPath, '/');
@@ -226,8 +241,10 @@ class Server extends \Apparat\Server\Domain\Model\Server
 
         // Iterate through and register all base routes
         foreach ($defaultRoutes as $routeName => $routeConfig) {
-            $route = new Route(Route::GET, $routeName, $routeConfig[0], $routeConfig[2], true);
-            $this->registerRoute($route->setTokens($routeConfig[1]));
+            if ($enable & DefaultRoute::nameToBit($routeName)) {
+                $route = new Route(Route::GET, $routeName, $routeConfig[0], $routeConfig[2], true);
+                $this->registerRoute($route->setTokens($routeConfig[1]));
+            }
         }
     }
 
