@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Infrastructure\Action;
 
-use Apparat\Server\Ports\Action\AbstractAction;
+use Apparat\Server\Ports\Action\AbstractSelectorAction;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -45,7 +45,7 @@ use Psr\Http\Message\ResponseInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class ObjectAction extends AbstractAction
+class ObjectAction extends AbstractSelectorAction
 {
     /**
      * Run the action
@@ -54,6 +54,7 @@ class ObjectAction extends AbstractAction
      */
     public function __invoke()
     {
+        echo $this->repositorySelector;
         // TODO: Implement __invoke() method.
     }
 }

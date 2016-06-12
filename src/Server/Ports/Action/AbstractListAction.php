@@ -36,8 +36,8 @@
 
 namespace Apparat\Server\Ports\Action;
 
-use Apparat\Server\Domain\Service\AbstractListService;
 use Apparat\Server\Ports\Responder\AbstractListResponder;
+use Apparat\Server\Ports\Service\AbstractListService;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -46,7 +46,7 @@ use Psr\Http\Message\ResponseInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-abstract class AbstractListAction extends AbstractAction
+abstract class AbstractListAction extends AbstractSelectorAction
 {
     /**
      * Domain service

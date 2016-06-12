@@ -36,8 +36,8 @@
 
 namespace Apparat\Server\Ports\Action;
 
-use Apparat\Server\Domain\Service\ServiceInterface;
 use Apparat\Server\Domain\Contract\ResponderInterface;
+use Apparat\Server\Domain\Service\ServiceInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**

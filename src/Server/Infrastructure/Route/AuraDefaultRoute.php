@@ -36,6 +36,8 @@
 
 namespace Apparat\Server\Infrastructure\Route;
 
+use Apparat\Server\Ports\Types\Selector;
+
 /**
  * Aura default route
  *
@@ -45,13 +47,6 @@ namespace Apparat\Server\Infrastructure\Route;
 class AuraDefaultRoute extends AuraRoute
 {
     /**
-     * Wildcard
-     *
-     * @var string
-     */
-    const WILDCARD = '*';
-
-    /**
      * Pre-process the route attributes
      */
     public function preprocessAttributes()
@@ -59,25 +54,34 @@ class AuraDefaultRoute extends AuraRoute
         parent::preprocessAttributes();
 
         // Hidden objects
-        $this->attributes['hidden'] = !empty($this->attributes['hidden']);
+        $this->attributes[Selector::HIDDEN] = !empty($this->attributes[Selector::HIDDEN]);
 
         // Object ID
-        $this->attributes['id'] = ((empty($this->attributes['id']) || ($this->attributes['id'] == self::WILDCARD)) ?
-            self::WILDCARD : intval($this->attributes['id']));
+        $this->attributes[Selector::ID] =
+            ((empty($this->attributes[Selector::ID]) || ($this->attributes[Selector::ID] == Selector::WILDCARD)) ?
+                Selector::WILDCARD : intval($this->attributes[Selector::ID]));
 
         // Object type
-        $this->attributes['type'] = empty($this->attributes['type']) ?
-            self::WILDCARD : ltrim($this->attributes['type'], '-');
+        $this->attributes[Selector::TYPE] = empty($this->attributes['dashtype']) ?
+            Selector::WILDCARD : ltrim($this->attributes['dashtype'], '-');
+        unset($this->attributes['dashtype']);
 
         // Draft objects
-        $this->attributes['draft'] = !empty($this->attributes['draft']) && strpos($this->attributes['draft'], '.');
+        $this->attributes[Selector::DRAFT] =
+            !empty($this->attributes['draftid']) && strpos($this->attributes['draftid'], '.');
+        unset($this->attributes['draftid']);
 
         // Object revisions
-        $this->attributes['revision'] = (empty($this->attributes['revision']) || $this->attributes['draft']) ?
-            null : intval(ltrim($this->attributes['revision'], '-'));
+        $this->attributes[Selector::REVISION] =
+            (empty($this->attributes['dashrevision']) || $this->attributes[Selector::DRAFT]) ?
+                Selector::WILDCARD : ltrim($this->attributes[Selector::REVISION], '-');
+        if ($this->attributes[Selector::REVISION] !== Selector::WILDCARD) {
+            $this->attributes[Selector::REVISION] = intval($this->attributes[Selector::REVISION]);
+        }
+        unset($this->attributes['dashrevision']);
 
         // Object resource format
-        $this->attributes['format'] = empty($this->attributes['format']) ?
-            null : ltrim($this->attributes['format'], '.');
+        $this->attributes[Selector::FORMAT] = empty($this->attributes[Selector::FORMAT]) ?
+            Selector::WILDCARD : ltrim($this->attributes[Selector::FORMAT], '.');
     }
 }

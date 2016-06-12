@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Tests
+ * @subpackage  Apparat\Server\Ports
  * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,41 +34,40 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Tests\Adr;
+namespace Apparat\Server\Ports\Action;
 
-use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
 use Apparat\Server\Domain\Contract\ResponderInterface;
 use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Module;
+use Apparat\Server\Ports\Factory\RepositorySelectorFactory;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Test module
+ * Abstract action
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Tests
+ * @subpackage Apparat\Server\Ports
  */
-class TestModule extends Module
+abstract class AbstractSelectorAction extends AbstractAction
 {
     /**
-     * Configure the dependency injection container
+     * Repository selector
      *
-     * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
-     * @return void
+     * @var string
      */
-    public function configureDependencyInjection(DependencyInjectionContainerInterface $diContainer)
-    {
-        parent::configureDependencyInjection($diContainer);
-
-        // Configure the Adr test
-        $diContainer->register(TestAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => TestService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => TestResponder::class,
-                ]
-            ]
-        ]);
+    protected $repositorySelector;
+    /**
+     * Constructor
+     *
+     * @param ServerRequestInterface $request Server request
+     * @param ServiceInterface $domain Domain service
+     * @param ResponderInterface $responder Responder
+     */
+    public function __construct(
+        ServerRequestInterface $request,
+        ServiceInterface $domain,
+        ResponderInterface $responder
+    ) {
+        parent::__construct($request, $domain, $responder);
+        $this->repositorySelector = RepositorySelectorFactory::createObjectSelectorFromRequest($this->request);
     }
 }

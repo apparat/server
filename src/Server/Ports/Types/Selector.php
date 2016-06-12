@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Tests
- * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage  Apparat\Server\Ports
+ * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,41 +34,92 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Tests\Adr;
-
-use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
-use Apparat\Server\Domain\Contract\ResponderInterface;
-use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Module;
+namespace Apparat\Server\Ports\Types;
 
 /**
- * Test module
+ * Selector types
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Tests
+ * @subpackage Apparat\Server\Ports
  */
-class TestModule extends Module
+class Selector
 {
     /**
-     * Configure the dependency injection container
+     * Month part
      *
-     * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
-     * @return void
+     * @var string
      */
-    public function configureDependencyInjection(DependencyInjectionContainerInterface $diContainer)
-    {
-        parent::configureDependencyInjection($diContainer);
-
-        // Configure the Adr test
-        $diContainer->register(TestAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => TestService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => TestResponder::class,
-                ]
-            ]
-        ]);
-    }
+    const YEAR = 'year';
+    /**
+     * Month part
+     *
+     * @var string
+     */
+    const MONTH = 'month';
+    /**
+     * Day part
+     *
+     * @var string
+     */
+    const DAY = 'day';
+    /**
+     * Hour part
+     *
+     * @var string
+     */
+    const HOUR = 'hour';
+    /**
+     * Minute part
+     *
+     * @var string
+     */
+    const MINUTE = 'minute';
+    /**
+     * Second part
+     *
+     * @var string
+     */
+    const SECOND = 'second';
+    /**
+     * Hidden part
+     *
+     * @var string
+     */
+    const HIDDEN = 'hidden';
+    /**
+     * ID part
+     *
+     * @var string
+     */
+    const ID = 'id';
+    /**
+     * Type part
+     *
+     * @var string
+     */
+    const TYPE = 'type';
+    /**
+     * Revision part
+     *
+     * @var string
+     */
+    const REVISION = 'revision';
+    /**
+     * Draft part
+     *
+     * @var string
+     */
+    const DRAFT = 'draft';
+    /**
+     * Format part
+     *
+     * @var string
+     */
+    const FORMAT = 'format';
+    /**
+     * Wildcard
+     *
+     * @var string
+     */
+    const WILDCARD = '*';
 }

@@ -212,8 +212,6 @@ class DefaultRoutesTest extends AbstractServerTest
             ['http://apparat/blog/2016/06/08/19/14/52/*-*/*-1.md', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*-*.md', ObjectsAction::class],
         ];
-
-//
     }
 
     public function getFaultyDefaultRouteRequestAction()
