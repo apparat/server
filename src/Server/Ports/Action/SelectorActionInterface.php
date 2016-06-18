@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Domain
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\Ports
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,27 +34,21 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Domain\Contract;
+namespace Apparat\Server\Ports\Action;
 
 /**
- * Action route interface
+ * Selector action interface
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Domain
- * @property array $attributes Attributes
- * @property-read mixed $handler Action handler
+ * @subpackage Apparat\Server\Ports
  */
-interface ActionRouteInterface
+interface SelectorActionInterface extends ActionInterface
 {
     /**
-     * Pre-process the route attributes
-     */
-    public function preprocessAttributes();
-
-    /**
-     * Get the action handler
+     * Check whether a set of attributes matches the action requirements
      *
-     * @return ActionInterface|\Callable
+     * @param array $attributes Attributes
+     * @return boolean The attributes match the action requirements
      */
-    public function getHandler();
+    public static function matches(array $attributes);
 }

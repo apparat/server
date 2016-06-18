@@ -42,7 +42,7 @@ namespace Apparat\Server\Ports\Types;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class DefaultRoute
+class ObjectRoute
 {
     /**
      * Default route name / bit mapping
@@ -121,41 +121,53 @@ class DefaultRoute
      */
     const ALL = 511;
     /**
-     * Month route
+     * Month route / selector
      *
      * @var string
      */
     const YEAR_STR = 'year';
     /**
-     * Month route
+     * Month route / selector
      *
      * @var string
      */
     const MONTH_STR = 'month';
     /**
-     * Day route
+     * Day route / selector
      *
      * @var string
      */
     const DAY_STR = 'day';
     /**
-     * Hour route
+     * Hour route / selector
      *
      * @var string
      */
     const HOUR_STR = 'hour';
     /**
-     * Minute route
+     * Minute route / selector
      *
      * @var string
      */
     const MINUTE_STR = 'minute';
     /**
-     * Second route
+     * Second route / selector
      *
      * @var string
      */
     const SECOND_STR = 'second';
+    /**
+     * ID selector
+     *
+     * @var string
+     */
+    const ID_STR = 'id';
+    /**
+     * Revvision selector
+     *
+     * @var string
+     */
+    const REVISION_STR = 'revision';
     /**
      * Object
      *
@@ -169,11 +181,17 @@ class DefaultRoute
      */
     const OBJECTS_STR = 'objects';
     /**
-     * Type
+     * Type route / selector
      *
      * @var string
      */
     const TYPE_STR = 'type';
+    /**
+     * Wildcard
+     *
+     * @var string
+     */
+    const WILDCARD = '*';
 
     /**
      * Return a bit value for a particular default route name
@@ -185,4 +203,6 @@ class DefaultRoute
     {
         return (empty($name) || empty(self::$nameBits[$name])) ? 0 : self::$nameBits[$name];
     }
+
+
 }

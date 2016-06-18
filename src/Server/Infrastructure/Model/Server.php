@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Infrastructure\Model;
 
-use Apparat\Object\Ports\Types\Object;
+use Apparat\Object\Ports\Factory\SelectorFactory;
 use Apparat\Server\Domain\Contract\ActionRouteInterface;
 use Apparat\Server\Infrastructure\Action\DayAction;
 use Apparat\Server\Infrastructure\Action\HourAction;
@@ -49,7 +49,7 @@ use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Ports\Action\ActionInterface;
 use Apparat\Server\Ports\Route\Route;
-use Apparat\Server\Ports\Types\DefaultRoute;
+use Apparat\Server\Ports\Types\ObjectRoute;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -61,227 +61,40 @@ use Psr\Http\Message\ServerRequestInterface;
 class Server extends \Apparat\Server\Domain\Model\Server
 {
     /**
-     * Asterisk regular expression
-     *
-     * @var string
-     */
-    const REGEX_ASTERISK = '(?:\%2A)';
-    /**
-     * Year route token
-     *
-     * @var array
-     */
-    protected static $tokenYear = ['year' => self::REGEX_ASTERISK.'|(?:\d{4})'];
-    /**
-     * Month route token
-     *
-     * @var array
-     */
-    protected static $tokenMonth = ['month' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:1[0-2])'];
-    /**
-     * Day route token
-     *
-     * @var array
-     */
-    protected static $tokenDay = ['day' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-2]\d)|(?:3[0-1])'];
-    /**
-     * Hour route token
-     *
-     * @var array
-     */
-    protected static $tokenHour = ['hour' => self::REGEX_ASTERISK.'|(?:[01]\d)|(?:2[0-3])'];
-    /**
-     * Day route token
-     *
-     * @var array
-     */
-    protected static $tokenMinute = ['minute' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-4]\d)|(?:5[0-9])'];
-    /**
-     * Second route token
-     *
-     * @var array
-     */
-    protected static $tokenSecond = ['second' => self::REGEX_ASTERISK.'|(?:0[1-9])|(?:[1-4]\d)|(?:5[0-9])'];
-
-    /**
-     * Register the default routes for a particular repository
+     * Enable the object route for a particular repository
      *
      * @param string $repositoryPath Repository path
      * @param int $enable Enable / disable default routes
      */
-    public function registerRepositoryDefaultRoutes($repositoryPath = '', $enable = DefaultRoute::ALL)
+    public function enableObjectRoute($repositoryPath = '', $enable = ObjectRoute::ALL)
     {
         // Repository route prefix
         $prefix = rtrim('/'.$repositoryPath, '/');
-
-        // Build the list of default routes
-        $defaultDateRoutes = $this->buildDefaultDateRoutes($prefix, getenv('OBJECT_DATE_PRECISION'));
-        $baseDateRoute = count($defaultDateRoutes) ? current($defaultDateRoutes) : ['/', []];
-        $defaultObjectRoutes = $this->buildDefaultObjectRoutes($prefix, $baseDateRoute);
-        $defaultRoutes = $defaultObjectRoutes + $defaultDateRoutes;
-
-        // Iterate through and register all base routes
-        foreach ($defaultRoutes as $routeName => $routeConfig) {
-            if ($enable & DefaultRoute::nameToBit($routeName)) {
-                $route = new Route(Route::GET, $routeName, $routeConfig[0], $routeConfig[2], true);
-                $this->registerRoute($route->setTokens($routeConfig[1]));
-            }
-        }
-    }
-
-    /**
-     * Build and return the default date routes
-     *
-     * @param string $prefix Repository route prefix
-     * @param int $precision Date precision
-     * @return array Default date routes
-     */
-    protected function buildDefaultDateRoutes($prefix, $precision)
-    {
-        return array_slice(
-            [
-                DefaultRoute::SECOND_STR => [
-                    $prefix.'/{year}/{month}/{day}/{hour}/{minute}/{second}',
-                    self::$tokenYear +
-                    self::$tokenMonth +
-                    self::$tokenDay +
-                    self::$tokenHour +
-                    self::$tokenMinute +
-                    self::$tokenSecond,
-                    SecondAction::class
+        $datePrecision = intval(getenv('OBJECT_DATE_PRECISION'));
+        $selectorRegex = SelectorFactory::getSelectorRegex($datePrecision);
+        $objectRouteActions = array_filter(
+            array_merge(
+                [
+                    ObjectRoute::OBJECT_STR => (ObjectRoute::OBJECT & $enable) ? ObjectAction::class : null,
+                    ObjectRoute::TYPE_STR => (ObjectRoute::TYPE & $enable) ? TypeAction::class : null,
+                    ObjectRoute::OBJECTS_STR => (ObjectRoute::OBJECTS & $enable) ? ObjectsAction::class : null,
                 ],
-                DefaultRoute::MINUTE_STR => [
-                    $prefix.'/{year}/{month}/{day}/{hour}/{minute}',
-                    self::$tokenYear +
-                    self::$tokenMonth +
-                    self::$tokenDay +
-                    self::$tokenHour +
-                    self::$tokenMinute,
-                    MinuteAction::class
-                ],
-                DefaultRoute::HOUR_STR => [
-                    $prefix.'/{year}/{month}/{day}/{hour}',
-                    self::$tokenYear +
-                    self::$tokenMonth +
-                    self::$tokenDay +
-                    self::$tokenHour,
-                    HourAction::class
-                ],
-                DefaultRoute::DAY_STR => [
-                    $prefix.'/{year}/{month}/{day}',
-                    self::$tokenYear +
-                    self::$tokenMonth +
-                    self::$tokenDay,
-                    DayAction::class
-                ],
-                DefaultRoute::MONTH_STR => [
-                    $prefix.'/{year}/{month}',
-                    self::$tokenYear +
-                    self::$tokenMonth,
-                    MonthAction::class
-                ],
-                DefaultRoute::YEAR_STR => [
-                    $prefix.'/{year}',
-                    self::$tokenYear,
-                    YearAction::class
-                ]
-            ],
-            6 - $precision
+                array_slice(
+                    [
+                        ObjectRoute::SECOND_STR => (ObjectRoute::SECOND & $enable) ? SecondAction::class : null,
+                        ObjectRoute::MINUTE_STR => (ObjectRoute::MINUTE & $enable) ? MinuteAction::class : null,
+                        ObjectRoute::HOUR_STR => (ObjectRoute::HOUR & $enable) ? HourAction::class : null,
+                        ObjectRoute::DAY_STR => (ObjectRoute::DAY & $enable) ? DayAction::class : null,
+                        ObjectRoute::MONTH_STR => (ObjectRoute::MONTH & $enable) ? MonthAction::class : null,
+                        ObjectRoute::YEAR_STR => (ObjectRoute::YEAR & $enable) ? YearAction::class : null,
+                    ],
+                    6 - $datePrecision
+                )
+            )
         );
-    }
 
-    /**
-     * Build and return the default object routes
-     *
-     * @param string $prefix Repository route prefix
-     * @param array $baseDateRoute Base date route
-     * @return array Default object routes
-     */
-    protected function buildDefaultObjectRoutes($prefix, $baseDateRoute)
-    {
-        // Build a regular expression for all supported object types
-        $enabledObjectTypes = '(?:(?:'.implode(')|(?:', array_map('preg_quote', Object::getSupportedTypes())).'))';
-        $objectResourceExt = getenv('OBJECT_RESOURCE_EXTENSION');
-
-        return [
-            // Default object route
-            DefaultRoute::OBJECT_STR => [
-                $prefix.$baseDateRoute[0].'/{hidden}{id}{dashtype}{draftid}{dashrevision}{format}',
-                $baseDateRoute[1] + [
-
-                    // Optionally hidden object
-                    'hidden' => '\.?',
-
-                    // Object ID must be given
-                    'id' => '\d+',
-
-                    // Optional object type (or wildcard)
-                    'dashtype' => '(?:-(?:'.self::REGEX_ASTERISK.'|'.$enabledObjectTypes.'))?',
-
-                    // Draft and (repeated) object ID
-                    'draftid' => '(?:(?P<draftslash>/)(?P<draft>\.)?(?P<idrep>(?:(?P=id)|'.self::REGEX_ASTERISK.')))?',
-
-                    // Object revision
-                    'dashrevision' => '(?(idrep)(?:-(?P<revision>(?:(?:\d+)|'.self::REGEX_ASTERISK.')))?)',
-
-                    // Resource format
-                    'format' => '(?(idrep)(?:\.'.preg_quote($objectResourceExt).')?)',
-                ],
-                ObjectAction::class
-            ],
-
-            // Default types route
-            DefaultRoute::TYPE_STR => [
-                $prefix.$baseDateRoute[0].'/{hidden}{id}{dashtype}{draftid}{dashrevision}{format}',
-                $baseDateRoute[1] + [
-
-                    // Optionally hidden object
-                    'hidden' => '\.?',
-
-                    // Object ID must be given
-                    'id' => self::REGEX_ASTERISK,
-
-                    // Optional object type (or wildcard)
-                    'dashtype' => '-'.$enabledObjectTypes,
-
-                    // Draft and (repeated) object ID
-                    'draftid' => '(?:(?P<draftslash>/)(?P<draft>\.)?(?P<idrep>'.self::REGEX_ASTERISK.'))?',
-
-                    // Object revision
-                    'dashrevision' => '(?(idrep)(?:-(?P<revision>(?:(?:\d+)|'.self::REGEX_ASTERISK.')))?)',
-
-                    // Resource format
-                    'format' => '(?(idrep)(?:\.'.preg_quote($objectResourceExt).')?)',
-                ],
-                TypeAction::class
-            ],
-
-            // Default objects route
-            DefaultRoute::OBJECTS_STR => [
-                $prefix.$baseDateRoute[0].'/{hidden}{id}{dashtype}{draftid}{dashrevision}{format}',
-                $baseDateRoute[1] + [
-
-                    // Optionally hidden object
-                    'hidden' => '\.?',
-
-                    // Object ID must be given
-                    'id' => self::REGEX_ASTERISK,
-
-                    // Optional object type (or wildcard)
-                    'dashtype' => '(?:-(?:'.self::REGEX_ASTERISK.'|'.$enabledObjectTypes.'))?',
-
-                    // Draft and (repeated) object ID
-                    'draftid' => '(?:(?P<draftslash>/)(?P<draft>\.)?(?P<idrep>'.self::REGEX_ASTERISK.'))?',
-
-                    // Object revision
-                    'dashrevision' => '(?(idrep)(?:-(?P<revision>(?:(?:\d+)|'.self::REGEX_ASTERISK.')))?)',
-
-                    // Resource format
-                    'format' => '(?(idrep)(?:\.'.preg_quote($objectResourceExt).')?)',
-                ],
-                ObjectsAction::class
-            ],
-        ];
+        $route = new Route(Route::GET, ObjectRoute::OBJECT_STR, $prefix.$selectorRegex, $objectRouteActions);
+        $this->registerRoute($route);
     }
 
     /**

@@ -36,7 +36,8 @@
 
 namespace Apparat\Server\Infrastructure\Action;
 
-use Apparat\Server\Ports\Action\AbstractAction;
+use Apparat\Server\Ports\Action\AbstractListAction;
+use Apparat\Server\Ports\Types\ObjectRoute;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -45,8 +46,20 @@ use Psr\Http\Message\ResponseInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class ObjectsAction extends AbstractAction
+class ObjectsAction extends AbstractListAction
 {
+    /**
+     * Check whether a set of attributes matches the action requirements
+     *
+     * @param array $attributes Attributes
+     * @return boolean The attributes match the action requirements
+     */
+    public static function matches(array $attributes)
+    {
+        return self::notEmptyDateSelector($attributes, 6)
+        && !empty($attributes[ObjectRoute::ID_STR]);
+    }
+
     /**
      * Run the action
      *
@@ -54,6 +67,6 @@ class ObjectsAction extends AbstractAction
      */
     public function __invoke()
     {
-        // TODO: Implement __invoke() method.
+
     }
 }

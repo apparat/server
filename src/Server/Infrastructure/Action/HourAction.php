@@ -37,6 +37,7 @@
 namespace Apparat\Server\Infrastructure\Action;
 
 use Apparat\Server\Ports\Action\AbstractListAction;
+use Apparat\Server\Ports\Types\ObjectRoute;
 
 /**
  * Hour action
@@ -46,5 +47,16 @@ use Apparat\Server\Ports\Action\AbstractListAction;
  */
 class HourAction extends AbstractListAction
 {
-    
+    /**
+     * Check whether a set of attributes matches the action requirements
+     *
+     * @param array $attributes Attributes
+     * @return boolean The attributes match the action requirements
+     */
+    public static function matches(array $attributes)
+    {
+        return self::notEmptyDateSelector($attributes, 4)
+        && empty($attributes[ObjectRoute::MINUTE_STR])
+        && empty($attributes[ObjectRoute::ID_STR]);
+    }
 }

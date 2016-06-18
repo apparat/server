@@ -41,9 +41,8 @@ use Apparat\Server\Domain\Contract\ActionRouteInterface;
 use Apparat\Server\Domain\Contract\RouteInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
 use Apparat\Server\Ports\Action\ActionInterface;
-use Aura\Router\Matcher;
-use Aura\Router\Route;
 use Aura\Router\RouterContainer;
+use Aura\Router\Rule;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -70,6 +69,16 @@ class AuraRouterAdapter implements RouterContainerInterface
     public function __construct(RouterContainer $routerContainer)
     {
         $this->routerContainer = $routerContainer;
+
+        /** @var Rule\RuleIterator $ruleIterator */
+        $ruleIterator = $routerContainer->getRuleIterator();
+        $ruleIterator->set([
+            new Rule\Secure(),
+            new Rule\Host(),
+            new ObjectPath(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH) ?: null),
+            new Rule\Allows(),
+            new Rule\Accepts(),
+        ]);
     }
 
     /**
@@ -81,11 +90,11 @@ class AuraRouterAdapter implements RouterContainerInterface
     public function registerRoute(RouteInterface $route)
     {
         /** @var AuraRoute $auraRoute */
-        $auraRoute = Kernel::create($route->isDefault() ? AuraDefaultRoute::class : AuraRoute::class);
+        $auraRoute = Kernel::create($route->isObject() ? AuraObjectRoute::class : AuraRoute::class);
         $auraRoute->name($route->getName())
             ->path($route->getPath())
-            ->handler($route->getAction())
             ->allows($route->getVerbs())
+            ->handler($route->getAction())
             ->tokens($route->getTokens())
             ->defaults($route->getDefaults())
             ->wildcard($route->getWildcard())
@@ -137,7 +146,7 @@ class AuraRouterAdapter implements RouterContainerInterface
         }
 
         /** @var AbstractActionRoute $route */
-        $handler = $route->handler;
+        $handler = $route->getHandler();
 
         // If the handler is a callable
         if (is_callable($handler)) {

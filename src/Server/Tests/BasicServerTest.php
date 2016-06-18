@@ -94,9 +94,9 @@ class BasicServerTest extends AbstractServerTest
     /**
      * Test registering the default routes
      */
-    public function testDefaultRoutes()
+    public function testObjectRoutes()
     {
-        ServerFacade::registerRepositoryDefaultRoutes();
+        ServerFacade::enableObjectRoute();
 
 //        $uri = new Uri('http://apparat/blog/*/12/*/.*-article/*.md');
         $uri = new Uri('http://apparat/blog/2016/06/08/1-article');

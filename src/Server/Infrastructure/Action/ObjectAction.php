@@ -37,6 +37,7 @@
 namespace Apparat\Server\Infrastructure\Action;
 
 use Apparat\Server\Ports\Action\AbstractSelectorAction;
+use Apparat\Server\Ports\Types\ObjectRoute;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -48,13 +49,27 @@ use Psr\Http\Message\ResponseInterface;
 class ObjectAction extends AbstractSelectorAction
 {
     /**
+     * Check whether a set of attributes matches the action requirements
+     *
+     * @param array $attributes Attributes
+     * @return boolean The attributes match the action requirements
+     */
+    public static function matches(array $attributes)
+    {
+        return self::notEmptyDateSelector($attributes, 6)
+        && !empty($attributes[ObjectRoute::ID_STR])
+        && ($attributes[ObjectRoute::ID_STR] !== ObjectRoute::WILDCARD)
+        && (empty($attributes[ObjectRoute::REVISION_STR])
+        || ($attributes[ObjectRoute::REVISION_STR] !== ObjectRoute::WILDCARD));
+    }
+
+    /**
      * Run the action
      *
      * @return ResponseInterface Response
      */
     public function __invoke()
     {
-        echo $this->repositorySelector;
         // TODO: Implement __invoke() method.
     }
 }

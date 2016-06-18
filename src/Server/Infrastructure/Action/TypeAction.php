@@ -37,6 +37,7 @@
 namespace Apparat\Server\Infrastructure\Action;
 
 use Apparat\Server\Ports\Action\AbstractListAction;
+use Apparat\Server\Ports\Types\ObjectRoute;
 
 /**
  * Type action
@@ -46,5 +47,18 @@ use Apparat\Server\Ports\Action\AbstractListAction;
  */
 class TypeAction extends AbstractListAction
 {
-    
+    /**
+     * Check whether a set of attributes matches the action requirements
+     *
+     * @param array $attributes Attributes
+     * @return boolean The attributes match the action requirements
+     */
+    public static function matches(array $attributes)
+    {
+        return self::notEmptyDateSelector($attributes, 6)
+        && !empty($attributes[ObjectRoute::ID_STR])
+        && ($attributes[ObjectRoute::ID_STR] == ObjectRoute::WILDCARD)
+        && !empty($attributes[ObjectRoute::TYPE_STR])
+        && ($attributes[ObjectRoute::TYPE_STR] !== ObjectRoute::WILDCARD);
+    }
 }

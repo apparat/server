@@ -40,7 +40,7 @@ use Apparat\Kernel\Ports\Kernel;
 use Apparat\Object\Ports\Object;
 use Apparat\Server\Infrastructure\Model\Server;
 use Apparat\Server\Ports\Contract\RouteInterface;
-use Apparat\Server\Ports\Types\DefaultRoute;
+use Apparat\Server\Ports\Types\ObjectRoute;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -65,9 +65,9 @@ class ServerFacade
      * @param int $enable Enable / disable default routes
      * @api
      */
-    public static function registerRepositoryDefaultRoutes($repositoryPath = '', $enable = DefaultRoute::ALL)
+    public static function enableObjectRoute($repositoryPath = '', $enable = ObjectRoute::ALL)
     {
-        self::getServer()->registerRepositoryDefaultRoutes($repositoryPath, $enable);
+        self::getServer()->enableObjectRoute($repositoryPath, $enable);
     }
 
     /**

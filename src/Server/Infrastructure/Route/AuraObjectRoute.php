@@ -36,7 +36,8 @@
 
 namespace Apparat\Server\Infrastructure\Route;
 
-use Apparat\Server\Ports\Types\Selector;
+use Apparat\Server\Domain\Contract\ActionInterface;
+use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
 
 /**
  * Aura default route
@@ -44,44 +45,23 @@ use Apparat\Server\Ports\Types\Selector;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
  */
-class AuraDefaultRoute extends AuraRoute
+class AuraObjectRoute extends AuraRoute implements ObjectActionRouteInterface
 {
     /**
-     * Pre-process the route attributes
+     * Get the action handler
+     *
+     * @return ActionInterface|\Callable
      */
-    public function preprocessAttributes()
+    public function getHandler()
     {
-        parent::preprocessAttributes();
-
-        // Hidden objects
-        $this->attributes[Selector::HIDDEN] = !empty($this->attributes[Selector::HIDDEN]);
-
-        // Object ID
-        $this->attributes[Selector::ID] =
-            ((empty($this->attributes[Selector::ID]) || ($this->attributes[Selector::ID] == Selector::WILDCARD)) ?
-                Selector::WILDCARD : intval($this->attributes[Selector::ID]));
-
-        // Object type
-        $this->attributes[Selector::TYPE] = empty($this->attributes['dashtype']) ?
-            Selector::WILDCARD : ltrim($this->attributes['dashtype'], '-');
-        unset($this->attributes['dashtype']);
-
-        // Draft objects
-        $this->attributes[Selector::DRAFT] =
-            !empty($this->attributes['draftid']) && strpos($this->attributes['draftid'], '.');
-        unset($this->attributes['draftid']);
-
-        // Object revisions
-        $this->attributes[Selector::REVISION] =
-            (empty($this->attributes['dashrevision']) || $this->attributes[Selector::DRAFT]) ?
-                Selector::WILDCARD : ltrim($this->attributes[Selector::REVISION], '-');
-        if ($this->attributes[Selector::REVISION] !== Selector::WILDCARD) {
-            $this->attributes[Selector::REVISION] = intval($this->attributes[Selector::REVISION]);
+        // Run through all registered handler classes
+        foreach ($this->handler as $actionClass) {
+            // If the request matches the handler class requirements
+            if (call_user_func([$actionClass, 'matches'], $this->attributes)) {
+                return $actionClass;
+            }
         }
-        unset($this->attributes['dashrevision']);
 
-        // Object resource format
-        $this->attributes[Selector::FORMAT] = empty($this->attributes[Selector::FORMAT]) ?
-            Selector::WILDCARD : ltrim($this->attributes[Selector::FORMAT], '.');
+        return null;
     }
 }

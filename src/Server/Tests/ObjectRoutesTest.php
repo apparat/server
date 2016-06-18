@@ -47,7 +47,7 @@ use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Infrastructure\Model\Server;
-use Apparat\Server\Infrastructure\Route\AuraDefaultRoute;
+use Apparat\Server\Infrastructure\Route\AuraObjectRoute;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
@@ -57,7 +57,7 @@ use Zend\Diactoros\Uri;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-class DefaultRoutesTest extends AbstractServerTest
+class ObjectRoutesTest extends AbstractServerTest
 {
     /**
      * Server instance
@@ -85,7 +85,7 @@ class DefaultRoutesTest extends AbstractServerTest
         putenv('OBJECT_DATE_PRECISION=6');
 
         self::$server = Kernel::create(Server::class);
-        self::$server->registerRepositoryDefaultRoutes();
+        self::$server->enableObjectRoute();
     }
 
     /**
@@ -102,11 +102,11 @@ class DefaultRoutesTest extends AbstractServerTest
     /**
      * Test dispatching default route requests to actions
      *
-     * @dataProvider getDefaultRouteRequestAction
+     * @dataProvider getObjectRouteRequestAction
      * @param string $request Server request
      * @param string $actionClass Action class
      */
-    public function testDefaultRouteAction($request, $actionClass)
+    public function testObjectRouteAction($request, $actionClass)
     {
         $uri = new Uri($request);
         $request = new ServerRequest();
@@ -114,7 +114,7 @@ class DefaultRoutesTest extends AbstractServerTest
 
         // Dispatch the route
         $route = self::$server->dispatchRequestToRoute($request);
-        $this->assertInstanceOf(AuraDefaultRoute::class, $route);
+        $this->assertInstanceOf(AuraObjectRoute::class, $route);
 
         // Get the associated action
         $action = self::$server->getRouteAction($request, $route);
@@ -124,7 +124,7 @@ class DefaultRoutesTest extends AbstractServerTest
     /**
      * Provide default route requests and expected action classes
      */
-    public function getDefaultRouteRequestAction()
+    public function getObjectRouteRequestAction()
     {
         return [
             ['http://apparat/blog/2016', YearAction::class],
@@ -147,9 +147,11 @@ class DefaultRoutesTest extends AbstractServerTest
 
             ['http://apparat/blog/2016/06/08/19/14/52/1', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/.1', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/~1', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-*', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/.1-article', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/~1-article', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/1', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/*', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1', ObjectAction::class],
@@ -158,76 +160,49 @@ class DefaultRoutesTest extends AbstractServerTest
             ['http://apparat/blog/2016/06/08/19/14/52/1-*/*', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-*/.1', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-*/.*', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-*/~1', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-*/~*', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-1', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-*', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-1', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-*', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/~1-1', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/*-1', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*-*', ObjectAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-1', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-*', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-1.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-1.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*-1.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-1.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-*.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*-1.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-*.md', ObjectAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-*.md', ObjectAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/~*-1', ObjectAction::class],
 
             ['http://apparat/blog/2016/06/08/19/14/52/*-article', TypeAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/.*-article', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/~*-article', TypeAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-article/*', TypeAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/~*', TypeAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-article/*-1', TypeAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-article/*-*', TypeAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*-1', TypeAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*-*', TypeAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*.md', TypeAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*-1.md', TypeAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*.md', TypeAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*-1.md', TypeAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-article/*-1.md', TypeAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-article/.*-*.md', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/~*-1', TypeAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-article/~*-*', TypeAction::class],
 
             ['http://apparat/blog/2016/06/08/19/14/52/*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/.*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/~*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*/*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*/.*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-*/*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/~*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-*/*-1', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-*/*-*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*-1', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*-*', ObjectsAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-*/*.md', ObjectsAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-*/*-1.md', ObjectsAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*.md', ObjectsAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*-1.md', ObjectsAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-*/*-1.md', ObjectsAction::class],
-            ['http://apparat/blog/2016/06/08/19/14/52/*-*/.*-*.md', ObjectsAction::class],
-        ];
-    }
-
-    public function getFaultyDefaultRouteRequestAction()
-    {
-        return [
-//            ['http://apparat/blog/2016/06/08/19/14/52/1', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/.1', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/1-article', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/1-*', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/.1-article', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-1', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-*', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-1.md', ObjectAction::class],
-//            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-1.*', ObjectAction::class],
-//
-//            ['http://apparat/blog/2016/06/08/19/14/52/*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/~*-1', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/*-*/~*-*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/1-*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.1-*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/~1-*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/*-*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-*', ObjectsAction::class],
+            ['http://apparat/blog/2016/06/08/19/14/52/1-article/~*-*', ObjectsAction::class],
         ];
     }
 }

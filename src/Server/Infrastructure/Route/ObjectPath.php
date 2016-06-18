@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports
+ * @subpackage  Apparat\Server\<Layer>
  * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,44 +34,58 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Action;
+namespace Apparat\Server\Infrastructure\Route;
 
-use Apparat\Server\Ports\Types\ObjectRoute;
+use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
+use Aura\Router\Route;
+use Aura\Router\Rule\Path;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Abstract action
+ * Object path rule
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Infrastructure
  */
-abstract class AbstractSelectorAction extends AbstractAction implements SelectorActionInterface
+class ObjectPath extends Path
 {
     /**
-     * Test whether the date selectors aren't empty
      *
-     * @param array $attributes Attributes
-     * @param int $maxDateTime Maximum date selectors
-     * @return bool Date selectors are not
+     * Check if the Request matches the Route.
+     *
+     * @param ServerRequestInterface $request The HTTP request.
+     * @param Route $route The route.
+     * @return bool True on success, false on failure.
      */
-    protected static function notEmptyDateSelector(array $attributes, $maxDateTime)
+    public function __invoke(ServerRequestInterface $request, Route $route)
     {
-        $dateSelectors = array_slice(
-            [
-                ObjectRoute::YEAR_STR,
-                ObjectRoute::MONTH_STR,
-                ObjectRoute::DAY_STR,
-                ObjectRoute::HOUR_STR,
-                ObjectRoute::MINUTE_STR,
-                ObjectRoute::SECOND_STR,
-            ],
-            0,
-            min($maxDateTime, intval(getenv('OBJECT_DATE_PRECISION')))
-        );
-        foreach ($dateSelectors as $dateSelector) {
-            if (empty($attributes[$dateSelector])) {
-                return false;
-            }
+        if ($route instanceof ObjectActionRouteInterface) {
+            return $this->matchObjectSelector($request, $route);
         }
+
+        return parent::__invoke($request, $route);
+    }
+
+    /**
+     * Check if the request matches the object route
+     *
+     * @param ServerRequestInterface $request Request
+     * @param Route $route Object route
+     * @return bool True on success, false on failure
+     */
+    protected function matchObjectSelector(ServerRequestInterface $request, Route $route) {
+        // Try to match the object selector
+        $match = preg_match(
+            '%^'.$this->basepath.$route->path.'$%',
+            rawurldecode($request->getUri()->getPath()),
+            $matches
+        );
+
+        if (!$match) {
+            return false;
+        }
+
+        $route->attributes($this->getAttributes($matches, $route->wildcard));
         return true;
     }
 }

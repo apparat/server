@@ -37,24 +37,12 @@
 namespace Apparat\Server\Domain\Contract;
 
 /**
- * Action route interface
+ * Object action route interface
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
- * @property array $attributes Attributes
- * @property-read mixed $handler Action handler
  */
-interface ActionRouteInterface
+interface ObjectActionRouteInterface extends ActionRouteInterface
 {
-    /**
-     * Pre-process the route attributes
-     */
-    public function preprocessAttributes();
 
-    /**
-     * Get the action handler
-     *
-     * @return ActionInterface|\Callable
-     */
-    public function getHandler();
 }

@@ -36,6 +36,7 @@
 
 namespace Apparat\Server\Infrastructure\Route;
 
+use Apparat\Server\Domain\Contract\ActionInterface;
 use Apparat\Server\Domain\Contract\ActionRouteInterface;
 use Aura\Router\Route;
 
@@ -52,6 +53,15 @@ abstract class AbstractActionRoute extends Route implements ActionRouteInterface
      */
     public function preprocessAttributes()
     {
+    }
 
+    /**
+     * Get the action handler
+     *
+     * @return ActionInterface|\Callable
+     */
+    public function getHandler()
+    {
+        return $this->handler;
     }
 }

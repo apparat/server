@@ -83,12 +83,7 @@ class Route implements RouteInterface
      * @var string
      */
     const HEAD = 'HEAD';
-    /**
-     * Year route
-     *
-     * @var string
-     */
-    const YEAR = 'year';
+
     /**
      * Allowed HTTP verbs
      *
@@ -175,11 +170,11 @@ class Route implements RouteInterface
      */
     protected $extras = [];
     /**
-     * Default route
+     * Object route
      *
      * @var bool
      */
-    protected $default = false;
+    protected $object = false;
 
     /**
      * Route constructor
@@ -187,11 +182,13 @@ class Route implements RouteInterface
      * @param string|array $verbs Allowed HTTP verbs
      * @param string $name Route name
      * @param string $path Route path
-     * @param string $action Route action
-     * @param bool $default Default route
+     * @param string|callable|array $action Route action
      */
-    public function __construct($verbs, $name, $path, $action, $default = false)
+    public function __construct($verbs, $name, $path, $action)
     {
+        // Set whether this is an object route
+        $this->object = is_array($action);
+
         // Set and validate the allowed HTTP verbs
         $this->setAndValidateVerbs($verbs);
 
@@ -202,10 +199,7 @@ class Route implements RouteInterface
         $this->setAndValidatePath($path);
 
         // Set and validate the route action
-        $this->setAndValidateAction($action);
-
-        // Set whether this is a default route
-        $this->default = !!$default;
+        $this->setAndValidateActionList($action);
     }
 
     /**
@@ -278,56 +272,12 @@ class Route implements RouteInterface
     /**
      * Set and validate the route action
      *
-     * @param string $action Route action
-     * @throws InvalidArgumentException If the route action is empty
-     * @throws InvalidArgumentException If the route action is not a class name
-     * @throws InvalidArgumentException If the route action is neither a callable nor an ActionInterface
+     * @param string|array $actions Route actions
      */
-    protected function setAndValidateAction($action)
+    protected function setAndValidateActionList($actions)
     {
-        // If the action is given as string
-        if (is_string($action)) {
-            $this->action = trim($action);
-
-            // If the route action is empty
-            if (!strlen($this->action)) {
-                throw new InvalidArgumentException(
-                    'Route action must not be empty',
-                    InvalidArgumentException::EMPTY_ROUTE_ACTION
-                );
-            }
-
-            // If the route action is not a class name
-            if (!class_exists($this->action)) {
-                throw new InvalidArgumentException(
-                    'Route action must be an existing class name',
-                    InvalidArgumentException::ROUTE_ACTION_MUST_BE_CLASSNAME
-                );
-            }
-
-            // If the route action doesn't implement the ActionInterface
-            $actionReflection = new \ReflectionClass($this->action);
-            if (!$actionReflection->implementsInterface(ActionInterface::class)) {
-                throw new InvalidArgumentException(
-                    'Route action must implement '.ActionInterface::class,
-                    InvalidArgumentException::ROUTE_ACTION_MUST_IMPLEMENT_ACTION_INTERFACE
-                );
-            }
-
-            return;
-        }
-
-        // If the action is given as callable
-        if (is_callable($action)) {
-            $this->action = $action;
-            return;
-        }
-
-        // If the route action is neither a callable nor an ActionInterface
-        throw new InvalidArgumentException(
-            'Route action must be a callable or '.ActionInterface::class,
-            InvalidArgumentException::ROUTE_ACTION_NOT_CALLABLE_OR_ACTION_INTERFACE
-        );
+        array_map([$this, 'setAndValidateAction'], (array)$actions);
+        $this->action = $actions;
     }
 
     /**
@@ -559,12 +509,66 @@ class Route implements RouteInterface
     }
 
     /**
-     * Return whether this is a default route
+     * Return whether this is an object route
      *
-     * @return boolean Default route
+     * @return boolean Object route
      */
-    public function isDefault()
+    public function isObject()
     {
-        return $this->default;
+        return $this->object;
+    }
+
+    /**
+     * Set and validate the route action
+     *
+     * @param string $action Route action
+     * @throws InvalidArgumentException If the route action is empty
+     * @throws InvalidArgumentException If the route action is not a class name
+     * @throws InvalidArgumentException If the route action is neither a callable nor an ActionInterface
+     */
+    protected function setAndValidateAction($action)
+    {
+        // If the action is given as string
+        if (is_string($action)) {
+            $this->action = trim($action);
+
+            // If the route action is empty
+            if (!strlen($this->action)) {
+                throw new InvalidArgumentException(
+                    'Route action must not be empty',
+                    InvalidArgumentException::EMPTY_ROUTE_ACTION
+                );
+            }
+
+            // If the route action is not a class name
+            if (!class_exists($this->action)) {
+                throw new InvalidArgumentException(
+                    'Route action must be an existing class name',
+                    InvalidArgumentException::ROUTE_ACTION_MUST_BE_CLASSNAME
+                );
+            }
+
+            // If the route action doesn't implement the ActionInterface
+            $actionReflection = new \ReflectionClass($this->action);
+            if (!$actionReflection->implementsInterface(ActionInterface::class)) {
+                throw new InvalidArgumentException(
+                    'Route action must implement '.ActionInterface::class,
+                    InvalidArgumentException::ROUTE_ACTION_MUST_IMPLEMENT_ACTION_INTERFACE
+                );
+            }
+
+            return;
+        }
+
+        // If the action is given as callable
+        if (is_callable($action)) {
+            return;
+        }
+
+        // If the route action is neither a callable nor an ActionInterface
+        throw new InvalidArgumentException(
+            'Route action must be a callable or '.ActionInterface::class,
+            InvalidArgumentException::ROUTE_ACTION_NOT_CALLABLE_OR_ACTION_INTERFACE
+        );
     }
 }

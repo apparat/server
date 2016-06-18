@@ -50,10 +50,9 @@ interface RouteInterface
      * @param string|array $verbs Allowed HTTP verbs
      * @param string $name Route name
      * @param string $path Route path
-     * @param string|callable $action Route action
-     * @param bool $default Default route
+     * @param string|callable|array $action Route action
      */
-    public function __construct($verbs, $name, $path, $action, $default = false);
+    public function __construct($verbs, $name, $path, $action);
 
     /**
      * Get the route name
@@ -212,9 +211,9 @@ interface RouteInterface
     public function setExtras(array $extras);
 
     /**
-     * Return whether this is a default route
+     * Return whether this is an object route
      *
-     * @return boolean Default route
+     * @return boolean Object route
      */
-    public function isDefault();
+    public function isObject();
 }
