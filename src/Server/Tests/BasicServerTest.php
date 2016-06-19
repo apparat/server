@@ -99,9 +99,11 @@ class BasicServerTest extends AbstractServerTest
         ServerFacade::enableObjectRoute();
 
 //        $uri = new Uri('http://apparat/blog/*/12/*/.*-article/*.md');
-        $uri = new Uri('http://apparat/blog/2016/06/08/1-article');
+//        $uri = new Uri('http://apparat/blog/2016/06/08/1-article');
+        $uri = new Uri('http://apparat/blog/2016/06/08/*');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
-        ServerFacade::dispatchRequest($request);
+        $response = ServerFacade::dispatchRequest($request);
+        echo $response->getBody();
     }
 }

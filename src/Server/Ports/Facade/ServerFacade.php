@@ -86,6 +86,7 @@ class ServerFacade
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface $response
+     * @api
      */
     public static function dispatchRequest(ServerRequestInterface $request)
     {

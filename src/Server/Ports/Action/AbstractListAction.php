@@ -36,6 +36,7 @@
 
 namespace Apparat\Server\Ports\Action;
 
+use Apparat\Object\Ports\Factory\SelectorFactory;
 use Apparat\Server\Ports\Responder\AbstractListResponder;
 use Apparat\Server\Ports\Service\AbstractListService;
 use Psr\Http\Message\ResponseInterface;
@@ -68,18 +69,8 @@ abstract class AbstractListAction extends AbstractSelectorAction
      */
     public function __invoke()
     {
-        $payload = $this->domain->findObjects(
-            $this->request->getAttribute('year'),
-            $this->request->getAttribute('month'),
-            $this->request->getAttribute('day'),
-            $this->request->getAttribute('hour'),
-            $this->request->getAttribute('minute'),
-            $this->request->getAttribute('second'),
-            $this->request->getAttribute('hidden'),
-            $this->request->getAttribute('type'),
-            $this->request->getAttribute('draft'),
-            $this->request->getAttribute('revision')
-        );
+        $selector = SelectorFactory::createFromParams($this->request->getAttributes());
+        $payload = $this->domain->findObjects($selector);
         return $this->responder->__invoke($payload);
     }
 }

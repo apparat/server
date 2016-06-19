@@ -59,14 +59,4 @@ class ObjectsAction extends AbstractListAction
         return self::notEmptyDateSelector($attributes, 6)
         && !empty($attributes[ObjectRoute::ID_STR]);
     }
-
-    /**
-     * Run the action
-     *
-     * @return ResponseInterface Response
-     */
-    public function __invoke()
-    {
-
-    }
 }

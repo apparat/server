@@ -54,15 +54,4 @@ class ObjectsResponder extends AbstractListResponder
      * @var string
      */
     const ACTION = 'Objects';
-
-    /**
-     * Run the responder
-     *
-     * @param PayloadInterface $payload Domain payload
-     * @return ResponseInterface Response
-     */
-    public function __invoke(PayloadInterface $payload)
-    {
-        // TODO: Implement __invoke() method.
-    }
 }

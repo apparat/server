@@ -76,5 +76,6 @@ abstract class AbstractResponder implements ResponderInterface
     {
         $this->response = $response;
         $this->view = $view->setAction(static::ACTION);
+//        print_r($this->view->getTemplatePaths());
     }
 }

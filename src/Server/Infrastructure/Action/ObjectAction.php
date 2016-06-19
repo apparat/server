@@ -70,6 +70,7 @@ class ObjectAction extends AbstractSelectorAction
      */
     public function __invoke()
     {
+        print_r($this->request->getAttributes());
         // TODO: Implement __invoke() method.
     }
 }
