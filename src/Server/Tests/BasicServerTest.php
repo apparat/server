@@ -37,6 +37,8 @@
 namespace Apparat\Server\Tests;
 
 use Apparat\Kernel\Ports\Kernel;
+use Apparat\Object\Infrastructure\Repository\FileAdapterStrategy;
+use Apparat\Object\Ports\Facades\RepositoryFacade;
 use Apparat\Server\Domain\Model\Server;
 use Apparat\Server\Ports\Facade\ServerFacade;
 use Apparat\Server\Ports\Route\Route;
@@ -61,6 +63,15 @@ class BasicServerTest extends AbstractServerTest
     public static function setUpBeforeClass()
     {
         TestModule::autorun();
+
+        // Register a repositoryc
+        RepositoryFacade::register(
+            'repo',
+            [
+                'type' => FileAdapterStrategy::TYPE,
+                'root' => __DIR__.DIRECTORY_SEPARATOR.'Fixture',
+            ]
+        );
     }
 
     /**
@@ -87,7 +98,7 @@ class BasicServerTest extends AbstractServerTest
         $uri = new Uri('http://apparat/blog/default/1.html');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
-        $response = ServerFacade::dispatchRequest($request);
+        ServerFacade::dispatchRequest($request);
 //        print_r($response);
     }
 
@@ -100,7 +111,8 @@ class BasicServerTest extends AbstractServerTest
 
 //        $uri = new Uri('http://apparat/blog/*/12/*/.*-article/*.md');
 //        $uri = new Uri('http://apparat/blog/2016/06/08/1-article');
-        $uri = new Uri('http://apparat/blog/2016/06/08/*');
+//        $uri = new Uri('http://apparat/blog/2016/06/08/*');
+        $uri = new Uri('http://apparat/blog/repo/2016/06/20/2');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
         $response = ServerFacade::dispatchRequest($request);

@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Infrastructure\Service;
 
-use Apparat\Server\Domain\Service\ServiceInterface;
+use Apparat\Server\Ports\Service\AbstractObjectService;
 
 /**
  * Object result service
@@ -44,7 +44,7 @@ use Apparat\Server\Domain\Service\ServiceInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  */
-class ObjectService implements ServiceInterface
+class ObjectService extends AbstractObjectService
 {
 
 }

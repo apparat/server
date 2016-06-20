@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Domain\Service
+ * @subpackage  Apparat\Server\Ports
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -37,26 +37,18 @@
 namespace Apparat\Server\Ports\Service;
 
 use Apparat\Object\Ports\Repository\SelectorInterface;
-use Apparat\Server\Application\Factory\PayloadFactory;
 use Apparat\Server\Domain\Payload\PayloadInterface;
 
 /**
  * Abstract list service
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Domain
+ * @subpackage Apparat\Server\Ports
  */
 class AbstractListService extends AbstractService
 {
     /**
-     * Payload factory
-     *
-     * @var PayloadFactory
-     */
-    protected $payloadFactory;
-
-    /**
-     * Find objects by parameters
+     * Find objects by selector
      *
      * @param SelectorInterface $selector Object selector
      * @return PayloadInterface Payload

@@ -1,8 +1,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers">
     <f:layout name="Default"/>
     <f:section name="Main">
-        <!-- Objects template (begin) -->
-        <f:debug>{_all}</f:debug>
-        <!-- Objects template (end) -->
+        <!-- Object template (begin) -->
+        <article>
+            <h1>{payload.name}</h1>
+            <p>{payload.content}</p>
+        </article>
+        <!-- Object template (end) -->
     </f:section>
 </html>

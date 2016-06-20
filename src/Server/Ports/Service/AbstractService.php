@@ -36,6 +36,8 @@
 
 namespace Apparat\Server\Ports\Service;
 
+use Apparat\Server\Application\Factory\PayloadFactory;
+
 /**
  * Abstract service
  *
@@ -44,5 +46,10 @@ namespace Apparat\Server\Ports\Service;
  */
 class AbstractService extends \Apparat\Server\Domain\Service\AbstractService
 {
-
+    /**
+     * Payload factory
+     *
+     * @var PayloadFactory
+     */
+    protected $payloadFactory;
 }

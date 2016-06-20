@@ -36,9 +36,7 @@
 
 namespace Apparat\Server\Infrastructure\Responder;
 
-use Apparat\Server\Domain\Payload\PayloadInterface;
-use Apparat\Server\Ports\Responder\AbstractResponder;
-use Psr\Http\Message\ResponseInterface;
+use Apparat\Server\Ports\Responder\AbstractObjectResponder;
 
 /**
  * Object responder
@@ -46,7 +44,7 @@ use Psr\Http\Message\ResponseInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class ObjectResponder extends AbstractResponder
+class ObjectResponder extends AbstractObjectResponder
 {
     /**
      * Action name
@@ -54,14 +52,4 @@ class ObjectResponder extends AbstractResponder
      * @var string
      */
     const ACTION = 'Object';
-    /**
-     * Run the responder
-     *
-     * @param PayloadInterface $payload Domain payload
-     * @return ResponseInterface Response
-     */
-    public function __invoke(PayloadInterface $payload)
-    {
-        // TODO: Implement __invoke() method.
-    }
 }

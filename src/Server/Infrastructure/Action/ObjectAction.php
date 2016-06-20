@@ -36,7 +36,10 @@
 
 namespace Apparat\Server\Infrastructure\Action;
 
+use Apparat\Object\Ports\Factory\SelectorFactory;
 use Apparat\Server\Ports\Action\AbstractSelectorAction;
+use Apparat\Server\Ports\Responder\AbstractObjectResponder;
+use Apparat\Server\Ports\Service\AbstractObjectService;
 use Apparat\Server\Ports\Types\ObjectRoute;
 use Psr\Http\Message\ResponseInterface;
 
@@ -49,6 +52,19 @@ use Psr\Http\Message\ResponseInterface;
 class ObjectAction extends AbstractSelectorAction
 {
     /**
+     * Domain service
+     *
+     * @var AbstractObjectService
+     */
+    protected $domain;
+    /**
+     * Responder
+     *
+     * @var AbstractObjectResponder
+     */
+    protected $responder;
+
+    /**
      * Check whether a set of attributes matches the action requirements
      *
      * @param array $attributes Attributes
@@ -60,7 +76,7 @@ class ObjectAction extends AbstractSelectorAction
         && !empty($attributes[ObjectRoute::ID_STR])
         && ($attributes[ObjectRoute::ID_STR] !== ObjectRoute::WILDCARD)
         && (empty($attributes[ObjectRoute::REVISION_STR])
-        || ($attributes[ObjectRoute::REVISION_STR] !== ObjectRoute::WILDCARD));
+            || ($attributes[ObjectRoute::REVISION_STR] !== ObjectRoute::WILDCARD));
     }
 
     /**
@@ -70,7 +86,8 @@ class ObjectAction extends AbstractSelectorAction
      */
     public function __invoke()
     {
-        print_r($this->request->getAttributes());
-        // TODO: Implement __invoke() method.
+        $selector = SelectorFactory::createFromParams($this->request->getAttributes());
+        $payload = $this->domain->findObject(strval($this->request->getAttribute('repository')), $selector);
+        return $this->responder->__invoke($payload);
     }
 }

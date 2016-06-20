@@ -6,8 +6,8 @@
  * @category    Apparat
  * @package     Apparat\Server
  * @subpackage  Apparat\Server\Ports
- * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,15 +34,48 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+namespace Apparat\Server\Ports\Service;
+
+use Apparat\Object\Ports\Facades\RepositoryFacade;
+use Apparat\Object\Ports\Repository\SelectorInterface;
+use Apparat\Server\Domain\Payload\PayloadInterface;
 
 /**
- * Abstract list responder
+ * Abstract object service
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-abstract class AbstractListResponder extends AbstractResponder
+class AbstractObjectService extends AbstractService
 {
-    
+    /**
+     * Find an object by select
+     *
+     * @param string $repository Repository identifier
+     * @param SelectorInterface $selector Object selector
+     * @return PayloadInterface Payload
+     */
+    public function findObject($repository, SelectorInterface $selector)
+    {
+        $objects = RepositoryFacade::instance($repository)->findObjects($selector);
+
+        switch (count($objects)) {
+            // If exactly one object was found
+            case 1:
+                return $this->payloadFactory->found([current($objects)]);
+                break;
+
+            // If no object was found
+            case 0:
+
+                break;
+
+            // If multiple objects were found: Error
+            default:
+
+                break;
+        }
+
+        return $this->payloadFactory->found([]);
+    }
 }

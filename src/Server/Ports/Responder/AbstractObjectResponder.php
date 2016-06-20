@@ -35,14 +35,27 @@
  ***********************************************************************************/
 
 namespace Apparat\Server\Ports\Responder;
+use Apparat\Server\Domain\Payload\PayloadInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Abstract list responder
+ * Abstract object responder
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-abstract class AbstractListResponder extends AbstractResponder
+abstract class AbstractObjectResponder extends AbstractResponder
 {
-    
+    /**
+     * Run the responder
+     *
+     * @param PayloadInterface $payload Domain payload
+     * @return ResponseInterface Response
+     */
+    public function __invoke(PayloadInterface $payload)
+    {
+        $this->view->assign('payload', current($payload->get()));
+        $this->response->getBody()->write($this->view->render());
+        return $this->response;
+    }
 }
