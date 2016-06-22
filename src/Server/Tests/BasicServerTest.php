@@ -135,7 +135,6 @@ class BasicServerTest extends AbstractServerTest
         $request = new ServerRequest();
         $request = $request->withUri($uri);
         $response = ServerFacade::dispatchRequest($request);
-        echo $response->getBody();
+        $this->assertEquals('[(article)]', trim($response->getBody()));
     }
-
 }

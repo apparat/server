@@ -67,12 +67,12 @@ class AbstractObjectService extends AbstractService
 
             // If no object was found
             case 0:
-
+                // TODO: Add payload
                 break;
 
             // If multiple objects were found: Error
             default:
-
+                // TODO: Add error payload
                 break;
         }
 

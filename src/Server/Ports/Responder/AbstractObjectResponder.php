@@ -35,6 +35,7 @@
  ***********************************************************************************/
 
 namespace Apparat\Server\Ports\Responder;
+
 use Apparat\Server\Domain\Payload\PayloadInterface;
 use Psr\Http\Message\ResponseInterface;
 

@@ -203,6 +203,4 @@ class ObjectRoute
     {
         return (empty($name) || empty(self::$nameBits[$name])) ? 0 : self::$nameBits[$name];
     }
-
-
 }
