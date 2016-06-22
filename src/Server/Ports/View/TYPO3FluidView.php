@@ -36,6 +36,7 @@
 
 namespace Apparat\Server\Ports\View;
 
+use Apparat\Server\Ports\Facade\ServerFacade;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -47,6 +48,25 @@ use TYPO3Fluid\Fluid\View\TemplateView;
  */
 class TYPO3FluidView extends TemplateView implements ViewInterface
 {
+    /**
+     * Layouts
+     *
+     * @var string
+     */
+    const LAYOUTS = 'layouts';
+    /**
+     * Partials
+     *
+     * @var string
+     */
+    const PARTIALS = 'partials';
+    /**
+     * Templates
+     *
+     * @var string
+     */
+    const TEMPLATES = 'templates';
+
     /**
      * Constructor
      *
@@ -61,6 +81,34 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
     }
 
     /**
+     * Set the template paths
+     *
+     * @todo Enable externally configured paths
+     */
+    protected function setTemplatePaths()
+    {
+        $paths = $this->getTemplatePaths();
+        $paths->setLayoutRootPaths(
+            array_merge(
+                (array)ServerFacade::getViewResources(self::LAYOUTS),
+                [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Layouts']
+            )
+        );
+        $paths->setTemplateRootPaths(
+            array_merge(
+                (array)ServerFacade::getViewResources(self::TEMPLATES),
+                [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Templates']
+            )
+        );
+        $paths->setPartialRootPaths(
+            array_merge(
+                (array)ServerFacade::getViewResources(self::PARTIALS),
+                [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Partials']
+            )
+        );
+    }
+
+    /**
      * Set the action name
      *
      * @param string $action Action name
@@ -70,18 +118,5 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
     {
         $this->getRenderingContext()->setControllerAction($action);
         return $this;
-    }
-
-    /**
-     * Set the template paths
-     *
-     * @todo Enable externally configured paths
-     */
-    protected function setTemplatePaths()
-    {
-        $paths = $this->getTemplatePaths();
-        $paths->setLayoutRootPaths([__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Layouts']);
-        $paths->setTemplateRootPaths([__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Templates']);
-        $paths->setPartialRootPaths([__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Partials']);
     }
 }

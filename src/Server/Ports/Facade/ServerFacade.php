@@ -71,6 +71,19 @@ class ServerFacade
     }
 
     /**
+     * Create and return the server instance
+     *
+     * @return Server Server instance
+     */
+    protected static function getServer()
+    {
+        if (self::$server === null) {
+            self::$server = Kernel::create(Server::class);
+        }
+        return self::$server;
+    }
+
+    /**
      * Register a route
      *
      * @param RouteInterface $route
@@ -101,15 +114,23 @@ class ServerFacade
     }
 
     /**
-     * Create and return the server instance
+     * Set the view resources
      *
-     * @return Server Server instance
+     * @param array $viewResources View resources
      */
-    protected static function getServer()
+    public static function setViewResources(array $viewResources)
     {
-        if (self::$server === null) {
-            self::$server = Kernel::create(Server::class);
-        }
-        return self::$server;
+        self::getServer()->setViewResources($viewResources);
+    }
+
+    /**
+     * Return view resources
+     *
+     * @param string|null $name Optional: view resource name
+     * @return array View resources
+     */
+    public static function getViewResources($name = null)
+    {
+        return self::getServer()->getViewResources($name);
     }
 }

@@ -1,0 +1,16 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers">
+    <f:layout name="Default"/>
+
+    <!-- Head section -->
+    <f:section name="Head">
+        <title>{payload.name}</title>
+    </f:section>
+
+    <!-- Main section -->
+    <f:section name="Main">
+        <article>
+            <h1>{payload.name}</h1>
+            <p>{payload.content}</p>
+        </article>
+    </f:section>
+</html>

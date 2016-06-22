@@ -42,6 +42,7 @@ use Apparat\Object\Ports\Facades\RepositoryFacade;
 use Apparat\Server\Domain\Model\Server;
 use Apparat\Server\Ports\Facade\ServerFacade;
 use Apparat\Server\Ports\Route\Route;
+use Apparat\Server\Ports\View\TYPO3FluidView;
 use Apparat\Server\Tests\Adr\TestAction;
 use Apparat\Server\Tests\Adr\TestModule;
 use Zend\Diactoros\ServerRequest;
@@ -108,14 +109,30 @@ class BasicServerTest extends AbstractServerTest
     public function testObjectRoutes()
     {
         ServerFacade::enableObjectRoute();
-
-//        $uri = new Uri('http://apparat/blog/*/12/*/.*-article/*.md');
-//        $uri = new Uri('http://apparat/blog/2016/06/08/1-article');
-//        $uri = new Uri('http://apparat/blog/2016/06/08/*');
         $uri = new Uri('http://apparat/blog/repo/2016/06/20/2');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
         $response = ServerFacade::dispatchRequest($request);
         echo $response->getBody();
     }
+
+    /**
+     * Test custom template resources
+     */
+    public function testCustomTemplateResources()
+    {
+        $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
+        ServerFacade::enableObjectRoute();
+        ServerFacade::setViewResources([
+            TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::TEMPLATES => $noneRepoPath.'Templates'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::PARTIALS => $noneRepoPath.'Partials'.DIRECTORY_SEPARATOR,
+        ]);
+        $uri = new Uri('http://apparat/blog/repo/2016/06/20/2');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+        $response = ServerFacade::dispatchRequest($request);
+        echo $response->getBody();
+    }
+
 }

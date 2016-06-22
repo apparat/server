@@ -61,6 +61,13 @@ use Psr\Http\Message\ServerRequestInterface;
 class Server extends \Apparat\Server\Domain\Model\Server
 {
     /**
+     * View resources
+     *
+     * @var array
+     */
+    protected $viewResources = [];
+
+    /**
      * Enable the object route for a particular repository
      *
      * @param string $repositoryPath Repository path
@@ -107,5 +114,28 @@ class Server extends \Apparat\Server\Domain\Model\Server
     public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route)
     {
         return $this->routerContainer->getRouteAction($request, $route);
+    }
+
+    /**
+     * Return view resources
+     *
+     * @param string|null $name Optional: view resource name
+     * @return array View resources
+     */
+    public function getViewResources($name = null)
+    {
+        return ($name === null) ?
+            $this->viewResources :
+            (array_key_exists($name, $this->viewResources) ? $this->viewResources[$name] : null);
+    }
+
+    /**
+     * Set the view resources
+     *
+     * @param array $viewResources View resources
+     */
+    public function setViewResources(array $viewResources)
+    {
+        $this->viewResources = $viewResources;
     }
 }
