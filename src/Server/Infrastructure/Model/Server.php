@@ -76,7 +76,6 @@ class Server extends \Apparat\Server\Domain\Model\Server
     public function enableObjectRoute($repositoryPath = '', $enable = ObjectRoute::ALL)
     {
         // Repository route prefix
-        $prefix = rtrim('/'.$repositoryPath, '/');
         $datePrecision = intval(getenv('OBJECT_DATE_PRECISION'));
         $selectorRegex = SelectorFactory::getSelectorRegex($datePrecision);
         $objectRouteActions = array_filter(
@@ -100,7 +99,12 @@ class Server extends \Apparat\Server\Domain\Model\Server
             )
         );
 
-        $route = new Route(Route::GET, ObjectRoute::OBJECT_STR, $prefix.$selectorRegex, $objectRouteActions);
+        // Add a repository subpattern
+        if (strlen($repositoryPath)) {
+            $selectorRegex = '(?:/(?P<repository>.+?))'.$selectorRegex;
+        }
+
+        $route = new Route(Route::GET, ObjectRoute::OBJECT_STR, $selectorRegex, $objectRouteActions);
         $this->registerRoute($route);
     }
 

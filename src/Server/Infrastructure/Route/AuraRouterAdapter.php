@@ -70,12 +70,13 @@ class AuraRouterAdapter implements RouterContainerInterface
     {
         $this->routerContainer = $routerContainer;
 
+        // Override the default rules
         /** @var Rule\RuleIterator $ruleIterator */
         $ruleIterator = $routerContainer->getRuleIterator();
         $ruleIterator->set([
             new Rule\Secure(),
             new Rule\Host(),
-            new ObjectPath(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH) ?: null),
+            new ObjectPath(rtrim(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH), '/') ?: null),
             new Rule\Allows(),
             new Rule\Accepts(),
         ]);

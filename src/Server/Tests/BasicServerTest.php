@@ -73,6 +73,9 @@ class BasicServerTest extends AbstractServerTest
                 'root' => __DIR__.DIRECTORY_SEPARATOR.'Fixture',
             ]
         );
+
+        // Enable the default routes
+        ServerFacade::enableObjectRoute('repo');
     }
 
     /**
@@ -108,7 +111,6 @@ class BasicServerTest extends AbstractServerTest
      */
     public function testObjectRoutes()
     {
-        ServerFacade::enableObjectRoute();
         $uri = new Uri('http://apparat/blog/repo/2016/06/20/2');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
@@ -122,12 +124,13 @@ class BasicServerTest extends AbstractServerTest
     public function testCustomTemplateResources()
     {
         $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
-        ServerFacade::enableObjectRoute();
         ServerFacade::setViewResources([
             TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
             TYPO3FluidView::TEMPLATES => $noneRepoPath.'Templates'.DIRECTORY_SEPARATOR,
             TYPO3FluidView::PARTIALS => $noneRepoPath.'Partials'.DIRECTORY_SEPARATOR,
         ]);
+
+        // Enable the default routes for a repository "repo"
         $uri = new Uri('http://apparat/blog/repo/2016/06/20/2');
         $request = new ServerRequest();
         $request = $request->withUri($uri);

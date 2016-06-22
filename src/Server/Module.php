@@ -137,7 +137,7 @@ class Module extends AbstractModule
         // Configure the router
         $diContainer->register(RouterContainer::class, [
             'constructParams' => [
-                parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH) ?: null
+                rtrim(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH), '/') ?: null
             ]
         ]);
 

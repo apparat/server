@@ -76,7 +76,7 @@ class ObjectPath extends Path
     protected function matchObjectSelector(ServerRequestInterface $request, Route $route) {
         // Try to match the object selector
         $match = preg_match(
-            '%^'.$this->basepath.'(?:/(?P<repository>.+))?'.$route->path.'$%',
+            '%^'.$this->basepath.$route->path.'$%',
             rawurldecode($request->getUri()->getPath()),
             $matches
         );
