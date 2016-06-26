@@ -1,3 +1,38 @@
-<!-- Default layout (begin) -->
-<f:render section="Main"/>
-<!-- Default layout (end) -->
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers">
+    <head>
+        <meta charset="UTF-8">
+        <title><f:format.htmlspecialchars>{payload.name}</f:format.htmlspecialchars></title>
+        <style>
+body {
+    font-family: sans-serif;
+}
+.property {
+    font-family: monospace;
+    color: #bbb;
+}
+dl {
+    border-bottom: 1px solid #bbb;
+}
+dt, dd {
+    padding-bottom: .5em;
+}
+dt {
+    float: left;
+    clear: left;
+    width: 10em;
+}
+dd {
+    margin-left: 10em;
+}
+ul {
+    margin: 0;
+    padding: 0 0 0 1em;
+}
+        </style>
+    </head>
+    <body>
+        <f:render section="Main"/>
+    </body>
+</html>

@@ -62,6 +62,49 @@ you might want to fine-tune your "view model" (the data you assign to the view).
             </xsd:attribute>
         </xsd:complexType>
     </xsd:element>
+    <xsd:element name="format.cdata">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Outputs an argument/value without any escaping and wraps it with CDATA tags.
+
+PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
+as the output is NOT SANITIZED!
+
+= Examples =
+
+<code title="Child nodes">
+<f:format.cdata>{string}</f:format.cdata>
+</code>
+<output>
+<![CDATA[(Content of {string} without any conversion/escaping)]]]]><![CDATA[>
+</output>
+
+<code title="Value attribute">
+<f:format.cdata value="{string}" />
+</code>
+<output>
+<![CDATA[(Content of {string} without any conversion/escaping)]]]]><![CDATA[>
+</output>
+
+<code title="Inline notation">
+{string -> f:format.cdata()}
+</code>
+<output>
+<![CDATA[(Content of {string} without any conversion/escaping)]]]]><![CDATA[>
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:mixed" name="value" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[The value to output]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
     <xsd:element name="comment">
         <xsd:annotation>
             <xsd:documentation><![CDATA[This ViewHelper prevents rendering of any content inside the tag
@@ -445,6 +488,56 @@ you might want to fine-tune your "view model" (the data you assign to the view).
             </xsd:attribute>
         </xsd:complexType>
     </xsd:element>
+    <xsd:element name="format.htmlspecialchars">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Applies htmlspecialchars() escaping to a value
+
+
+= Examples =
+
+<code title="default notation">
+<f:format.htmlspecialchars>{text}</f:format.htmlspecialchars>
+</code>
+<output>
+Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
+</output>
+
+<code title="inline notation">
+{text -> f:format.htmlspecialchars(encoding: 'ISO-8859-1')}
+</code>
+<output>
+Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:string" name="value" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Value to format]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:boolean" name="keepQuotes" default="false">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        <![CDATA[If TRUE quotes will not be replaced (ENT_NOQUOTES)]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="encoding" default="'UTF-8'">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Encoding]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:boolean" name="doubleEncode" default="true">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[If FALSE html entities will not be encoded]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
     <xsd:element name="if">
         <xsd:annotation>
             <xsd:documentation><![CDATA[This view helper implements an if/else condition.
@@ -685,6 +778,104 @@ Otherwise, everything the value of the "else"-attribute is displayed.
                 <xsd:annotation>
                     <xsd:documentation>
                         <![CDATA[Arguments to be replaced in the resulting string, using sprintf]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="format.printf">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[A view helper for formatting values with printf. Either supply an array for
+the arguments or a single value.
+See http://www.php.net/manual/en/function.sprintf.php
+
+= Examples =
+
+<code title="Scientific notation">
+<f:format.printf arguments="{number: 362525200}">%.3e</f:format.printf>
+</code>
+<output>
+3.625e+8
+</output>
+
+<code title="Argument swapping">
+<f:format.printf arguments="{0: 3, 1: 'Kasper'}">%2$s is great, TYPO%1$d too. Yes, TYPO%1$d is great and so is %2$s!</f:format.printf>
+</code>
+<output>
+Kasper is great, TYPO3 too. Yes, TYPO3 is great and so is Kasper!
+</output>
+
+<code title="Single argument">
+<f:format.printf arguments="{1: 'TYPO3'}">We love %s</f:format.printf>
+</code>
+<output>
+We love TYPO3
+</output>
+
+<code title="Inline notation">
+{someText -> f:format.printf(arguments: {1: 'TYPO3'})}
+</code>
+<output>
+We love TYPO3
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:array" name="arguments" default="array (&#10;)">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[The arguments for vsprintf]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="value" default="false">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[String to format]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="format.raw">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Outputs an argument/value without any escaping. Is normally used to output
+an ObjectAccessor which should not be escaped, but output as-is.
+
+PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
+as the output is NOT SANITIZED!
+
+= Examples =
+
+<code title="Child nodes">
+<f:format.raw>{string}</f:format.raw>
+</code>
+<output>
+(Content of {string} without any conversion/escaping)
+</output>
+
+<code title="Value attribute">
+<f:format.raw value="{string}" />
+</code>
+<output>
+(Content of {string} without any conversion/escaping)
+</output>
+
+<code title="Inline notation">
+{string -> f:format.raw()}
+</code>
+<output>
+(Content of {string} without any conversion/escaping)
+</output>
+
+/]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:mixed" name="value" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[The value to output]]></xsd:documentation>
                 </xsd:annotation>
             </xsd:attribute>
         </xsd:complexType>

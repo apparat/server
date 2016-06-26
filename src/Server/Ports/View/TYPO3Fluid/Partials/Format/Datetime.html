@@ -1,0 +1,11 @@
+<span xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers"
+      xmlns:as="http://typo3.org/ns/Apparat/Server/Ports/ViewHelpers">
+    <f:if condition="{datetime}">
+        <f:then>
+            <time class="{class}" datetime="{datetime -> as:format.datetime()}">
+                <as:format.datetime value="{datetime}"/>
+            </time>
+        </f:then>
+        <f:else>---</f:else>
+    </f:if>
+</span>

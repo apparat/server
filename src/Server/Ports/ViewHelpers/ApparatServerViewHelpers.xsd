@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://typo3.org/ns/Apparat/Server/Ports/ViewHelpers">
+    <xsd:element name="commonMark.html">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Converts a CommonMark string to HTML]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:string" name="value" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[CommonMark content]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="format.datetime">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[Returns a formatted representation of a date/time object]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType mixed="true">
+            <xsd:sequence>
+                <xsd:any minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute type="xsd:dateTime" name="value" default="NULL">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Date/time object]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute type="xsd:string" name="format" default="c">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[Date format]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

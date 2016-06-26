@@ -3,11 +3,122 @@
       xmlns:as="http://typo3.org/ns/Apparat/Server/Ports/ViewHelpers">
     <f:layout name="Default"/>
     <f:section name="Main">
+
         <!-- Object template (begin) -->
-        <article>
-            <h1>{payload.name}</h1>
-            <p><as:commonMark.html>{payload.content}</as:commonMark.html></p>
+        <article class="h-entry">
+            <dl>
+                <!-- Name -->
+                <dt><f:render partial="Property" arguments="{property: 'name'}"/></dt>
+                <dd class="p-name">
+                    <f:format.htmlspecialchars>{payload.name}</f:format.htmlspecialchars>
+                </dd>
+
+                <!-- Summary -->
+                <dt><f:render partial="Property" arguments="{property: 'summary'}"/></dt>
+                <dd class="p-summary">
+                    <f:format.htmlspecialchars>{payload.summary}</f:format.htmlspecialchars>
+                </dd>
+
+                <!-- Publication date -->
+                <dt><f:render partial="Property" arguments="{property: 'published'}"/></dt>
+                <dd>
+                    <f:render partial="Format/Datetime"
+                              arguments="{datetime: payload.published, class: 'dt-published'}"/>
+                </dd>
+
+                <!-- Modification date -->
+                <dt><f:render partial="Property" arguments="{property: 'updated'}"/></dt>
+                <dd>
+                    <f:render partial="Format/Datetime"
+                              arguments="{datetime: payload.updated, class: 'dt-updated'}"/>
+                </dd>
+
+                <!-- Author -->
+                <dt><f:render partial="Property" arguments="{property: 'author'}"/></dt>
+                <dd>
+                    <f:if condition="{payload.author}">
+                        <f:then>
+                            <ul>
+                                <f:for each="{payload.author}" as="author">
+                                    <li class="p-author">{author}</li>
+                                </f:for>
+                            </ul>
+                        </f:then>
+                        <f:else>---</f:else>
+                    </f:if>
+                </dd>
+
+                <!-- Category -->
+                <dt><f:render partial="Property" arguments="{property: 'category'}"/></dt>
+                <dd>
+                    <f:if condition="{payload.category}">
+                        <f:then>
+                            <ul>
+                                <f:for each="{payload.category}" as="category">
+                                    <li class="p-category">{category}</li>
+                                </f:for>
+                            </ul>
+                        </f:then>
+                        <f:else>---</f:else>
+                    </f:if>
+                </dd>
+
+                <!-- URL -->
+                <dt><f:render partial="Property" arguments="{property: 'url'}"/></dt>
+                <dd>
+                    <a class="u-url" href="{payload.url}">{payload.url}</a>
+                </dd>
+
+                <!-- UID -->
+                <dt><f:render partial="Property" arguments="{property: 'uid'}"/></dt>
+                <dd>
+                    <a class="u-uid" href="{payload.uid}">{payload.uid}</a>
+                </dd>
+
+                <!-- Location -->
+                <dt><f:render partial="Property" arguments="{property: 'location'}"/></dt>
+                <dd>
+                    <f:if condition="{payload.location}">
+                        <f:then><span class="p-location">{payload.location}</span></f:then>
+                        <f:else>---</f:else>
+                    </f:if>
+                </dd>
+
+                <!-- Syndication -->
+                <dt><f:render partial="Property" arguments="{property: 'syndication'}"/></dt>
+                <dd>
+                    <f:if condition="{payload.syndication}">
+                        <f:then>
+                            <ul>
+                                <f:for each="{payload.syndication}" as="syndication">
+                                    <li><a class="u-syndication" href="{syndication}">{syndication}</a></li>
+                                </f:for>
+                            </ul>
+                        </f:then>
+                        <f:else>---</f:else>
+                    </f:if>
+                </dd>
+
+                <!-- Featured -->
+                <dt><f:render partial="Property" arguments="{property: 'featured'}"/></dt>
+                <dd>
+                    <f:if condition="{payload.featured}">
+                        <f:then>
+                            <img class="u-featured" src="{payload.featured}" alt="{payload.nae}" height="150"/>
+                        </f:then>
+                        <f:else>---</f:else>
+                    </f:if>
+                </dd>
+            </dl>
+
+            <main>
+                <f:render partial="Property" arguments="{property: 'content'}"/>
+                <div class="e-content">
+                    <as:commonMark.html>{payload.content}</as:commonMark.html>
+                </div>
+            </main>
         </article>
         <!-- Object template (end) -->
+
     </f:section>
 </html>
