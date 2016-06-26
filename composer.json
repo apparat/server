@@ -23,7 +23,8 @@
     "phpunit/phpunit": "^5.3",
     "apparat/dev": "dev-master",
     "satooshi/php-coveralls": "^1.0",
-    "codeclimate/php-test-reporter": "dev-master"
+    "codeclimate/php-test-reporter": "dev-master",
+    "typo3fluid/schema-generator": "dev-master"
   },
   "repositories": [
     {
@@ -49,6 +50,11 @@
     {
       "type": "vcs",
       "url": "git@github.com:dominicsayers/isemail.git",
+      "reference": "master"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:NamelessCoder/TYPO3.Fluid.SchemaGenerator.git",
       "reference": "master"
     }
   ],

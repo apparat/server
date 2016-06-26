@@ -106,6 +106,10 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
                 [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Partials']
             )
         );
+
+        // Register the view helpers
+        // TODO: Enable after https://github.com/TYPO3Fluid/Fluid/issues/114 has been resolved
+//        $paths->registerNamespace('as', 'Apparat\\Server\\Ports\\ViewHelpers');
     }
 
     /**

@@ -1,10 +1,12 @@
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers"
+      xmlns:as="http://typo3.org/ns/Apparat/Server/Ports/ViewHelpers">
     <f:layout name="Default"/>
     <f:section name="Main">
         <!-- Object template (begin) -->
         <article>
             <h1>{payload.name}</h1>
-            <p>{payload.content}</p>
+            <p><as:commonmark.html>{payload.content}</as:commonmark.html></p>
         </article>
         <!-- Object template (end) -->
     </f:section>
