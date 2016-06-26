@@ -34,7 +34,7 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\ViewHelpers\Commonmark;
+namespace Apparat\Server\Ports\ViewHelpers\CommonMark;
 
 use League\CommonMark\CommonMarkConverter;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
