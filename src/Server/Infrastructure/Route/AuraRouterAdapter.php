@@ -138,7 +138,7 @@ class AuraRouterAdapter implements RouterContainerInterface
      */
     public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route)
     {
-        // Preprocess the matched attributes
+        // Pre-process the matched attributes
         $route->preprocessAttributes();
 
         // Copy all route attributes to the server request

@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Action
+ * @subpackage  Apparat\Server\Application
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,42 +34,17 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Infrastructure\Action;
+namespace Apparat\Server\Application\Payload;
 
-use Apparat\Server\Infrastructure\Responder\ErrorResponder;
-use Apparat\Server\Infrastructure\Service\ErrorService;
-use Apparat\Server\Ports\Action\AbstractAction;
-use Psr\Http\Message\ResponseInterface;
+use Apparat\Server\Domain\Payload\AbstractPayload;
 
 /**
- * Object action
+ * Error payload
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Application
  */
-class ErrorAction extends AbstractAction
+class Error extends AbstractPayload
 {
-    /**
-     * Domain service
-     *
-     * @var ErrorService
-     */
-    protected $domain;
-    /**
-     * Responder
-     *
-     * @var ErrorResponder
-     */
-    protected $responder;
 
-    /**
-     * Run the action
-     *
-     * @return ResponseInterface Response
-     */
-    public function __invoke()
-    {
-        $payload = $this->domain->explain($this->request->getAttributes());
-        return $this->responder->__invoke($payload);
-    }
 }

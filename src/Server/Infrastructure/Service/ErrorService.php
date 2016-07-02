@@ -36,7 +36,8 @@
 
 namespace Apparat\Server\Infrastructure\Service;
 
-use Apparat\Server\Domain\Service\ServiceInterface;
+use Apparat\Server\Domain\Payload\PayloadInterface;
+use Apparat\Server\Ports\Service\AbstractService;
 
 /**
  * Error result service
@@ -44,7 +45,48 @@ use Apparat\Server\Domain\Service\ServiceInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
  */
-class ErrorService implements ServiceInterface
+class ErrorService extends AbstractService
 {
+    /**
+     * Explain a
+     *
+     * @param array $attributes Request attributes
+     * @return PayloadInterface Payload
+     */
+    public function explain(array $attributes)
+    {
+        // Which matching rule failed?
+        switch ($attributes['failure']) {
+            // Invalid object path
+            case 'Apparat\Server\Infrastructure\Route\ObjectPath':
+                return $this->payloadFactory->error(404, 'Bad apparat object request');
+                break;
 
+            // Invalid method
+            case 'Aura\Router\Rule\Allows':
+                return $this->payloadFactory->error(
+                    405,
+                    'Method not allowed',
+                    ['Allow' => $attributes['allow']]
+                );
+                break;
+
+            // Response not acceptable
+            case 'Aura\Router\Rule\Accepts':
+                return $this->payloadFactory->error(
+                    406,
+                    'Not acceptable',
+                    ['Accept' => $attributes['accept']]
+                );
+                break;
+
+            // Not found
+            default:
+                return $this->payloadFactory->error(
+                    404,
+                    'Not found'
+                );
+                break;
+        }
+    }
 }

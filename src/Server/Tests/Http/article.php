@@ -54,4 +54,5 @@ $uri = new \Zend\Diactoros\Uri($requestUri);
 $request = new \Zend\Diactoros\ServerRequest();
 $request = $request->withUri($uri);
 $response = ServerFacade::dispatchRequest($request);
-echo $response->getBody();
+$emitter = new \Zend\Diactoros\Response\SapiEmitter();
+$emitter->emit($response);

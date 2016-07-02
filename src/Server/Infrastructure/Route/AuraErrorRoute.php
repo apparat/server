@@ -57,10 +57,12 @@ class AuraErrorRoute extends AbstractActionRoute implements ErrorRouteInterface
         parent::preprocessAttributes();
 
         $this->attributes['failure'] = $this->failedRule;
+        $this->attributes['allows'] = $this->allows;
+        $this->attributes['accept'] = $this->accepts;
     }
 
     /**
-     * Cast an regular route as an error route
+     * Cast a regular route as an error route
      *
      * @param Route $route Regular route
      * @return AuraErrorRoute Error route

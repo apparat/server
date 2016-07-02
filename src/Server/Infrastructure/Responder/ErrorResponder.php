@@ -63,6 +63,16 @@ class ErrorResponder extends AbstractResponder
      */
     public function __invoke(PayloadInterface $payload)
     {
-        // TODO: Implement __invoke() method.
+        // Set the HTTP status code
+        $this->response = $this->response->withStatus($payload->get('status'), $payload->get('description'));
+
+        // Add HTTP headers
+        foreach ((array)$payload->get('header') as $name => $value) {
+            $this->response = $this->response->withHeader($name, $value);
+        }
+
+        $this->view->assign('error', $payload->get());
+        $this->response->getBody()->write($this->view->render());
+        return $this->response;
     }
 }

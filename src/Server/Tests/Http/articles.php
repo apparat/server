@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports\Action
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\Tests
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,42 +34,27 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Infrastructure\Action;
+use Apparat\Object\Infrastructure\Repository\FileAdapterStrategy;
+use Apparat\Object\Ports\Facades\RepositoryFacade;
+use Apparat\Server\Ports\Facade\ServerFacade;
 
-use Apparat\Server\Infrastructure\Responder\ErrorResponder;
-use Apparat\Server\Infrastructure\Service\ErrorService;
-use Apparat\Server\Ports\Action\AbstractAction;
-use Psr\Http\Message\ResponseInterface;
+require_once dirname(dirname(dirname(dirname(__DIR__)))).DIRECTORY_SEPARATOR.
+    'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
-/**
- * Object action
- *
- * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
- */
-class ErrorAction extends AbstractAction
-{
-    /**
-     * Domain service
-     *
-     * @var ErrorService
-     */
-    protected $domain;
-    /**
-     * Responder
-     *
-     * @var ErrorResponder
-     */
-    protected $responder;
+//header('Content-Type: text/plain');
+$requestUri = 'http://apparat/blog/2016/*/*/*/*-article';
 
-    /**
-     * Run the action
-     *
-     * @return ResponseInterface Response
-     */
-    public function __invoke()
-    {
-        $payload = $this->domain->explain($this->request->getAttributes());
-        return $this->responder->__invoke($payload);
-    }
-}
+ServerFacade::enableObjectRoute('');
+RepositoryFacade::register(
+    '',
+    ['type' => FileAdapterStrategy::TYPE, 'root' => dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture',]
+);
+
+$uri = new \Zend\Diactoros\Uri($requestUri);
+$request = new \Zend\Diactoros\ServerRequest();
+$request = $request->withUri($uri);
+
+/** @var \Zend\Diactoros\Response $response */
+$response = ServerFacade::dispatchRequest($request);
+$emitter = new \Zend\Diactoros\Response\SapiEmitter();
+$emitter->emit($response);

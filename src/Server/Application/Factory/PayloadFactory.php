@@ -37,8 +37,9 @@
 namespace Apparat\Server\Application\Factory;
 
 use Apparat\Kernel\Ports\Kernel;
-use Apparat\Server\Domain\Contract\PayloadFactoryInterface;
+use Apparat\Server\Application\Payload\Error;
 use Apparat\Server\Application\Payload\Found;
+use Apparat\Server\Domain\Contract\PayloadFactoryInterface;
 
 /**
  * Payload factory
@@ -57,5 +58,25 @@ class PayloadFactory implements PayloadFactoryInterface
     public function found(array $payload)
     {
         return Kernel::create(Found::class, [$payload]);
+    }
+
+    /**
+     * Create a new Error payload
+     *
+     * @param int $status HTTP status code
+     * @param string $description Error description
+     * @param array $header HTTP header
+     * @return Error Error payload
+     */
+    public function error($status, $description, array $header = [])
+    {
+        return Kernel::create(
+            Error::class,
+            [[
+                'status' => $status,
+                'description' => $description,
+                'header' => $header
+            ]]
+        );
     }
 }

@@ -55,7 +55,7 @@ abstract class AbstractObjectResponder extends AbstractResponder
      */
     public function __invoke(PayloadInterface $payload)
     {
-        $this->view->assign('payload', current($payload->get()));
+        $this->view->assign('object', current($payload->get()));
         $this->response->getBody()->write($this->view->render());
         return $this->response;
     }
