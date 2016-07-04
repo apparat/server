@@ -70,7 +70,7 @@ abstract class AbstractListAction extends AbstractSelectorAction
     public function __invoke()
     {
         $selector = SelectorFactory::createFromParams($this->request->getAttributes());
-        $payload = $this->domain->findObjects($selector);
+        $payload = $this->domain->findObjects(strval($this->request->getAttribute('repository')), $selector);
         return $this->responder->__invoke($payload);
     }
 }

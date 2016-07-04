@@ -77,7 +77,6 @@ abstract class AbstractResponder implements ResponderInterface
     {
         $this->response = $response;
         $this->view = $view->setAction(static::ACTION);
-//        print_r($this->view->getTemplatePaths());
     }
 
     /**
@@ -90,7 +89,7 @@ abstract class AbstractResponder implements ResponderInterface
      */
     public function __invoke(PayloadInterface $payload)
     {
-        $this->view->assign('payload', $payload->get());
+        $this->view->assign('objects', $payload->get());
         $this->response->getBody()->write($this->view->render());
         return $this->response;
     }

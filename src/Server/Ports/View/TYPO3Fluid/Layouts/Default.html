@@ -3,10 +3,15 @@
       xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers">
     <head>
         <meta charset="UTF-8">
-        <title><f:format.htmlspecialchars>{payload.name}</f:format.htmlspecialchars></title>
+        <title><f:format.htmlspecialchars>{object.name}</f:format.htmlspecialchars></title>
         <style>
 body {
     font-family: sans-serif;
+}
+header {
+    background-color: #bbb;
+    text-align: center;
+    font-family: monospace;
 }
 .property {
     font-family: monospace;

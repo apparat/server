@@ -42,7 +42,7 @@ require_once dirname(dirname(dirname(dirname(__DIR__)))).DIRECTORY_SEPARATOR.
     'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
 //header('Content-Type: text/plain');
-$requestUri = 'http://apparat/blog/2016/*/*/*/*-article';
+$requestUri = 'http://apparat/blog/2016/*/*/*-article';
 
 ServerFacade::enableObjectRoute('');
 RepositoryFacade::register(

@@ -36,6 +36,7 @@
 
 namespace Apparat\Server\Ports\Service;
 
+use Apparat\Object\Ports\Facades\RepositoryFacade;
 use Apparat\Object\Ports\Repository\SelectorInterface;
 use Apparat\Server\Domain\Payload\PayloadInterface;
 
@@ -50,11 +51,13 @@ class AbstractListService extends AbstractService
     /**
      * Find objects by selector
      *
+     * @param string $repository Repository identifier
      * @param SelectorInterface $selector Object selector
      * @return PayloadInterface Payload
      */
-    public function findObjects(SelectorInterface $selector)
+    public function findObjects($repository, SelectorInterface $selector)
     {
-        return $this->payloadFactory->found([]);
+        $objects = RepositoryFacade::instance($repository)->findObjects($selector);
+        return $this->payloadFactory->found([$objects]);
     }
 }
