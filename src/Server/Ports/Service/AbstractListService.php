@@ -58,6 +58,6 @@ class AbstractListService extends AbstractService
     public function findObjects($repository, SelectorInterface $selector)
     {
         $objects = RepositoryFacade::instance($repository)->findObjects($selector);
-        return $this->payloadFactory->found([$objects]);
+        return $this->payloadFactory->found($objects);
     }
 }

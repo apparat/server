@@ -34,25 +34,6 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-use Apparat\Object\Infrastructure\Repository\FileAdapterStrategy;
-use Apparat\Object\Ports\Facades\RepositoryFacade;
-use Apparat\Server\Ports\Facade\ServerFacade;
+$requestUri = 'http://apparat/blog/2016/*/*/*';
 
-require_once dirname(dirname(dirname(dirname(__DIR__)))).DIRECTORY_SEPARATOR.
-    'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
-
-//header('Content-Type: text/plain');
-$requestUri = 'http://apparat/blog/2016/06/20/2';
-
-ServerFacade::enableObjectRoute('');
-RepositoryFacade::register(
-    '',
-    ['type' => FileAdapterStrategy::TYPE, 'root' => dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture',]
-);
-
-$uri = new \Zend\Diactoros\Uri($requestUri);
-$request = new \Zend\Diactoros\ServerRequest();
-$request = $request->withUri($uri);
-$response = ServerFacade::dispatchRequest($request);
-$emitter = new \Zend\Diactoros\Response\SapiEmitter();
-$emitter->emit($response);
+require __DIR__.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'common.inc.php';

@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports
+ * @subpackage  Apparat\Server\Tests
  * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,64 +34,6 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
+$requestUri = 'http://apparat/blog/2016/*/*/*-article';
 
-use Apparat\Server\Domain\Payload\PayloadInterface;
-use Apparat\Server\Ports\View\ViewInterface;
-use Psr\Http\Message\ResponseInterface;
-
-/**
- * Abstract responder
- *
- * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
- */
-abstract class AbstractResponder implements ResponderInterface
-{
-    /**
-     * View
-     *
-     * @var ViewInterface
-     */
-    protected $view;
-    /**
-     * Response
-     *
-     * @var ResponseInterface
-     */
-    protected $response;
-    /**
-     * Action name
-     *
-     * @var string
-     */
-    const ACTION = 'Abstract';
-
-    /**
-     * Constructor
-     *
-     * @param ResponseInterface $response
-     * @param ViewInterface $view
-     */
-    public function __construct(ResponseInterface $response, ViewInterface $view)
-    {
-        $this->response = $response;
-        $this->view = $view->setAction(static::ACTION);
-    }
-
-    /**
-     * Run the responder
-     *
-     * @param PayloadInterface $payload Domain payload
-     * @return ResponseInterface Response
-     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/AbstractResponder.php
-     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Responder/BlogBrowseResponder.php
-     */
-    public function __invoke(PayloadInterface $payload)
-    {
-        $this->view->assign('objects', $payload->get());
-        $this->response->getBody()->write($this->view->render());
-        $this->response->getBody()->rewind();
-        return $this->response;
-    }
-}
+require __DIR__.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'common.inc.php';
