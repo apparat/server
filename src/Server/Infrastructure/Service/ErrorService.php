@@ -48,7 +48,7 @@ use Apparat\Server\Ports\Service\AbstractService;
 class ErrorService extends AbstractService
 {
     /**
-     * Explain a
+     * Explain a failed request with an appropriate error message
      *
      * @param array $attributes Request attributes
      * @return PayloadInterface Payload
@@ -79,14 +79,11 @@ class ErrorService extends AbstractService
                     ['Accept' => $attributes['accept']]
                 );
                 break;
-
-            // Not found
-            default:
-                return $this->payloadFactory->error(
-                    404,
-                    'Not found'
-                );
-                break;
         }
+
+        return $this->payloadFactory->error(
+            404,
+            'Not found'
+        );
     }
 }
