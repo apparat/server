@@ -63,7 +63,6 @@ class AbstractObjectService extends AbstractService
             // If exactly one object was found
             case 1:
                 return $this->payloadFactory->found([current($objects)]);
-                break;
 
             // If no object was found
             case 0:

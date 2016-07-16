@@ -44,9 +44,17 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
+ * @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Action/BlogBrowseAction.php
  */
 class TestAction extends AbstractAction
 {
+    /**
+     * Domain service
+     *
+     * @var TestService
+     */
+    protected $domain;
+
     /**
      * Run the action
      *
@@ -54,7 +62,6 @@ class TestAction extends AbstractAction
      */
     public function __invoke()
     {
-        return $this->responder;
-        // @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Action/BlogBrowseAction.php
+        return $this->responder->__invoke($this->domain->test());
     }
 }

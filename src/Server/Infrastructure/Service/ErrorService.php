@@ -60,7 +60,6 @@ class ErrorService extends AbstractService
             // Invalid object path
             case 'Apparat\Server\Infrastructure\Route\ObjectPath':
                 return $this->payloadFactory->error(404, 'Bad apparat object request');
-                break;
 
             // Invalid method
             case 'Aura\Router\Rule\Allows':
@@ -69,7 +68,6 @@ class ErrorService extends AbstractService
                     'Method not allowed',
                     ['Allow' => $attributes['allow']]
                 );
-                break;
 
             // Response not acceptable
             case 'Aura\Router\Rule\Accepts':
@@ -78,7 +76,6 @@ class ErrorService extends AbstractService
                     'Not acceptable',
                     ['Accept' => $attributes['accept']]
                 );
-                break;
         }
 
         return $this->payloadFactory->error(

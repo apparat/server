@@ -54,7 +54,7 @@ interface ActionRouteInterface
     /**
      * Get the action handler
      *
-     * @return ActionInterface|\Callable
+     * @return string|\Callable
      */
     public function getHandler();
 }

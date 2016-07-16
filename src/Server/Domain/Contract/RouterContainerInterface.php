@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Domain\Contract;
 
-use Psr\Http\Message\ResponseInterface;
+use Apparat\Server\Infrastructure\Route\AbstractActionRoute;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -67,8 +67,8 @@ interface RouterContainerInterface
      * Prepare and return a route action
      *
      * @param ServerRequestInterface $request Request
-     * @param ActionRouteInterface $route Route
+     * @param AbstractActionRoute $route Route
      * @return ActionInterface|Callable $action Action
      */
-    public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route);
+    public function getRouteAction(ServerRequestInterface $request, AbstractActionRoute $route);
 }

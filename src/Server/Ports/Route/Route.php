@@ -182,7 +182,7 @@ class Route implements RouteInterface
      * @param string|array $verbs Allowed HTTP verbs
      * @param string $name Route name
      * @param string $path Route path
-     * @param string|callable|array $action Route action
+     * @param string|\Callable|array $action Route action
      */
     public function __construct($verbs, $name, $path, $action)
     {
@@ -272,7 +272,7 @@ class Route implements RouteInterface
     /**
      * Set and validate the route action
      *
-     * @param string|array $actions Route actions
+     * @param string|\Callable|array $actions Route actions
      */
     protected function setAndValidateActionList($actions)
     {

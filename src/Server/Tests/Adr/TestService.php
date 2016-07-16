@@ -36,6 +36,7 @@
 
 namespace Apparat\Server\Tests\Adr;
 
+use Apparat\Server\Application\Payload\Found;
 use Apparat\Server\Ports\Service\AbstractService;
 
 /**
@@ -46,5 +47,13 @@ use Apparat\Server\Ports\Service\AbstractService;
  */
 class TestService extends AbstractService
 {
-
+    /***
+     * Test method
+     *
+     * @return Found Found payload
+     */
+    public function test()
+    {
+        return $this->payloadFactory->found([]);
+    }
 }

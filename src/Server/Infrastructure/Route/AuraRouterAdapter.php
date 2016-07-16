@@ -133,10 +133,10 @@ class AuraRouterAdapter implements RouterContainerInterface
      * Prepare and return a route action
      *
      * @param ServerRequestInterface $request Request
-     * @param ActionRouteInterface $route Route
+     * @param AbstractActionRoute $route Route
      * @return ActionInterface|Callable $action Action
      */
-    public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route)
+    public function getRouteAction(ServerRequestInterface $request, AbstractActionRoute $route)
     {
         // Pre-process the matched attributes
         $route->preprocessAttributes();

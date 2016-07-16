@@ -52,14 +52,14 @@ class HtmlViewHelper extends AbstractViewHelper
      *
      * @var boolean
      */
-    protected $escapeChildren = FALSE;
+    protected $escapeChildren = false;
 
     /**
      * Don't apply HTML special chars to the output
      *
      * @var boolean
      */
-    protected $escapeOutput = FALSE;
+    protected $escapeOutput = false;
 
     /**
      * Initialize the arguments
