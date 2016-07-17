@@ -47,6 +47,7 @@ use Apparat\Server\Infrastructure\Action\ObjectsAction;
 use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
+use Apparat\Server\Infrastructure\Route\AbstractActionRoute;
 use Apparat\Server\Ports\Action\ActionInterface;
 use Apparat\Server\Ports\Route\Route;
 use Apparat\Server\Ports\Types\ObjectRoute;
@@ -112,10 +113,10 @@ class Server extends \Apparat\Server\Domain\Model\Server
      * Prepare and return a route action
      *
      * @param ServerRequestInterface $request Request
-     * @param ActionRouteInterface $route Route
+     * @param AbstractActionRoute $route Route
      * @return ActionInterface|Callable $action Action
      */
-    public function getRouteAction(ServerRequestInterface $request, ActionRouteInterface $route)
+    public function getRouteAction(ServerRequestInterface $request, AbstractActionRoute $route)
     {
         return $this->routerContainer->getRouteAction($request, $route);
     }

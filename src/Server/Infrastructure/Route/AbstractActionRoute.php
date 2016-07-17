@@ -45,6 +45,7 @@ use Aura\Router\Route;
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
+ * @property-read array $attributes Attribute values added by the rules
  */
 abstract class AbstractActionRoute extends Route implements ActionRouteInterface
 {
