@@ -40,11 +40,15 @@ use Apparat\Kernel\Ports\Kernel;
 use Apparat\Object\Infrastructure\Repository\FileAdapterStrategy;
 use Apparat\Object\Ports\Facades\RepositoryFacade;
 use Apparat\Server\Domain\Model\Server;
+use Apparat\Server\Infrastructure\Model\Server as InfrastructureServer;
+use Apparat\Server\Infrastructure\Route\AuraErrorRoute;
 use Apparat\Server\Ports\Facade\ServerFacade;
 use Apparat\Server\Ports\Route\Route;
 use Apparat\Server\Ports\View\TYPO3FluidView;
 use Apparat\Server\Tests\Adr\TestAction;
 use Apparat\Server\Tests\Adr\TestModule;
+use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
@@ -102,20 +106,55 @@ class BasicServerTest extends AbstractServerTest
         $uri = new Uri('http://apparat/blog/default/1.html');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
-        ServerFacade::dispatchRequest($request);
-//        print_r($response);
+        $response = ServerFacade::dispatchRequest($request);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
     /**
-     * Test registering the default routes
+     * Test registering and dispatching a route with callable handler
      */
-    public function testObjectRoutes()
+    public function testRegisterDispatchRouteCallableHandler()
     {
-        $uri = new Uri('http://apparat/blog/repo/2016/06/20/2');
+        $route = new Route(
+            'GET',
+            'default2',
+            '/default/{id}{format}',
+            function () {
+                return Kernel::create(Response::class, []);
+            }
+        );
+        $route->setTokens([
+            'id' => '\d+',
+            'format' => '(\.[^/]+)?',
+        ]);
+        ServerFacade::registerRoute($route);
+
+        $uri = new Uri('http://apparat/blog/default/1.html');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
         $response = ServerFacade::dispatchRequest($request);
-        $response->getBody();
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+    }
+
+    /**
+     * Test a route mismatch
+     */
+    public function testRouteMismatch()
+    {
+        $uri = new Uri('http://apparat/blog/invalid');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+
+        /** @var InfrastructureServer $server */
+        $server = Kernel::create(InfrastructureServer::class);
+        $route = new Route('GET', 'default', '/default/{id}{format}', TestAction::class);
+        $route->setTokens([
+            'id' => '\d+',
+            'format' => '(\.[^/]+)?',
+        ]);
+        $server->registerRoute($route);
+
+        $this->assertInstanceOf(AuraErrorRoute::class, $server->dispatchRequestToRoute($request));
     }
 
     /**

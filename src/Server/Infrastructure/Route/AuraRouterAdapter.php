@@ -113,7 +113,7 @@ class AuraRouterAdapter implements RouterContainerInterface
      * Dispatch a request to a route
      *
      * @param ServerRequestInterface $request
-     * @return ActionRouteInterface $route
+     * @return AbstractActionRoute $route
      */
     public function dispatchRequestToRoute(ServerRequestInterface $request)
     {

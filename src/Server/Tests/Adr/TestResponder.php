@@ -62,6 +62,6 @@ class TestResponder extends AbstractResponder
      */
     public function __invoke(PayloadInterface $payload)
     {
-        // TODO: Implement __invoke() method.
+        return $this->response;
     }
 }
