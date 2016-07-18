@@ -73,7 +73,8 @@ class ObjectPath extends Path
      * @param Route $route Object route
      * @return bool True on success, false on failure
      */
-    protected function matchObjectSelector(ServerRequestInterface $request, Route $route) {
+    protected function matchObjectSelector(ServerRequestInterface $request, Route $route)
+    {
         // Try to match the object selector
         $match = preg_match(
             '%^'.$this->basepath.$route->path.'$%',

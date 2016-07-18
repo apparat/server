@@ -36,10 +36,9 @@
 
 namespace Apparat\Server\Domain\Model;
 
-use Apparat\Server\Domain\Contract\ActionRouteInterface;
 use Apparat\Server\Domain\Contract\RouteInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
-use Psr\Http\Message\ResponseInterface;
+use Apparat\Server\Infrastructure\Route\AbstractActionRoute;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -81,7 +80,7 @@ class Server
      * Dispatch a request to a route
      *
      * @param ServerRequestInterface $request
-     * @return ActionRouteInterface $route
+     * @return AbstractActionRoute $route
      */
     public function dispatchRequestToRoute(ServerRequestInterface $request)
     {
