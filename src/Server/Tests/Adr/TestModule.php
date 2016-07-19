@@ -59,8 +59,20 @@ class TestModule extends Module
     {
         parent::configureDependencyInjection($diContainer);
 
-        // Configure the Adr test
+        // Configure the Adr test action
         $diContainer->register(TestAction::class, [
+            'substitutions' => [
+                ServiceInterface::class => [
+                    'instance' => TestService::class,
+                ],
+                ResponderInterface::class => [
+                    'instance' => TestResponder::class,
+                ]
+            ]
+        ]);
+
+        // Configure the Adr object test action
+        $diContainer->register(TestObjectAction::class, [
             'substitutions' => [
                 ServiceInterface::class => [
                     'instance' => TestService::class,

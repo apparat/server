@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\Tests
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -32,70 +32,47 @@
  *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  *  IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- ***********************************************************************************/
+ ******************************************w*****************************************/
 
-namespace Apparat\Server\Ports\Route;
+namespace Apparat\Server\Tests\Adr;
+
+use Apparat\Server\Ports\Action\AbstractSelectorAction;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Invalid server argument exception
+ * Test action
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Tests
+ * @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Action/BlogBrowseAction.php
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class TestObjectAction extends AbstractSelectorAction
 {
     /**
-     * Empty route HTTP verbs
+     * Domain service
      *
-     * @var int
+     * @var TestService
      */
-    const EMPTY_ROUTE_HTTP_VERBS = 1464520768;
+    protected $domain;
+
     /**
-     * Invalid route HTTP verb
+     * Run the action
      *
-     * @var int
+     * @return ResponseInterface Response
      */
-    const INVALID_ROUTE_HTTP_VERB = 1464520896;
+    public function __invoke()
+    {
+        return $this->responder->__invoke($this->domain->test());
+    }
+
     /**
-     * Empty route name
+     * Check whether a set of attributes matches the action requirements
      *
-     * @var int
+     * @param array $attributes Attributes
+     * @return boolean The attributes match the action requirements
      */
-    const EMPTY_ROUTE_NAME = 1464521013;
-    /**
-     * Empty route path
-     *
-     * @var int
-     */
-    const EMPTY_ROUTE_PATH = 1464521073;
-    /**
-     * Empty route action
-     *
-     * @var int
-     */
-    const EMPTY_ROUTE_ACTION = 1464521136;
-    /**
-     * Route action must be a class name
-     *
-     * @var int
-     */
-    const ROUTE_ACTION_MUST_BE_CLASSNAME = 1464521937;
-    /**
-     * Empty route action
-     *
-     * @var int
-     */
-    const ROUTE_ACTION_NOT_CALLABLE_OR_ACTION_INTERFACE = 1464521506;
-    /**
-     * Route action must implement ActionInterface
-     *
-     * @var int
-     */
-    const ROUTE_ACTION_MUST_IMPLEMENT_ACTION_INTERFACE = 1464522202;
-    /**
-     * Route action doesn't match
-     *
-     * @var int
-     */
-    const ROUTE_ACTION_DOESNT_MATCH = 1468918389;
+    public static function matches(array $attributes)
+    {
+        return false;
+    }
 }

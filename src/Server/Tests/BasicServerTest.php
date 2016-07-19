@@ -44,9 +44,11 @@ use Apparat\Server\Infrastructure\Model\Server as InfrastructureServer;
 use Apparat\Server\Infrastructure\Route\AuraErrorRoute;
 use Apparat\Server\Ports\Facade\ServerFacade;
 use Apparat\Server\Ports\Route\Route;
+use Apparat\Server\Ports\Types\ObjectRoute;
 use Apparat\Server\Ports\View\TYPO3FluidView;
 use Apparat\Server\Tests\Adr\TestAction;
 use Apparat\Server\Tests\Adr\TestModule;
+use Apparat\Server\Tests\Adr\TestObjectAction;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
@@ -96,7 +98,7 @@ class BasicServerTest extends AbstractServerTest
      */
     public function testRegisterDispatchRoute()
     {
-        $route = new Route('GET', 'default', '/default/{id}{format}', TestAction::class);
+        $route = new Route(Route::GET, 'default', '/default/{id}{format}', TestAction::class);
         $route->setTokens([
             'id' => '\d+',
             'format' => '(\.[^/]+)?',
@@ -116,9 +118,9 @@ class BasicServerTest extends AbstractServerTest
     public function testRegisterDispatchRouteCallableHandler()
     {
         $route = new Route(
-            'GET',
+            Route::GET,
             'default2',
-            '/default/{id}{format}',
+            '/handler/{id}{format}',
             function () {
                 return Kernel::create(Response::class, []);
             }
@@ -129,7 +131,7 @@ class BasicServerTest extends AbstractServerTest
         ]);
         ServerFacade::registerRoute($route);
 
-        $uri = new Uri('http://apparat/blog/default/1.html');
+        $uri = new Uri('http://apparat/blog/handler/1.html');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
         $response = ServerFacade::dispatchRequest($request);
@@ -141,20 +143,42 @@ class BasicServerTest extends AbstractServerTest
      */
     public function testRouteMismatch()
     {
-        $uri = new Uri('http://apparat/blog/invalid');
+        $uri = new Uri('http://apparat/blog/invalid-route');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
 
         /** @var InfrastructureServer $server */
         $server = Kernel::create(InfrastructureServer::class);
-        $route = new Route('GET', 'default', '/default/{id}{format}', TestAction::class);
-        $route->setTokens([
-            'id' => '\d+',
-            'format' => '(\.[^/]+)?',
-        ]);
+        $route = new Route(Route::GET, 'default', '/default/{id}{format}', TestAction::class);
         $server->registerRoute($route);
 
         $this->assertInstanceOf(AuraErrorRoute::class, $server->dispatchRequestToRoute($request));
+    }
+
+    /**
+     * Test a handler mismatch
+     *
+     * @expectedException \Apparat\Server\Ports\Route\InvalidArgumentException
+     * @expectedExceptionCode 1468918389
+     */
+    public function testHandlerMismatch()
+    {
+        $uri = new Uri('http://apparat/blog/invalid-handler');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+
+        /** @var InfrastructureServer $server */
+        $server = Kernel::create(InfrastructureServer::class);
+        $route = new Route(
+            Route::GET,
+            'default',
+            '/invalid-handler',
+            [ObjectRoute::OBJECT_STR => TestObjectAction::class]
+        );
+        $server->registerRoute($route);
+
+        $route = $server->dispatchRequestToRoute($request);
+        $server->getRouteAction($request, $route);
     }
 
     /**
