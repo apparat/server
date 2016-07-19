@@ -37,7 +37,6 @@
 namespace Apparat\Server\Infrastructure\Model;
 
 use Apparat\Object\Ports\Factory\SelectorFactory;
-use Apparat\Server\Domain\Contract\ActionRouteInterface;
 use Apparat\Server\Infrastructure\Action\DayAction;
 use Apparat\Server\Infrastructure\Action\HourAction;
 use Apparat\Server\Infrastructure\Action\MinuteAction;
@@ -76,7 +75,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
      */
     public function enableObjectRoute($repositoryPath = '', $enable = ObjectRoute::ALL)
     {
-        // Repository route prefix
+        $routeName = ObjectRoute::OBJECT_STR;
         $datePrecision = intval(getenv('OBJECT_DATE_PRECISION'));
         $selectorRegex = SelectorFactory::getSelectorRegex($datePrecision);
         $objectRouteActions = array_filter(
@@ -100,12 +99,13 @@ class Server extends \Apparat\Server\Domain\Model\Server
             )
         );
 
-        // Add a repository subpattern
+        // Add a repository sub-pattern
         if (strlen($repositoryPath)) {
             $selectorRegex = '(?:/(?P<repository>.+?))'.$selectorRegex;
+            $routeName .= '.'.$repositoryPath;
         }
 
-        $route = new Route(Route::GET, ObjectRoute::OBJECT_STR, $selectorRegex, $objectRouteActions);
+        $route = new Route(Route::GET, $routeName, $selectorRegex, $objectRouteActions);
         $this->registerRoute($route);
     }
 

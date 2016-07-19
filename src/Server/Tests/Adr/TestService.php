@@ -54,6 +54,6 @@ class TestService extends AbstractService
      */
     public function test()
     {
-        return $this->payloadFactory->found([]);
+        return $this->payloadFactory->found(['key' => true]);
     }
 }

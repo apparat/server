@@ -85,7 +85,6 @@ class ObjectRoutesTest extends AbstractServerTest
         putenv('OBJECT_DATE_PRECISION=6');
 
         self::$server = Kernel::create(Server::class);
-        self::$server->enableObjectRoute();
     }
 
     /**
@@ -97,6 +96,15 @@ class ObjectRoutesTest extends AbstractServerTest
     {
         parent::tearDownAfterClass();
         putenv('OBJECT_DATE_PRECISION='.self::$objectDatePrecision);
+    }
+
+    /**
+     * Test enabling the object route
+     */
+    public function testEnableObjectRoute()
+    {
+        // Enable the object route
+        self::$server->enableObjectRoute();
     }
 
     /**

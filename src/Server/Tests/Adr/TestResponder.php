@@ -62,6 +62,8 @@ class TestResponder extends AbstractResponder
      */
     public function __invoke(PayloadInterface $payload)
     {
+        $this->view->assign('key', $payload->get('key'));
+        $this->view->assign('null', $payload->get('null'));
         return $this->response;
     }
 }

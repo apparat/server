@@ -264,7 +264,7 @@ class Route implements RouteInterface
         if (!strlen($this->path)) {
             throw new InvalidArgumentException(
                 'Route path must not be empty',
-                InvalidArgumentException::EMPTY_ROUTE_NAME
+                InvalidArgumentException::EMPTY_ROUTE_PATH
             );
         }
     }
@@ -438,7 +438,9 @@ class Route implements RouteInterface
      */
     public function setVerbs(array $verbs)
     {
-        $this->verbs = $verbs;
+        // Set and validate the allowed HTTP verbs
+        $this->setAndValidateVerbs($verbs);
+
         return $this;
     }
 
