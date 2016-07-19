@@ -36,57 +36,38 @@
 
 namespace Apparat\Server\Tests;
 
-use Apparat\Dev\Tests\AbstractTest;
-use Apparat\Kernel\Ports\Kernel;
-use Apparat\Server\Infrastructure\Model\Server;
+use Apparat\Server\Infrastructure\Action\ErrorAction;
+use Apparat\Server\Infrastructure\Route\AuraErrorRoute;
+use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 /**
- * Abstract server test
+ * Error test
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-abstract class AbstractServerTest extends AbstractTest
+class ErrorTest extends AbstractServerTest
 {
-    /**
-     * Server instance
-     *
-     * @var Server
-     */
-    protected static $server = null;
-    /**
-     * Configured object date precision
-     *
-     * @var int
-     */
-    protected static $objectDatePrecision;
 
     /**
-     * This method is called before the first test of this test class is run.
-     *
-     * @since Method available since Release 3.4.0
+     * Test an object route mismatch
      */
-    public static function setUpBeforeClass()
+    public function testObjectRouteMismatch()
     {
-        parent::setUpBeforeClass();
+        $uri = new Uri('http://apparat/blog/');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
 
-        self::$objectDatePrecision = intval(getenv('OBJECT_DATE_PRECISION'));
-        putenv('OBJECT_DATE_PRECISION=6');
+        // Dispatch the route
+        $route = self::$server->dispatchRequestToRoute($request);
+        $this->assertInstanceOf(AuraErrorRoute::class, $route);
 
-        self::$server = Kernel::create(Server::class);
+        $action = self::$server->getRouteAction($request, $route);
+        $this->assertInstanceOf(ErrorAction::class, $action);
 
-        // Enable the object route
-        self::$server->enableObjectRoute();
-    }
-
-    /**
-     * This method is called after the last test of this test class is run.
-     *
-     * @since Method available since Release 3.4.0
-     */
-    public static function tearDownAfterClass()
-    {
-        parent::tearDownAfterClass();
-        putenv('OBJECT_DATE_PRECISION='.self::$objectDatePrecision);
+        $response = $action();
+        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 }

@@ -36,6 +36,7 @@
 
 namespace Apparat\Server\Tests;
 
+use Apparat\Dev\Tests\AbstractTest;
 use Apparat\Server\Ports\Route\Route;
 
 /**
@@ -44,7 +45,7 @@ use Apparat\Server\Ports\Route\Route;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-class RouteTest extends AbstractServerTest
+class RouteTest extends AbstractTest
 {
     /**
      * Test empty route verbs

@@ -36,6 +36,7 @@
 
 namespace Apparat\Server\Tests;
 
+use Apparat\Dev\Tests\AbstractTest;
 use Apparat\Kernel\Ports\Kernel;
 use Apparat\Object\Infrastructure\Repository\FileAdapterStrategy;
 use Apparat\Object\Ports\Facades\RepositoryFacade;
@@ -60,7 +61,7 @@ use Zend\Diactoros\Uri;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-class BasicServerTest extends AbstractServerTest
+class BasicServerTest extends AbstractTest
 {
     /**
      * This method is called before the first test of this test class is run.

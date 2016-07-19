@@ -36,8 +36,8 @@
 
 namespace Apparat\Server\Tests;
 
-use Apparat\Kernel\Ports\Kernel;
-use Apparat\Server\Infrastructure\Model\Server;
+use Apparat\Dev\Tests\AbstractTest;
+use Apparat\Server\Ports\Facade\ServerFacade;
 
 /**
  * Default route server test
@@ -45,16 +45,13 @@ use Apparat\Server\Infrastructure\Model\Server;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-class ObjectRouteServerTest extends AbstractServerTest
+class ObjectRouteServerTest extends AbstractTest
 {
     /**
      * Test enabling the object route
      */
     public function testEnableObjectRoute()
     {
-        /** @var Server $server */
-        $server = Kernel::create(Server::class);
-        $server->enableObjectRoute();
-        $this->assertInstanceOf(Server::class, $server);
+        ServerFacade::enableObjectRoute('test');
     }
 }
