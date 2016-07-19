@@ -50,12 +50,11 @@ use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Infrastructure\Model\Server;
 use Apparat\Server\Infrastructure\Route\AuraErrorRoute;
 use Apparat\Server\Infrastructure\Route\AuraObjectRoute;
-use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
 /**
- * Default routes test
+ * Default route test
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
@@ -226,26 +225,5 @@ class ObjectRoutesTest extends AbstractServerTest
 
         $action = self::$server->getRouteAction($request, $route);
         $this->assertInstanceOf(ErrorAction::class, $action);
-    }
-
-    /**
-     * Test an object list response
-     */
-    public function testListResponse()
-    {
-        $uri = new Uri('http://apparat/blog/*/*/*/*/*/*/*');
-        $request = new ServerRequest();
-        $request = $request->withUri($uri);
-
-        // Dispatch the route
-        $route = self::$server->dispatchRequestToRoute($request);
-        $this->assertInstanceOf(AuraObjectRoute::class, $route);
-
-        // Resolve the route action
-        $action = self::$server->getRouteAction($request, $route);
-        $this->assertInstanceOf(ObjectsAction::class, $action);
-
-        // Create the response
-        $this->assertInstanceOf(ResponseInterface::class, $action());
     }
 }

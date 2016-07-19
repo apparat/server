@@ -77,6 +77,9 @@ class BasicServerTest extends AbstractServerTest
                 'root' => __DIR__.DIRECTORY_SEPARATOR.'Fixture',
             ]
         );
+
+        // Enable the default routes
+        ServerFacade::enableObjectRoute('repo');
     }
 
     /**
@@ -181,9 +184,6 @@ class BasicServerTest extends AbstractServerTest
      */
     public function testCustomTemplateResources()
     {
-        // Enable the default routes
-        ServerFacade::enableObjectRoute('repo');
-
         $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
         ServerFacade::setViewResources([
             TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
@@ -198,5 +198,17 @@ class BasicServerTest extends AbstractServerTest
         $response = ServerFacade::dispatchRequest($request);
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals('[(article)]', trim($response->getBody()));
+    }
+
+    /**
+     * Test an object list response
+     */
+    public function testListResponse()
+    {
+        $uri = new Uri('http://apparat/blog/repo/*/*/*/*');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+        $response = ServerFacade::dispatchRequest($request);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 }
