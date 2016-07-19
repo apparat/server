@@ -64,8 +64,6 @@ class BasicServerTest extends AbstractServerTest
 {
     /**
      * This method is called before the first test of this test class is run.
-     *
-     * @since Method available since Release 3.4.0
      */
     public static function setUpBeforeClass()
     {
@@ -198,6 +196,7 @@ class BasicServerTest extends AbstractServerTest
         $request = new ServerRequest();
         $request = $request->withUri($uri);
         $response = ServerFacade::dispatchRequest($request);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals('[(article)]', trim($response->getBody()));
     }
 }

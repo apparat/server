@@ -38,6 +38,7 @@ namespace Apparat\Server\Tests;
 
 use Apparat\Kernel\Ports\Kernel;
 use Apparat\Server\Infrastructure\Action\DayAction;
+use Apparat\Server\Infrastructure\Action\ErrorAction;
 use Apparat\Server\Infrastructure\Action\HourAction;
 use Apparat\Server\Infrastructure\Action\MinuteAction;
 use Apparat\Server\Infrastructure\Action\MonthAction;
@@ -47,7 +48,9 @@ use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Infrastructure\Model\Server;
+use Apparat\Server\Infrastructure\Route\AuraErrorRoute;
 use Apparat\Server\Infrastructure\Route\AuraObjectRoute;
+use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
@@ -85,6 +88,9 @@ class ObjectRoutesTest extends AbstractServerTest
         putenv('OBJECT_DATE_PRECISION=6');
 
         self::$server = Kernel::create(Server::class);
+
+        // Enable the object route
+        self::$server->enableObjectRoute();
     }
 
     /**
@@ -96,15 +102,6 @@ class ObjectRoutesTest extends AbstractServerTest
     {
         parent::tearDownAfterClass();
         putenv('OBJECT_DATE_PRECISION='.self::$objectDatePrecision);
-    }
-
-    /**
-     * Test enabling the object route
-     */
-    public function testEnableObjectRoute()
-    {
-        // Enable the object route
-        self::$server->enableObjectRoute();
     }
 
     /**
@@ -212,5 +209,43 @@ class ObjectRoutesTest extends AbstractServerTest
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/~*-*', ObjectsAction::class],
         ];
+    }
+
+    /**
+     * Test an object route mismatch
+     */
+    public function testObjectRouteMismatch()
+    {
+        $uri = new Uri('http://apparat/blog/');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+
+        // Dispatch the route
+        $route = self::$server->dispatchRequestToRoute($request);
+        $this->assertInstanceOf(AuraErrorRoute::class, $route);
+
+        $action = self::$server->getRouteAction($request, $route);
+        $this->assertInstanceOf(ErrorAction::class, $action);
+    }
+
+    /**
+     * Test an object list response
+     */
+    public function testListResponse()
+    {
+        $uri = new Uri('http://apparat/blog/*/*/*/*/*/*/*');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+
+        // Dispatch the route
+        $route = self::$server->dispatchRequestToRoute($request);
+        $this->assertInstanceOf(AuraObjectRoute::class, $route);
+
+        // Resolve the route action
+        $action = self::$server->getRouteAction($request, $route);
+        $this->assertInstanceOf(ObjectsAction::class, $action);
+
+        // Create the response
+        $this->assertInstanceOf(ResponseInterface::class, $action());
     }
 }
