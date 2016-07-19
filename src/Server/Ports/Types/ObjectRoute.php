@@ -45,22 +45,6 @@ namespace Apparat\Server\Ports\Types;
 class ObjectRoute
 {
     /**
-     * Default route name / bit mapping
-     *
-     * @var array
-     */
-    protected static $nameBits = [
-        self::YEAR_STR => self::YEAR,
-        self::MONTH_STR => self::MONTH,
-        self::DAY_STR => self::DAY,
-        self::HOUR_STR => self::HOUR,
-        self::MINUTE_STR => self::MINUTE,
-        self::SECOND_STR => self::SECOND,
-        self::TYPE_STR => self::TYPE,
-        self::OBJECT_STR => self::OBJECT,
-        self::OBJECTS_STR => self::OBJECTS,
-    ];
-    /**
      * Year default route
      *
      * @var int
@@ -192,6 +176,57 @@ class ObjectRoute
      * @var string
      */
     const WILDCARD = '*';
+    /**
+     * Plain text accept header
+     *
+     * @var string
+     */
+    const ACCEPT_TEXT = 'text/plain';
+    /**
+     * Markdown accept header
+     *
+     * @var string
+     */
+    const ACCEPT_MARKDOWN = 'text/markdown';
+    /**
+     * HTML accept header
+     *
+     * @var string
+     */
+    const ACCEPT_HTML = 'text/html';
+    /**
+     * JSON accept header
+     *
+     * @var string
+     */
+    const ACCEPT_JSON = 'application/json';
+    /**
+     * Accepted response types
+     *
+     * @var array
+     */
+    public static $accept = [
+        self::ACCEPT_HTML,
+        self::ACCEPT_TEXT,
+        self::ACCEPT_MARKDOWN,
+        self::ACCEPT_JSON,
+    ];
+    /**
+     * Default route name / bit mapping
+     *
+     * @var array
+     */
+    protected static $nameBits = [
+        self::YEAR_STR => self::YEAR,
+        self::MONTH_STR => self::MONTH,
+        self::DAY_STR => self::DAY,
+        self::HOUR_STR => self::HOUR,
+        self::MINUTE_STR => self::MINUTE,
+        self::SECOND_STR => self::SECOND,
+        self::TYPE_STR => self::TYPE,
+        self::OBJECT_STR => self::OBJECT,
+        self::OBJECTS_STR => self::OBJECTS,
+    ];
 
     /**
      * Return a bit value for a particular default route name

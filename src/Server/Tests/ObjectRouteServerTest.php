@@ -48,10 +48,11 @@ use Apparat\Server\Ports\Facade\ServerFacade;
 class ObjectRouteServerTest extends AbstractTest
 {
     /**
-     * Test enabling the object route
+     * Test enabling the object route and resetting the server
      */
-    public function testEnableObjectRoute()
+    public function testEnableObjectRouteReset()
     {
         ServerFacade::enableObjectRoute('test');
+        ServerFacade::reset();
     }
 }

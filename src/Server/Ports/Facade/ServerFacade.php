@@ -37,7 +37,6 @@
 namespace Apparat\Server\Ports\Facade;
 
 use Apparat\Kernel\Ports\Kernel;
-use Apparat\Object\Ports\Object;
 use Apparat\Server\Infrastructure\Model\Server;
 use Apparat\Server\Ports\Contract\RouteInterface;
 use Apparat\Server\Ports\Types\ObjectRoute;
@@ -132,5 +131,13 @@ class ServerFacade
     public static function getViewResources($name = null)
     {
         return self::getServer()->getViewResources($name);
+    }
+
+    /**
+     * Reset the server
+     */
+    public static function reset()
+    {
+        self::$server = null;
     }
 }

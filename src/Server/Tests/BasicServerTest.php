@@ -42,7 +42,6 @@ use Apparat\Object\Infrastructure\Repository\FileAdapterStrategy;
 use Apparat\Object\Ports\Facades\RepositoryFacade;
 use Apparat\Server\Domain\Model\Server;
 use Apparat\Server\Infrastructure\Model\Server as InfrastructureServer;
-use Apparat\Server\Infrastructure\Route\AuraErrorRoute;
 use Apparat\Server\Ports\Facade\ServerFacade;
 use Apparat\Server\Ports\Route\Route;
 use Apparat\Server\Ports\Types\ObjectRoute;
@@ -84,6 +83,17 @@ class BasicServerTest extends AbstractTest
     }
 
     /**
+     * This method is called after the last test of this test class is run.
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+
+        // Reset the server
+        ServerFacade::reset();
+    }
+
+    /**
      * Test the server instantiation
      */
     public function testServerInstance()
@@ -118,7 +128,7 @@ class BasicServerTest extends AbstractTest
     {
         $route = new Route(
             Route::GET,
-            'default2',
+            'handler',
             '/handler/{id}{format}',
             function () {
                 return Kernel::create(Response::class, []);
@@ -135,23 +145,6 @@ class BasicServerTest extends AbstractTest
         $request = $request->withUri($uri);
         $response = ServerFacade::dispatchRequest($request);
         $this->assertInstanceOf(ResponseInterface::class, $response);
-    }
-
-    /**
-     * Test a route mismatch
-     */
-    public function testRouteMismatch()
-    {
-        $uri = new Uri('http://apparat/blog/invalid-route');
-        $request = new ServerRequest();
-        $request = $request->withUri($uri);
-
-        /** @var InfrastructureServer $server */
-        $server = Kernel::create(InfrastructureServer::class);
-        $route = new Route(Route::GET, 'default', '/default/{id}{format}', TestAction::class);
-        $server->registerRoute($route);
-
-        $this->assertInstanceOf(AuraErrorRoute::class, $server->dispatchRequestToRoute($request));
     }
 
     /**

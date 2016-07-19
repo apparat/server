@@ -76,7 +76,6 @@ class AuraRouterAdapter implements RouterContainerInterface
         $ruleIterator->set([
             new Rule\Secure(),
             new Rule\Host(),
-            new ObjectPath(rtrim(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH), '/') ?: null),
             new Rule\Allows(),
             new Rule\Accepts(),
         ]);
@@ -91,7 +90,7 @@ class AuraRouterAdapter implements RouterContainerInterface
     public function registerRoute(RouteInterface $route)
     {
         /** @var AuraRoute $auraRoute */
-        $auraRoute = Kernel::create($route->isObject() ? AuraObjectRoute::class : AuraRoute::class);
+        $auraRoute = $route->isObject() ? $this->createAuraObjectRoute() : $this->createAuraRoute();
         $auraRoute->name($route->getName())
             ->path($route->getPath())
             ->allows($route->getVerbs())
@@ -107,6 +106,30 @@ class AuraRouterAdapter implements RouterContainerInterface
         $this->routerContainer->getMap()->addRoute($auraRoute);
 
         return $this;
+    }
+
+    /**
+     * Instantiate and register an aura object route
+     *
+     * @return AuraObjectRoute Aura object route
+     */
+    protected function createAuraObjectRoute()
+    {
+        $ruleIterator = $this->routerContainer->getRuleIterator();
+        $ruleIterator->append(new ObjectPath(rtrim(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH), '/') ?: null));
+        return Kernel::create(AuraObjectRoute::class);
+    }
+
+    /**
+     * Instantiate and register an aura object route
+     *
+     * @return AuraRoute Aura route
+     */
+    protected function createAuraRoute()
+    {
+        $ruleIterator = $this->routerContainer->getRuleIterator();
+        $ruleIterator->append(new Rule\Path(rtrim(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH), '/') ?: null));
+        return Kernel::create(AuraRoute::class);
     }
 
     /**

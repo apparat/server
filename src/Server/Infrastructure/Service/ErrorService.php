@@ -66,7 +66,7 @@ class ErrorService extends AbstractService
                 return $this->payloadFactory->error(
                     405,
                     'Method not allowed',
-                    ['Allow' => $attributes['allow']]
+                    ['Allow' => $attributes['allows']]
                 );
 
             // Response not acceptable
@@ -78,6 +78,7 @@ class ErrorService extends AbstractService
                 );
         }
 
+        // General error
         return $this->payloadFactory->error(
             404,
             'Not found'
