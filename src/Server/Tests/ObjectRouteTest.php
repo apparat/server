@@ -47,7 +47,6 @@ use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Infrastructure\Route\AuraObjectRoute;
 use Apparat\Server\Ports\Types\ObjectRoute;
-use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
@@ -79,9 +78,6 @@ class ObjectRouteTest extends AbstractServerTest
         // Get the associated action
         $action = self::$server->getRouteAction($request, $route);
         $this->assertInstanceOf($actionClass, $action);
-
-        // Call the action and verify the response
-        $this->assertInstanceOf(ResponseInterface::class, $action());
     }
 
     /**
@@ -172,7 +168,8 @@ class ObjectRouteTest extends AbstractServerTest
     /**
      * Test the object route name to bit translation
      */
-    public function testObjectRouteNamesToBits() {
+    public function testObjectRouteNamesToBits()
+    {
         $this->assertEquals(ObjectRoute::YEAR, ObjectRoute::nameToBit(ObjectRoute::YEAR_STR));
         $this->assertEquals(ObjectRoute::MONTH, ObjectRoute::nameToBit(ObjectRoute::MONTH_STR));
         $this->assertEquals(ObjectRoute::DAY, ObjectRoute::nameToBit(ObjectRoute::DAY_STR));

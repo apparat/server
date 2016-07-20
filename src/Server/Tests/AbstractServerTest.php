@@ -76,7 +76,7 @@ abstract class AbstractServerTest extends AbstractTest
         self::$server = Kernel::create(Server::class);
 
         // Enable the object route
-        self::$server->enableObjectRoute();
+        self::$server->enableObjectRoute('');
     }
 
     /**
