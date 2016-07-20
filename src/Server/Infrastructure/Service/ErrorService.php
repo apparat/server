@@ -36,8 +36,12 @@
 
 namespace Apparat\Server\Infrastructure\Service;
 
+use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
 use Apparat\Server\Domain\Payload\PayloadInterface;
+use Apparat\Server\Infrastructure\Route\ObjectPath;
 use Apparat\Server\Ports\Service\AbstractService;
+use Aura\Router\Rule\Accepts;
+use Aura\Router\Rule\Allows;
 
 /**
  * Error result service
@@ -56,13 +60,18 @@ class ErrorService extends AbstractService
     public function explain(array $attributes)
     {
         // Which matching rule failed?
-        switch ($attributes['failure']) {
-            // Invalid object path
-            case 'Apparat\Server\Infrastructure\Route\ObjectPath':
-                return $this->payloadFactory->error(404, 'Bad apparat object request');
+        switch ($attributes['failedRule']) {
+            // Invalid path
+            case ObjectPath::class:
+                // If an object route failed
+                $failedRouteReflection = new \ReflectionClass($attributes['failedRoute']);
+                if ($failedRouteReflection->implementsInterface(ObjectActionRouteInterface::class)) {
+                    return $this->payloadFactory->error(404, 'Bad apparat object request');
+                }
+                break;
 
             // Invalid method
-            case 'Aura\Router\Rule\Allows':
+            case Allows::class:
                 return $this->payloadFactory->error(
                     405,
                     'Method not allowed',
@@ -70,7 +79,7 @@ class ErrorService extends AbstractService
                 );
 
             // Response not acceptable
-            case 'Aura\Router\Rule\Accepts':
+            case Accepts::class:
                 return $this->payloadFactory->error(
                     406,
                     'Not acceptable',
@@ -78,7 +87,7 @@ class ErrorService extends AbstractService
                 );
         }
 
-        // General error
+        // Else: General error
         return $this->payloadFactory->error(
             404,
             'Not found'

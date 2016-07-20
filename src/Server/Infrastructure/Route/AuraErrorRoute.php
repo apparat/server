@@ -56,7 +56,8 @@ class AuraErrorRoute extends AbstractActionRoute implements ErrorRouteInterface
     {
         parent::preprocessAttributes();
 
-        $this->attributes['failure'] = $this->failedRule;
+        $this->attributes['failedRule'] = $this->failedRule;
+        $this->attributes['failedRoute'] = $this->failedRoute;
         $this->attributes['allows'] = $this->allows;
         $this->attributes['accept'] = $this->accepts;
     }
@@ -74,6 +75,7 @@ class AuraErrorRoute extends AbstractActionRoute implements ErrorRouteInterface
         foreach (get_object_vars($route) as $property => $value) {
             $errorRoute->$property = $value;
         }
+        $errorRoute->failedRoute = get_class($route);
         return $errorRoute->handler(ErrorAction::class);
     }
 }
