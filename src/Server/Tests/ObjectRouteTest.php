@@ -46,6 +46,7 @@ use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Infrastructure\Route\AuraObjectRoute;
+use Apparat\Server\Ports\Types\ObjectRoute;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
@@ -55,7 +56,7 @@ use Zend\Diactoros\Uri;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-class ObjectRoutesTest extends AbstractServerTest
+class ObjectRouteTest extends AbstractServerTest
 {
     /**
      * Test dispatching default route requests to actions
@@ -162,5 +163,20 @@ class ObjectRoutesTest extends AbstractServerTest
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/.*-*', ObjectsAction::class],
             ['http://apparat/blog/2016/06/08/19/14/52/1-article/~*-*', ObjectsAction::class],
         ];
+    }
+
+    /**
+     * Test the object route name to bit translation
+     */
+    public function testObjectRouteNamesToBits() {
+        $this->assertEquals(ObjectRoute::YEAR, ObjectRoute::nameToBit(ObjectRoute::YEAR_STR));
+        $this->assertEquals(ObjectRoute::MONTH, ObjectRoute::nameToBit(ObjectRoute::MONTH_STR));
+        $this->assertEquals(ObjectRoute::DAY, ObjectRoute::nameToBit(ObjectRoute::DAY_STR));
+        $this->assertEquals(ObjectRoute::HOUR, ObjectRoute::nameToBit(ObjectRoute::HOUR_STR));
+        $this->assertEquals(ObjectRoute::MINUTE, ObjectRoute::nameToBit(ObjectRoute::MINUTE_STR));
+        $this->assertEquals(ObjectRoute::SECOND, ObjectRoute::nameToBit(ObjectRoute::SECOND_STR));
+        $this->assertEquals(ObjectRoute::TYPE, ObjectRoute::nameToBit(ObjectRoute::TYPE_STR));
+        $this->assertEquals(ObjectRoute::OBJECT, ObjectRoute::nameToBit(ObjectRoute::OBJECT_STR));
+        $this->assertEquals(ObjectRoute::OBJECTS, ObjectRoute::nameToBit(ObjectRoute::OBJECTS_STR));
     }
 }

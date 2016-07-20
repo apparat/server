@@ -36,7 +36,6 @@
 
 namespace Apparat\Server\Ports\Responder;
 
-use Apparat\Server\Domain\Payload\PayloadInterface;
 use Apparat\Server\Ports\View\ViewInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -49,6 +48,12 @@ use Psr\Http\Message\ResponseInterface;
 abstract class AbstractResponder implements ResponderInterface
 {
     /**
+     * Action name
+     *
+     * @var string
+     */
+    const ACTION = 'Abstract';
+    /**
      * View
      *
      * @var ViewInterface
@@ -60,12 +65,6 @@ abstract class AbstractResponder implements ResponderInterface
      * @var ResponseInterface
      */
     protected $response;
-    /**
-     * Action name
-     *
-     * @var string
-     */
-    const ACTION = 'Abstract';
 
     /**
      * Constructor
@@ -77,21 +76,5 @@ abstract class AbstractResponder implements ResponderInterface
     {
         $this->response = $response;
         $this->view = $view->setAction(static::ACTION);
-    }
-
-    /**
-     * Run the responder
-     *
-     * @param PayloadInterface $payload Domain payload
-     * @return ResponseInterface Response
-     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/AbstractResponder.php
-     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Responder/BlogBrowseResponder.php
-     */
-    public function __invoke(PayloadInterface $payload)
-    {
-        $this->view->assign('objects', $payload->get());
-        $this->response->getBody()->write($this->view->render());
-        $this->response->getBody()->rewind();
-        return $this->response;
     }
 }

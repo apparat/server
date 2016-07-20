@@ -78,6 +78,7 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
 //        var_dump($context);
         parent::__construct($context);
         $this->setTemplatePaths();
+        $this->registerNamespaces();
     }
 
     /**
@@ -122,5 +123,13 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
     {
         $this->getRenderingContext()->setControllerAction($action);
         return $this;
+    }
+
+    /**
+     * Register default view helper namespaces
+     */
+    protected function registerNamespaces()
+    {
+        $this->getViewHelperResolver()->addNamespace('as', 'Apparat\\Server\\Ports\\ViewHelpers');
     }
 }

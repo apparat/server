@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports
- * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage  Apparat\Server\Tests
+ * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,31 +34,32 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Ports\Responder;
-use Apparat\Server\Domain\Payload\PayloadInterface;
-use Psr\Http\Message\ResponseInterface;
+namespace Apparat\Server\Tests;
+
+use Apparat\Dev\Tests\AbstractTest;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
- * Abstract list responder
+ * View helper tests
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Tests
  */
-abstract class AbstractListResponder extends AbstractResponder
+class ViewHelperTest extends AbstractTest
 {
     /**
-     * Run the responder
-     *
-     * @param PayloadInterface $payload Domain payload
-     * @return ResponseInterface Response
-     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/AbstractResponder.php
-     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Responder/BlogBrowseResponder.php
+     * Test the Datetime view helper
      */
-    public function __invoke(PayloadInterface $payload)
+    public function testDatetimeViewHelper()
     {
-        $this->view->assign('objects', $payload->get());
-        $this->response->getBody()->write($this->view->render());
-        $this->response->getBody()->rewind();
-        return $this->response;
+        $now = new \DateTimeImmutable('now');
+        $view = new TemplateView();
+        $view->getViewHelperResolver()->addNamespace('as', 'Apparat\\Server\\Ports\\ViewHelpers');
+        $view->getTemplatePaths()->setTemplatePathAndFilename(
+            __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR.'Singles'.
+            DIRECTORY_SEPARATOR.'Datetime.html'
+        );
+        $view->assign('datetime', $now);
+        $this->assertEquals($now->format('c'), trim($view->render()));
     }
 }
