@@ -47,6 +47,7 @@ use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Infrastructure\Route\AuraObjectRoute;
 use Apparat\Server\Ports\Types\ObjectRoute;
+use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
@@ -78,6 +79,9 @@ class ObjectRouteTest extends AbstractServerTest
         // Get the associated action
         $action = self::$server->getRouteAction($request, $route);
         $this->assertInstanceOf($actionClass, $action);
+
+        // Call the action and verify the response
+        $this->assertInstanceOf(ResponseInterface::class, $action());
     }
 
     /**

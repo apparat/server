@@ -62,4 +62,19 @@ class ViewHelperTest extends AbstractTest
         $view->assign('datetime', $now);
         $this->assertEquals($now->format('c'), trim($view->render()));
     }
+
+    /**
+     * Test the CommonMark HTML view helper
+     */
+    public function testCommonMarkHtmlViewHelper()
+    {
+        $view = new TemplateView();
+        $view->getViewHelperResolver()->addNamespace('as', 'Apparat\\Server\\Ports\\ViewHelpers');
+        $view->getTemplatePaths()->setTemplatePathAndFilename(
+            __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR.'Singles'.
+            DIRECTORY_SEPARATOR.'CommonMark.html'
+        );
+        $view->assign('commonMark', '# Headline');
+        $this->assertEquals('<h1>Headline</h1>', trim($view->render()));
+    }
 }
