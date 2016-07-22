@@ -66,7 +66,7 @@ class ErrorService extends AbstractService
                 // If an object route failed
                 $failedRouteReflection = new \ReflectionClass($attributes['failedRoute']);
                 if ($failedRouteReflection->implementsInterface(ObjectActionRouteInterface::class)) {
-                    return $this->payloadFactory->error(404, 'Bad apparat object request');
+                    return $this->payloadFactory->error(400, 'Bad apparat object request');
                 }
                 break;
 

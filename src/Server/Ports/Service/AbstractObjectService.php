@@ -66,15 +66,15 @@ class AbstractObjectService extends AbstractService
 
             // If no object was found
             case 0:
-                // TODO: Add payload
                 break;
 
             // If multiple objects were found: Error
             default:
-                // TODO: Add error payload
-                break;
+                echo 'multiple';
+                return $this->payloadFactory->error(500, 'Multiple objects found');
         }
 
-        return $this->payloadFactory->found([]);
+        // Not found
+        return $this->payloadFactory->error(404, 'Not found');
     }
 }

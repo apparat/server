@@ -36,6 +36,9 @@
 
 namespace Apparat\Server\Ports\Responder;
 
+use Apparat\Kernel\Ports\Kernel;
+use Apparat\Server\Application\Factory\PayloadFactory;
+use Apparat\Server\Domain\Payload\PayloadInterface;
 use Apparat\Server\Ports\View\ViewInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -76,5 +79,53 @@ abstract class AbstractResponder implements ResponderInterface
     {
         $this->response = $response;
         $this->view = $view->setAction(static::ACTION);
+    }
+
+    /**
+     * Run the responder and process the payload
+     *
+     * @param PayloadInterface $payload Domain payload
+     * @return ResponseInterface Response
+     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/AbstractResponder.php
+     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Responder/BlogBrowseResponder.php
+     */
+    public function __invoke(PayloadInterface $payload)
+    {
+        $payloadClass = (new \ReflectionClass($payload))->getShortName();
+        $method = strtolower($payloadClass);
+
+        // If there's no processor for this type of payload
+        if (!is_callable([$this, $method])) {
+            /** @var PayloadFactory $payloadFactory */
+            $payloadFactory = Kernel::create(PayloadFactory::class);
+            $error = $payloadFactory->error(500, sprintf('Unrecognized payload type "%s"', $payloadClass));
+            return $this->error($error);
+        }
+
+        return $this->$method($payload);
+    }
+
+    /**
+     * Process an error payload
+     *
+     * @param PayloadInterface $payload Error payload
+     * @return ResponseInterface Response
+     */
+    protected function error(PayloadInterface $payload)
+    {
+        // Ensure the error template is used
+        $this->view->setAction((new \ReflectionClass($payload))->getShortName());
+
+        // Set the HTTP status code
+        $this->response = $this->response->withStatus($payload->get('status'), $payload->get('description'));
+
+        // Add HTTP headers
+        foreach ((array)$payload->get('header') as $name => $value) {
+            $this->response = $this->response->withHeader($name, $value);
+        }
+
+        $this->view->assign('error', $payload->get());
+        $this->response->getBody()->write($this->view->render());
+        return $this->response;
     }
 }

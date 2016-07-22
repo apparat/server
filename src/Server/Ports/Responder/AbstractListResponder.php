@@ -35,7 +35,8 @@
  ***********************************************************************************/
 
 namespace Apparat\Server\Ports\Responder;
-use Apparat\Server\Domain\Payload\PayloadInterface;
+
+use Apparat\Server\Application\Payload\Found;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -47,18 +48,15 @@ use Psr\Http\Message\ResponseInterface;
 abstract class AbstractListResponder extends AbstractResponder
 {
     /**
-     * Run the responder
+     * Process found objects
      *
-     * @param PayloadInterface $payload Domain payload
+     * @param Found $payload Found payload
      * @return ResponseInterface Response
-     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/AbstractResponder.php
-     * @see https://github.com/pmjones/adr/blob/master/example-code/Web/Blog/Responder/BlogBrowseResponder.php
      */
-    public function __invoke(PayloadInterface $payload)
+    public function found(Found $payload)
     {
         $this->view->assign('objects', $payload->get());
         $this->response->getBody()->write($this->view->render());
-        $this->response->getBody()->rewind();
         return $this->response;
     }
 }

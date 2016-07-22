@@ -47,6 +47,7 @@ use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Infrastructure\Route\AuraObjectRoute;
 use Apparat\Server\Ports\Types\ObjectRoute;
+use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
@@ -179,5 +180,29 @@ class ObjectRouteTest extends AbstractServerTest
         $this->assertEquals(ObjectRoute::TYPE, ObjectRoute::nameToBit(ObjectRoute::TYPE_STR));
         $this->assertEquals(ObjectRoute::OBJECT, ObjectRoute::nameToBit(ObjectRoute::OBJECT_STR));
         $this->assertEquals(ObjectRoute::OBJECTS, ObjectRoute::nameToBit(ObjectRoute::OBJECTS_STR));
+    }
+
+    /**
+     * Test an empty object result
+     */
+    public function testObjectNotFound()
+    {
+        $uri = new Uri('http://apparat/blog/2016/06/08/19/14/52/1');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+
+        // Dispatch the route
+        $route = self::$server->dispatchRequestToRoute($request);
+        $this->assertInstanceOf(AuraObjectRoute::class, $route);
+
+        // Get the associated action
+        $action = self::$server->getRouteAction($request, $route);
+        $this->assertInstanceOf(ObjectAction::class, $action);
+
+        // Run the action
+        /** @var ResponseInterface $response */
+        $response = $action();
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }

@@ -36,7 +36,7 @@
 
 namespace Apparat\Server\Ports\Responder;
 
-use Apparat\Server\Domain\Payload\PayloadInterface;
+use Apparat\Server\Application\Payload\Found;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -48,12 +48,12 @@ use Psr\Http\Message\ResponseInterface;
 abstract class AbstractObjectResponder extends AbstractResponder
 {
     /**
-     * Run the responder
+     * Process a found object
      *
-     * @param PayloadInterface $payload Domain payload
+     * @param Found $payload Domain payload
      * @return ResponseInterface Response
      */
-    public function __invoke(PayloadInterface $payload)
+    public function found(Found $payload)
     {
         $this->view->assign('object', current($payload->get()));
         $this->response->getBody()->write($this->view->render());

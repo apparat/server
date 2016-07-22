@@ -74,7 +74,7 @@ class ErrorTest extends AbstractServerTest
         /** @var ResponseInterface $response */
         $response = $action();
         $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
