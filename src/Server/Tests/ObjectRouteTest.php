@@ -36,6 +36,8 @@
 
 namespace Apparat\Server\Tests;
 
+use Apparat\Object\Infrastructure\Repository\FileAdapterStrategy;
+use Apparat\Object\Ports\Facades\RepositoryFacade;
 use Apparat\Server\Infrastructure\Action\DayAction;
 use Apparat\Server\Infrastructure\Action\HourAction;
 use Apparat\Server\Infrastructure\Action\MinuteAction;
@@ -46,7 +48,9 @@ use Apparat\Server\Infrastructure\Action\SecondAction;
 use Apparat\Server\Infrastructure\Action\TypeAction;
 use Apparat\Server\Infrastructure\Action\YearAction;
 use Apparat\Server\Infrastructure\Route\AuraObjectRoute;
+use Apparat\Server\Ports\Facade\ServerFacade;
 use Apparat\Server\Ports\Types\ObjectRoute;
+use Apparat\Server\Tests\Adr\TestMultipleObjectAction;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
@@ -205,4 +209,29 @@ class ObjectRouteTest extends AbstractServerTest
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(404, $response->getStatusCode());
     }
+
+
+    /**
+     * Test multiple object error
+     */
+//    public function testMultipleObjectError()
+//    {
+//        $uri = new Uri('http://apparat/blog/*');
+//        $request = new ServerRequest();
+//        $request = $request->withUri($uri);
+//
+//        // Dispatch the route
+//        $route = self::$server->dispatchRequestToRoute($request);
+//        $this->assertInstanceOf(AuraObjectRoute::class, $route);
+//        $route->handler([ObjectRoute::YEAR_STR => TestMultipleObjectAction::class]);
+//
+//        // Get the associated action
+//        $action = self::$server->getRouteAction($request, $route);
+//        $this->assertInstanceOf(TestMultipleObjectAction::class, $action);
+//
+//        // Run the action
+//        $response = $action();
+//        $this->assertInstanceOf(ResponseInterface::class, $response);
+//        $this->assertEquals(500, $response->getStatusCode());
+//    }
 }

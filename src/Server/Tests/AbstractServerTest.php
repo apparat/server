@@ -38,6 +38,8 @@ namespace Apparat\Server\Tests;
 
 use Apparat\Dev\Tests\AbstractTest;
 use Apparat\Kernel\Ports\Kernel;
+use Apparat\Object\Infrastructure\Repository\FileAdapterStrategy;
+use Apparat\Object\Ports\Facades\RepositoryFacade;
 use Apparat\Server\Infrastructure\Model\Server;
 
 /**
@@ -74,6 +76,15 @@ abstract class AbstractServerTest extends AbstractTest
         putenv('OBJECT_DATE_PRECISION=6');
 
         self::$server = Kernel::create(Server::class);
+
+        // Register a repositoryc
+        RepositoryFacade::register(
+            '',
+            [
+                'type' => FileAdapterStrategy::TYPE,
+                'root' => __DIR__.DIRECTORY_SEPARATOR.'Fixture',
+            ]
+        );
 
         // Enable the object route
         self::$server->enableObjectRoute('');

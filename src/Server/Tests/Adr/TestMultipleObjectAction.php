@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Ports
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\Tests
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -32,50 +32,31 @@
  *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  *  IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- ***********************************************************************************/
+ ******************************************w*****************************************/
 
-namespace Apparat\Server\Ports\Service;
+namespace Apparat\Server\Tests\Adr;
 
-use Apparat\Object\Ports\Facades\RepositoryFacade;
-use Apparat\Object\Ports\Repository\SelectorInterface;
-use Apparat\Server\Domain\Payload\PayloadInterface;
+use Apparat\Server\Infrastructure\Action\ObjectAction;
+use Apparat\Server\Ports\Types\ObjectRoute;
 
 /**
- * Abstract object service
+ * Test action
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Tests
  */
-class AbstractObjectService extends AbstractService
+class TestMultipleObjectAction extends ObjectAction
 {
     /**
-     * Find an object by select
+     * Check whether a set of attributes matches the action requirements
      *
-     * @param string $repository Repository identifier
-     * @param SelectorInterface $selector Object selector
-     * @return PayloadInterface Payload
+     * @param array $attributes Attributes
+     * @return boolean The attributes match the action requirements
      */
-    public function findObject($repository, SelectorInterface $selector)
+    public static function matches(array $attributes)
     {
-        $objects = RepositoryFacade::instance($repository)->findObjects($selector);
-//        print_r($selector);
-
-        switch (count($objects)) {
-            // If exactly one object was found
-            case 1:
-                return $this->payloadFactory->found([current($objects)]);
-
-            // If no object was found
-            case 0:
-                break;
-
-            // If multiple objects were found: Error
-            default:
-                echo 'multiple';
-                return $this->payloadFactory->error(500, 'Multiple objects found');
-        }
-
-        // Not found
-        return $this->payloadFactory->error(404, 'Not found');
+        return self::notEmptyDateSelector($attributes, 1)
+        && empty($attributes[ObjectRoute::MONTH_STR])
+        && empty($attributes[ObjectRoute::ID_STR]);
     }
 }
