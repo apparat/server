@@ -50,17 +50,11 @@ use Aura\Router\Route;
 class AuraErrorRoute extends AbstractActionRoute implements ErrorRouteInterface
 {
     /**
-     * Pre-process the route attributes
+     * Failed route
+     *
+     * @var string
      */
-    public function preprocessAttributes()
-    {
-        parent::preprocessAttributes();
-
-        $this->attributes['failedRule'] = $this->failedRule;
-        $this->attributes['failedRoute'] = $this->failedRoute;
-        $this->attributes['allows'] = $this->allows;
-        $this->attributes['accept'] = $this->accepts;
-    }
+    protected $failedRoute;
 
     /**
      * Cast a regular route as an error route
@@ -77,5 +71,18 @@ class AuraErrorRoute extends AbstractActionRoute implements ErrorRouteInterface
         }
         $errorRoute->failedRoute = get_class($route);
         return $errorRoute->handler(ErrorAction::class);
+    }
+
+    /**
+     * Pre-process the route attributes
+     */
+    public function preprocessAttributes()
+    {
+        parent::preprocessAttributes();
+
+        $this->attributes['failedRule'] = $this->failedRule;
+        $this->attributes['failedRoute'] = $this->failedRoute;
+        $this->attributes['allows'] = $this->allows;
+        $this->attributes['accept'] = $this->accepts;
     }
 }

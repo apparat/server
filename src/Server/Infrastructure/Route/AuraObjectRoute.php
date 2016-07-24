@@ -36,7 +36,6 @@
 
 namespace Apparat\Server\Infrastructure\Route;
 
-use Apparat\Server\Domain\Contract\ActionInterface;
 use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
 use Apparat\Server\Ports\Route\InvalidArgumentException;
 
@@ -51,7 +50,7 @@ class AuraObjectRoute extends AuraRoute implements ObjectActionRouteInterface
     /**
      * Get the action handler
      *
-     * @return ActionInterface|\Callable
+     * @return string
      * @throws InvalidArgumentException If the route action doesn't match
      */
     public function getHandler()

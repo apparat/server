@@ -182,7 +182,7 @@ class Route implements RouteInterface
      * @param string|array $verbs Allowed HTTP verbs
      * @param string $name Route name
      * @param string $path Route path
-     * @param string|\Callable|array $action Route action
+     * @param string|\Callable|\Closure|array $action Route action
      */
     public function __construct($verbs, $name, $path, $action)
     {
@@ -198,7 +198,7 @@ class Route implements RouteInterface
         // Set and validate the route path
         $this->setAndValidatePath($path);
 
-        // Set and validate the route action
+        // Set and validate the route action(s)
         $this->setAndValidateActionList($action);
     }
 
@@ -272,7 +272,7 @@ class Route implements RouteInterface
     /**
      * Set and validate the route action
      *
-     * @param string|\Callable|array $actions Route actions
+     * @param string|\Callable|\Closure|array $actions Route actions
      */
     protected function setAndValidateActionList($actions)
     {
@@ -303,7 +303,7 @@ class Route implements RouteInterface
     /**
      * Get the route action
      *
-     * @return callable|string Route action
+     * @return \Callable|\Closure|string|array Route action
      */
     public function getAction()
     {
@@ -523,7 +523,7 @@ class Route implements RouteInterface
     /**
      * Set and validate the route action
      *
-     * @param string $action Route action
+     * @param string|\Callable|\Closure $action Route action
      * @throws InvalidArgumentException If the route action is empty
      * @throws InvalidArgumentException If the route action is not a class name
      * @throws InvalidArgumentException If the route action is neither a callable nor an ActionInterface
@@ -562,7 +562,7 @@ class Route implements RouteInterface
             return;
         }
 
-        // If the action is given as callable
+        // If the action is given as callable / closure
         if (is_callable($action)) {
             return;
         }

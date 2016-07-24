@@ -50,7 +50,7 @@ interface RouteInterface
      * @param string|array $verbs Allowed HTTP verbs
      * @param string $name Route name
      * @param string $path Route path
-     * @param string|callable|array $action Route action
+     * @param string|\Callable|\Closure|array $action Route action
      */
     public function __construct($verbs, $name, $path, $action);
 
@@ -71,7 +71,7 @@ interface RouteInterface
     /**
      * Get the route action
      *
-     * @return callable|string Route action
+     * @return \Callable|\Closure|string|array Route action
      */
     public function getAction();
 
