@@ -88,6 +88,21 @@ abstract class AbstractServerTest extends AbstractTest
     }
 
     /**
+     * Register and prepare a server instance with a particular date precision
+     *
+     * @param int $datePrecision Date precision
+     */
+    protected static function createServer($datePrecision)
+    {
+        putenv('OBJECT_DATE_PRECISION='.intval($datePrecision));
+
+        self::$server = Kernel::create(Server::class);
+
+        // Enable the object route
+        self::$server->enableObjectRoute('');
+    }
+
+    /**
      * This method is called after the last test of this test class is run.
      *
      * @since Method available since Release 3.4.0
@@ -96,19 +111,5 @@ abstract class AbstractServerTest extends AbstractTest
     {
         parent::tearDownAfterClass();
         putenv('OBJECT_DATE_PRECISION='.self::$objectDatePrecision);
-    }
-
-    /**
-     * Register and prepare a server instance with a particular date precision
-     *
-     * @param int $datePrecision Date precision
-     */
-    protected static function createServer($datePrecision) {
-        putenv('OBJECT_DATE_PRECISION='.intval($datePrecision));
-
-        self::$server = Kernel::create(Server::class);
-
-        // Enable the object route
-        self::$server->enableObjectRoute('');
     }
 }

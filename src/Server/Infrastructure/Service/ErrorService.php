@@ -64,8 +64,8 @@ class ErrorService extends AbstractService
             // Invalid path
             case ObjectPath::class:
                 // If an object route failed
-                $failedRouteReflection = new \ReflectionClass($attributes['failedRoute']);
-                if ($failedRouteReflection->implementsInterface(ObjectActionRouteInterface::class)) {
+                $failedRoute = new \ReflectionClass($attributes['failedRoute']);
+                if ($failedRoute->implementsInterface(ObjectActionRouteInterface::class)) {
                     return $this->payloadFactory->error(400, 'Bad apparat object request');
                 }
                 break;

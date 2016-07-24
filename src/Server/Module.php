@@ -40,42 +40,12 @@ use Apparat\Kernel\Ports\AbstractModule;
 use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
 use Apparat\Server\Application\Factory\PayloadFactory;
 use Apparat\Server\Domain\Contract\PayloadFactoryInterface;
-use Apparat\Server\Domain\Contract\ResponderInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
 use Apparat\Server\Domain\Model\Server;
 use Apparat\Server\Domain\Service\AbstractService;
-use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Infrastructure\Action\DayAction;
-use Apparat\Server\Infrastructure\Action\ErrorAction;
-use Apparat\Server\Infrastructure\Action\HourAction;
-use Apparat\Server\Infrastructure\Action\MinuteAction;
-use Apparat\Server\Infrastructure\Action\MonthAction;
-use Apparat\Server\Infrastructure\Action\ObjectAction;
-use Apparat\Server\Infrastructure\Action\ObjectsAction;
-use Apparat\Server\Infrastructure\Action\SecondAction;
-use Apparat\Server\Infrastructure\Action\TypeAction;
-use Apparat\Server\Infrastructure\Action\YearAction;
-use Apparat\Server\Infrastructure\Responder\DayResponder;
-use Apparat\Server\Infrastructure\Responder\ErrorResponder;
-use Apparat\Server\Infrastructure\Responder\HourResponder;
-use Apparat\Server\Infrastructure\Responder\MinuteResponder;
-use Apparat\Server\Infrastructure\Responder\MonthResponder;
-use Apparat\Server\Infrastructure\Responder\ObjectResponder;
-use Apparat\Server\Infrastructure\Responder\ObjectsResponder;
-use Apparat\Server\Infrastructure\Responder\SecondResponder;
-use Apparat\Server\Infrastructure\Responder\TypeResponder;
-use Apparat\Server\Infrastructure\Responder\YearResponder;
 use Apparat\Server\Infrastructure\Route\AuraRouterAdapter;
-use Apparat\Server\Infrastructure\Service\DayService;
-use Apparat\Server\Infrastructure\Service\ErrorService;
-use Apparat\Server\Infrastructure\Service\HourService;
-use Apparat\Server\Infrastructure\Service\MinuteService;
-use Apparat\Server\Infrastructure\Service\MonthService;
-use Apparat\Server\Infrastructure\Service\ObjectService;
-use Apparat\Server\Infrastructure\Service\ObjectsService;
-use Apparat\Server\Infrastructure\Service\SecondService;
-use Apparat\Server\Infrastructure\Service\TypeService;
-use Apparat\Server\Infrastructure\Service\YearService;
+use Apparat\Server\Infrastructure\Traits\DateActionsTrait;
+use Apparat\Server\Infrastructure\Traits\ObjectActionsTrait;
 use Apparat\Server\Ports\Responder\AbstractResponder;
 use Apparat\Server\Ports\View\TYPO3FluidView;
 use Apparat\Server\Ports\View\ViewInterface;
@@ -94,6 +64,10 @@ use Zend\Diactoros\Response;
 class Module extends AbstractModule
 {
     /**
+     * Use external dependency configurations
+     */
+    use DateActionsTrait, ObjectActionsTrait;
+    /**
      * Module name
      *
      * @var string
@@ -108,10 +82,6 @@ class Module extends AbstractModule
     protected static function validateEnvironment(Dotenv $environment)
     {
         parent::validateEnvironment($environment);
-
-        // Validate the required environment variables
-//        $environment->required('APPARAT_BASE_URL')->notEmpty();
-//        $environment->required('OBJECT_DATE_PRECISION')->isInteger()->allowedValues([0, 1, 2, 3, 4, 5, 6]);
     }
 
     /**
@@ -167,116 +137,10 @@ class Module extends AbstractModule
             'constructParams' => [null]
         ]);
 
-        // Configure the action dependencies
-        $this->configureActionDependencies($diContainer);
-    }
+        // Configure the date action dependencies
+        $this->configureDateActionDependencies($diContainer);
 
-    /**
-     * Configure the action dependencies
-     *
-     * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
-     */
-    protected function configureActionDependencies(DependencyInjectionContainerInterface $diContainer)
-    {
-        $diContainer->register(YearAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => YearService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => YearResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(MonthAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => MonthService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => MonthResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(DayAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => DayService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => DayResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(HourAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => HourService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => HourResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(MinuteAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => MinuteService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => MinuteResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(SecondAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => SecondService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => SecondResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(ObjectAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => ObjectService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => ObjectResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(ObjectsAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => ObjectsService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => ObjectsResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(TypeAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => TypeService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => TypeResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(ErrorAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => ErrorService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => ErrorResponder::class,
-                ]
-            ]
-        ]);
+        // Configure the object action dependencies
+        $this->configureObjectActionDependencies($diContainer);
     }
 }

@@ -74,17 +74,14 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
      */
     public function __construct(RenderingContextInterface $context = null)
     {
-        // TODO Why gets this called twice?
-//        var_dump($context);
         parent::__construct($context);
+
         $this->setTemplatePaths();
         $this->registerNamespaces();
     }
 
     /**
      * Set the template paths
-     *
-     * @todo Enable externally configured paths
      */
     protected function setTemplatePaths()
     {
@@ -107,10 +104,14 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
                 [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Partials']
             )
         );
+    }
 
-        // Register the view helpers
-        // TODO: Enable after https://github.com/TYPO3Fluid/Fluid/issues/114 has been resolved
-//        $paths->registerNamespace('as', 'Apparat\\Server\\Ports\\ViewHelpers');
+    /**
+     * Register default view helper namespaces
+     */
+    protected function registerNamespaces()
+    {
+        $this->getViewHelperResolver()->addNamespace('as', 'Apparat\\Server\\Ports\\ViewHelpers');
     }
 
     /**
@@ -123,13 +124,5 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
     {
         $this->getRenderingContext()->setControllerAction($action);
         return $this;
-    }
-
-    /**
-     * Register default view helper namespaces
-     */
-    protected function registerNamespaces()
-    {
-        $this->getViewHelperResolver()->addNamespace('as', 'Apparat\\Server\\Ports\\ViewHelpers');
     }
 }

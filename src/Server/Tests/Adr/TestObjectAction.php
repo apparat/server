@@ -73,6 +73,6 @@ class TestObjectAction extends AbstractSelectorAction
      */
     public static function matches(array $attributes)
     {
-        return false;
+        return is_string($attributes);
     }
 }

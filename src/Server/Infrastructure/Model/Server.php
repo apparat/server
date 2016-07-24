@@ -71,7 +71,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
      * Enable the object route for a particular repository
      *
      * @param string $repositoryPath Repository path
-     * @param int $enable Enable / disable default routes
+     * @param int $enable Enable / disable default actions
      */
     public function enableObjectRoute($repositoryPath = '', $enable = ObjectRoute::ALL)
     {
@@ -80,22 +80,8 @@ class Server extends \Apparat\Server\Domain\Model\Server
         $selectorRegex = SelectorFactory::getSelectorRegex($datePrecision);
         $objectRouteActions = array_filter(
             array_merge(
-                [
-                    ObjectRoute::OBJECT_STR => (ObjectRoute::OBJECT & $enable) ? ObjectAction::class : null,
-                    ObjectRoute::TYPE_STR => (ObjectRoute::TYPE & $enable) ? TypeAction::class : null,
-                    ObjectRoute::OBJECTS_STR => (ObjectRoute::OBJECTS & $enable) ? ObjectsAction::class : null,
-                ],
-                array_slice(
-                    [
-                        ObjectRoute::SECOND_STR => (ObjectRoute::SECOND & $enable) ? SecondAction::class : null,
-                        ObjectRoute::MINUTE_STR => (ObjectRoute::MINUTE & $enable) ? MinuteAction::class : null,
-                        ObjectRoute::HOUR_STR => (ObjectRoute::HOUR & $enable) ? HourAction::class : null,
-                        ObjectRoute::DAY_STR => (ObjectRoute::DAY & $enable) ? DayAction::class : null,
-                        ObjectRoute::MONTH_STR => (ObjectRoute::MONTH & $enable) ? MonthAction::class : null,
-                        ObjectRoute::YEAR_STR => (ObjectRoute::YEAR & $enable) ? YearAction::class : null,
-                    ],
-                    6 - $datePrecision
-                )
+                self::getEnabledObjectActionClasses($enable),
+                self::getEnabledDateActionClasses($enable, $datePrecision)
             )
         );
 
@@ -143,5 +129,42 @@ class Server extends \Apparat\Server\Domain\Model\Server
     public function setViewResources(array $viewResources)
     {
         $this->viewResources = $viewResources;
+    }
+
+    /**
+     * Return the enabled object action classes
+     *
+     * @param int $enable Enable / disable default actions
+     * @return array Enabled object action classes
+     */
+    protected function getEnabledObjectActionClasses($enable)
+    {
+        return [
+            ObjectRoute::OBJECT_STR => (ObjectRoute::OBJECT & $enable) ? ObjectAction::class : null,
+            ObjectRoute::TYPE_STR => (ObjectRoute::TYPE & $enable) ? TypeAction::class : null,
+            ObjectRoute::OBJECTS_STR => (ObjectRoute::OBJECTS & $enable) ? ObjectsAction::class : null,
+        ];
+    }
+
+    /**
+     * Return the enabled date action classes
+     *
+     * @param int $enable Enable / disable default actions
+     * @param int $datePrecision Date precision
+     * @return array Enabled date action classes
+     */
+    protected function getEnabledDateActionClasses($enable, $datePrecision)
+    {
+        return array_slice(
+            [
+                ObjectRoute::SECOND_STR => (ObjectRoute::SECOND & $enable) ? SecondAction::class : null,
+                ObjectRoute::MINUTE_STR => (ObjectRoute::MINUTE & $enable) ? MinuteAction::class : null,
+                ObjectRoute::HOUR_STR => (ObjectRoute::HOUR & $enable) ? HourAction::class : null,
+                ObjectRoute::DAY_STR => (ObjectRoute::DAY & $enable) ? DayAction::class : null,
+                ObjectRoute::MONTH_STR => (ObjectRoute::MONTH & $enable) ? MonthAction::class : null,
+                ObjectRoute::YEAR_STR => (ObjectRoute::YEAR & $enable) ? YearAction::class : null,
+            ],
+            6 - $datePrecision
+        );
     }
 }
