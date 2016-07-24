@@ -152,4 +152,29 @@ class ErrorTest extends AbstractServerTest
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(404, $response->getStatusCode());
     }
+
+    /**
+     * Test dispatching with no route registered
+     */
+    public function testNoRoutes()
+    {
+        /** @var Server $server */
+        $server = Kernel::create(Server::class);
+
+        $uri = new Uri('http://apparat/blog/no-route');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+
+        // Dispatch the route
+        $route = $server->dispatchRequestToRoute($request);
+        $this->assertInstanceOf(AuraErrorRoute::class, $route);
+
+        $action = $server->getRouteAction($request, $route);
+        $this->assertInstanceOf(ErrorAction::class, $action);
+
+        /** @var ResponseInterface $response */
+        $response = $action();
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(501, $response->getStatusCode());
+    }
 }

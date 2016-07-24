@@ -85,6 +85,16 @@ class ErrorService extends AbstractService
                     'Not acceptable',
                     ['Accept' => $attributes['accept']]
                 );
+
+            // Other cases
+            default:
+                // If no routes were registered
+                if (empty($attributes['failedRoute'])) {
+                    return $this->payloadFactory->error(
+                        501,
+                        'Not implemented'
+                    );
+                }
         }
 
         // Else: General error

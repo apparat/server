@@ -112,7 +112,7 @@ class Route implements RouteInterface
     /**
      * Route action
      *
-     * @var string|callable
+     * @var string|\Callable|\Closure|array
      */
     protected $action;
     /**
@@ -276,8 +276,8 @@ class Route implements RouteInterface
      */
     protected function setAndValidateActionList($actions)
     {
-        array_map([$this, 'setAndValidateAction'], (array)$actions);
-        $this->action = $actions;
+        $actionList = array_map([$this, 'setAndValidateAction'], (array)$actions);
+        $this->action = is_array($actions) ? $actionList : current($actionList);
     }
 
     /**
@@ -532,10 +532,10 @@ class Route implements RouteInterface
     {
         // If the action is given as string
         if (is_string($action)) {
-            $this->action = trim($action);
+            $action = trim($action);
 
             // If the route action is empty
-            if (!strlen($this->action)) {
+            if (!strlen($action)) {
                 throw new InvalidArgumentException(
                     'Route action must not be empty',
                     InvalidArgumentException::EMPTY_ROUTE_ACTION
@@ -543,7 +543,7 @@ class Route implements RouteInterface
             }
 
             // If the route action is not a class name
-            if (!class_exists($this->action)) {
+            if (!class_exists($action)) {
                 throw new InvalidArgumentException(
                     'Route action must be an existing class name',
                     InvalidArgumentException::ROUTE_ACTION_MUST_BE_CLASSNAME
@@ -551,7 +551,7 @@ class Route implements RouteInterface
             }
 
             // If the route action doesn't implement the ActionInterface
-            $actionReflection = new \ReflectionClass($this->action);
+            $actionReflection = new \ReflectionClass($action);
             if (!$actionReflection->implementsInterface(ActionInterface::class)) {
                 throw new InvalidArgumentException(
                     'Route action must implement '.ActionInterface::class,
@@ -559,12 +559,12 @@ class Route implements RouteInterface
                 );
             }
 
-            return;
+            return $action;
         }
 
         // If the action is given as callable / closure
         if (is_callable($action)) {
-            return;
+            return $action;
         }
 
         // If the route action is neither a callable nor an ActionInterface

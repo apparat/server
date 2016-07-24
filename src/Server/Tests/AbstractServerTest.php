@@ -91,15 +91,18 @@ abstract class AbstractServerTest extends AbstractTest
      * Register and prepare a server instance with a particular date precision
      *
      * @param int $datePrecision Date precision
+     * @param bool $enableObjectRoute Enable object route
      */
-    protected static function createServer($datePrecision)
+    protected static function createServer($datePrecision, $enableObjectRoute = true)
     {
         putenv('OBJECT_DATE_PRECISION='.intval($datePrecision));
 
         self::$server = Kernel::create(Server::class);
 
         // Enable the object route
-        self::$server->enableObjectRoute('');
+        if ($enableObjectRoute) {
+            self::$server->enableObjectRoute('');
+        }
     }
 
     /**

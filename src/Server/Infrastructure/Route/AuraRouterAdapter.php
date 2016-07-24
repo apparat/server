@@ -117,6 +117,11 @@ class AuraRouterAdapter implements RouterContainerInterface
      */
     public function dispatchRequestToRoute(ServerRequestInterface $request)
     {
+        // If no route has been registered
+        if (!count($this->routerContainer->getMap()->getIterator())) {
+            return AuraErrorRoute::cast(null);
+        }
+
         $matcher = $this->routerContainer->getMatcher();
         $route = $matcher->match($request);
 

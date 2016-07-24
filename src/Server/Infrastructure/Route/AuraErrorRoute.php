@@ -59,17 +59,22 @@ class AuraErrorRoute extends AbstractActionRoute implements ErrorRouteInterface
     /**
      * Cast a regular route as an error route
      *
-     * @param Route $route Regular route
+     * @param Route $route Original route
      * @return AuraErrorRoute Error route
      */
-    public static function cast(Route $route)
+    public static function cast(Route $route = null)
     {
         /** @var AuraErrorRoute $errorRoute */
         $errorRoute = Kernel::create(static::class, []);
-        foreach (get_object_vars($route) as $property => $value) {
-            $errorRoute->$property = $value;
+
+        // If an original route is given: Clone its properties
+        if ($route instanceof Route) {
+            foreach (get_object_vars($route) as $property => $value) {
+                $errorRoute->$property = $value;
+            }
+            $errorRoute->failedRoute = get_class($route);
         }
-        $errorRoute->failedRoute = get_class($route);
+
         return $errorRoute->handler(ErrorAction::class);
     }
 

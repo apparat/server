@@ -69,7 +69,7 @@ class BasicServerTest extends AbstractTest
     {
         TestModule::autorun();
 
-        // Register a repositoryc
+        // Register a repository
         RepositoryFacade::register(
             'repo',
             [
