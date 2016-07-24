@@ -61,7 +61,7 @@ class TestResponder extends AbstractResponder
      * @param PayloadInterface $payload Domain payload
      * @return ResponseInterface Response
      */
-    public function found(PayloadInterface $payload)
+    public function error(PayloadInterface $payload)
     {
         $this->view->assign('key', $payload->get('key'));
         $this->view->assign('null', $payload->get('null'));
