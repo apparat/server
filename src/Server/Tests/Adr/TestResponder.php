@@ -54,13 +54,14 @@ class TestResponder extends AbstractResponder
      * @var string
      */
     const ACTION = 'Test';
+
     /**
      * Run the responder
      *
      * @param PayloadInterface $payload Domain payload
      * @return ResponseInterface Response
      */
-    public function __invoke(PayloadInterface $payload)
+    public function found(PayloadInterface $payload)
     {
         $this->view->assign('key', $payload->get('key'));
         $this->view->assign('null', $payload->get('null'));

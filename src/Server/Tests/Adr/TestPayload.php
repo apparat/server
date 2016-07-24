@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Tests
+ * @subpackage  Apparat\Server\<Layer>
  * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -32,31 +32,19 @@
  *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  *  IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- ******************************************w*****************************************/
+ ***********************************************************************************/
 
 namespace Apparat\Server\Tests\Adr;
 
-use Apparat\Server\Infrastructure\Action\ObjectAction;
-use Apparat\Server\Ports\Types\ObjectRoute;
+use Apparat\Server\Domain\Payload\AbstractPayload;
 
 /**
- * Test action
+ * Test payload
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Tests
  */
-class TestMultipleObjectAction extends ObjectAction
+class TestPayload extends AbstractPayload
 {
-    /**
-     * Check whether a set of attributes matches the action requirements
-     *
-     * @param array $attributes Attributes
-     * @return boolean The attributes match the action requirements
-     */
-    public static function matches(array $attributes)
-    {
-        return self::notEmptyDateSelector($attributes, 1)
-        && empty($attributes[ObjectRoute::MONTH_STR])
-        && empty($attributes[ObjectRoute::ID_STR]);
-    }
+
 }

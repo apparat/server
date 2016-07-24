@@ -73,9 +73,6 @@ abstract class AbstractServerTest extends AbstractTest
         parent::setUpBeforeClass();
 
         self::$objectDatePrecision = intval(getenv('OBJECT_DATE_PRECISION'));
-        putenv('OBJECT_DATE_PRECISION=6');
-
-        self::$server = Kernel::create(Server::class);
 
         // Register a repositoryc
         RepositoryFacade::register(
@@ -86,8 +83,8 @@ abstract class AbstractServerTest extends AbstractTest
             ]
         );
 
-        // Enable the object route
-        self::$server->enableObjectRoute('');
+        // Register and prepare a server with date precision 6
+        self::createServer(6);
     }
 
     /**
@@ -99,5 +96,19 @@ abstract class AbstractServerTest extends AbstractTest
     {
         parent::tearDownAfterClass();
         putenv('OBJECT_DATE_PRECISION='.self::$objectDatePrecision);
+    }
+
+    /**
+     * Register and prepare a server instance with a particular date precision
+     *
+     * @param int $datePrecision Date precision
+     */
+    protected static function createServer($datePrecision) {
+        putenv('OBJECT_DATE_PRECISION='.intval($datePrecision));
+
+        self::$server = Kernel::create(Server::class);
+
+        // Enable the object route
+        self::$server->enableObjectRoute('');
     }
 }

@@ -58,24 +58,13 @@ class AbstractObjectService extends AbstractService
     public function findObject($repository, SelectorInterface $selector)
     {
         $objects = RepositoryFacade::instance($repository)->findObjects($selector);
-//        print_r($selector);
 
-        switch (count($objects)) {
-            // If exactly one object was found
-            case 1:
-                return $this->payloadFactory->found([current($objects)]);
-
-            // If no object was found
-            case 0:
-                break;
-
-            // If multiple objects were found: Error
-            default:
-                echo 'multiple';
-                return $this->payloadFactory->error(500, 'Multiple objects found');
+        // If exactly one object was found
+        if (count($objects) == 1) {
+            return $this->payloadFactory->found([current($objects)]);
         }
 
-        // Not found
+        // If no object was found
         return $this->payloadFactory->error(404, 'Not found');
     }
 }

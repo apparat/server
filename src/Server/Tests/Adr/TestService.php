@@ -36,6 +36,7 @@
 
 namespace Apparat\Server\Tests\Adr;
 
+use Apparat\Kernel\Ports\Kernel;
 use Apparat\Server\Application\Payload\Found;
 use Apparat\Server\Ports\Service\AbstractService;
 
@@ -54,6 +55,6 @@ class TestService extends AbstractService
      */
     public function test()
     {
-        return $this->payloadFactory->found(['key' => true]);
+        return Kernel::create(TestPayload::class, [['key' => true]]);
     }
 }
