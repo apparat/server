@@ -42,7 +42,7 @@ use Apparat\Server\Ports\Service\AbstractObjectService;
  * Object result service
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Domain
+ * @subpackage Apparat\Server\Infrastructure
  */
 class ObjectService extends AbstractObjectService
 {

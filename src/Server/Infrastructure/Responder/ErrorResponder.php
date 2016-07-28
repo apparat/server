@@ -44,7 +44,7 @@ use Psr\Http\Message\ResponseInterface;
  * Error responder
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Infrastructure
  */
 class ErrorResponder extends AbstractResponder
 {

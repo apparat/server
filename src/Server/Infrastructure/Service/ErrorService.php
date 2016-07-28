@@ -47,7 +47,7 @@ use Aura\Router\Rule\Allows;
  * Error result service
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Domain
+ * @subpackage Apparat\Server\Infrastructure
  */
 class ErrorService extends AbstractService
 {

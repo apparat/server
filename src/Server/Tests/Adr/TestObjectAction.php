@@ -56,16 +56,6 @@ class TestObjectAction extends AbstractSelectorAction
     protected $domain;
 
     /**
-     * Run the action
-     *
-     * @return ResponseInterface Response
-     */
-    public function __invoke()
-    {
-        return $this->responder->__invoke($this->domain->test());
-    }
-
-    /**
      * Check whether a set of attributes matches the action requirements
      *
      * @param array $attributes Attributes
@@ -74,5 +64,15 @@ class TestObjectAction extends AbstractSelectorAction
     public static function matches(array $attributes)
     {
         return is_string($attributes);
+    }
+
+    /**
+     * Run the action
+     *
+     * @return ResponseInterface Response
+     */
+    public function __invoke()
+    {
+        return $this->responder->__invoke($this->domain->test());
     }
 }

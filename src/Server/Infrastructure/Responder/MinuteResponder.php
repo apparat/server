@@ -42,7 +42,7 @@ use Apparat\Server\Ports\Responder\AbstractListResponder;
  * Minute responder
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Infrastructure
  */
 class MinuteResponder extends AbstractListResponder
 {

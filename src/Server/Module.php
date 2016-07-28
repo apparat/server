@@ -56,10 +56,10 @@ use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use Zend\Diactoros\Response;
 
 /**
- * Object module
+ * Server module
  *
- * @package Apparat\Object
- * @subpackage Apparat\Object
+ * @package Apparat\Server
+ * @subpackage Apparat\Server
  */
 class Module extends AbstractModule
 {

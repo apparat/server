@@ -42,7 +42,7 @@ use Apparat\Server\Ports\Service\AbstractListService;
  * Second result service
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Domain
+ * @subpackage Apparat\Server\Infrastructure
  */
 class SecondService extends AbstractListService
 {

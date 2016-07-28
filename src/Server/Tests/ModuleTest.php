@@ -37,13 +37,13 @@
 namespace Apparat\Server\Tests;
 
 use Apparat\Dev\Tests\AbstractTest;
-use Apparat\Resource\Module;
+use Apparat\Server\Module;
 
 /**
  * Module tests
  *
- * @package Apparat\Kernel
- * @subpackage Apparat\Kernel\Tests
+ * @package Apparat\Server
+ * @subpackage Apparat\Server\Tests
  */
 class ModuleTest extends AbstractTest
 {

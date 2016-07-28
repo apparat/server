@@ -47,7 +47,7 @@ use Psr\Http\Message\ResponseInterface;
  * Object action
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Infrastructure
  */
 class ObjectAction extends AbstractSelectorAction
 {

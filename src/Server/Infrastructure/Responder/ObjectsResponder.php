@@ -36,15 +36,13 @@
 
 namespace Apparat\Server\Infrastructure\Responder;
 
-use Apparat\Server\Domain\Payload\PayloadInterface;
 use Apparat\Server\Ports\Responder\AbstractListResponder;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Objects responder
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Infrastructure
  */
 class ObjectsResponder extends AbstractListResponder
 {

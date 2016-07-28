@@ -42,7 +42,7 @@ use Apparat\Server\Ports\Responder\AbstractListResponder;
  * Second responder
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Infrastructure
  */
 class SecondResponder extends AbstractListResponder
 {

@@ -1,125 +1,147 @@
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
-      xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers"
-      xmlns:as="http://typo3.org/ns/Apparat/Server/Ports/ViewHelpers">
-    <f:layout name="Default"/>
-    <f:section name="Main">
-        <header>Template: Object</header>
+<html xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers" xmlns:as="http://typo3.org/ns/Apparat/Server/Ports/ViewHelpers"
+      xmlns="http://www.w3.org/1999/xhtml"
+      lang="en">
+<f:layout name="Default"/>
+<f:section name="Main">
+    <header>Template: Object</header>
 
-        <!-- Object template (begin) -->
-        <article class="h-entry">
-            <dl>
-                <!-- Name -->
-                <dt><f:render partial="Property" arguments="{property: 'name'}"/></dt>
-                <dd class="p-name">
-                    <f:format.htmlspecialchars>{object.name}</f:format.htmlspecialchars>
-                </dd>
+    <!-- Object template (begin) -->
+    <article class="h-entry">
+        <dl>
+            <!-- Name -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'name'}"/>
+            </dt>
+            <dd class="p-name">
+                <f:format.htmlspecialchars>{object.name}</f:format.htmlspecialchars>
+            </dd>
 
-                <!-- Summary -->
-                <dt><f:render partial="Property" arguments="{property: 'summary'}"/></dt>
-                <dd class="p-summary">
-                    <f:format.htmlspecialchars>{object.summary}</f:format.htmlspecialchars>
-                </dd>
+            <!-- Summary -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'summary'}"/>
+            </dt>
+            <dd class="p-summary">
+                <f:format.htmlspecialchars>{object.summary}</f:format.htmlspecialchars>
+            </dd>
 
-                <!-- Publication date -->
-                <dt><f:render partial="Property" arguments="{property: 'published'}"/></dt>
-                <dd>
-                    <f:render partial="Format/Datetime"
-                              arguments="{datetime: object.published, class: 'dt-published'}"/>
-                </dd>
+            <!-- Publication date -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'published'}"/>
+            </dt>
+            <dd>
+                <f:render partial="Format/Datetime"
+                          arguments="{datetime: object.published, class: 'dt-published'}"/>
+            </dd>
 
-                <!-- Modification date -->
-                <dt><f:render partial="Property" arguments="{property: 'updated'}"/></dt>
-                <dd>
-                    <f:render partial="Format/Datetime"
-                              arguments="{datetime: object.updated, class: 'dt-updated'}"/>
-                </dd>
+            <!-- Modification date -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'updated'}"/>
+            </dt>
+            <dd>
+                <f:render partial="Format/Datetime"
+                          arguments="{datetime: object.updated, class: 'dt-updated'}"/>
+            </dd>
 
-                <!-- Author -->
-                <dt><f:render partial="Property" arguments="{property: 'author'}"/></dt>
-                <dd>
-                    <f:if condition="{object.author}">
-                        <f:then>
-                            <ul>
-                                <f:for each="{object.author}" as="author">
-                                    <li class="p-author">{author}</li>
-                                </f:for>
-                            </ul>
-                        </f:then>
-                        <f:else>---</f:else>
-                    </f:if>
-                </dd>
+            <!-- Author -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'author'}"/>
+            </dt>
+            <dd>
+                <f:if condition="{object.author}">
+                    <f:then>
+                        <ul>
+                            <f:for each="{object.author}" as="author">
+                                <li class="p-author">{author}</li>
+                            </f:for>
+                        </ul>
+                    </f:then>
+                    <f:else>---</f:else>
+                </f:if>
+            </dd>
 
-                <!-- Category -->
-                <dt><f:render partial="Property" arguments="{property: 'category'}"/></dt>
-                <dd>
-                    <f:if condition="{object.category}">
-                        <f:then>
-                            <ul>
-                                <f:for each="{object.category}" as="category">
-                                    <li class="p-category">{category}</li>
-                                </f:for>
-                            </ul>
-                        </f:then>
-                        <f:else>---</f:else>
-                    </f:if>
-                </dd>
+            <!-- Category -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'category'}"/>
+            </dt>
+            <dd>
+                <f:if condition="{object.category}">
+                    <f:then>
+                        <ul>
+                            <f:for each="{object.category}" as="category">
+                                <li class="p-category">{category}</li>
+                            </f:for>
+                        </ul>
+                    </f:then>
+                    <f:else>---</f:else>
+                </f:if>
+            </dd>
 
-                <!-- URL -->
-                <dt><f:render partial="Property" arguments="{property: 'url'}"/></dt>
-                <dd>
-                    <a class="u-url" href="{object.url}">{object.url}</a>
-                </dd>
+            <!-- URL -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'url'}"/>
+            </dt>
+            <dd>
+                <a class="u-url" href="{object.url}">{object.url}</a>
+            </dd>
 
-                <!-- UID -->
-                <dt><f:render partial="Property" arguments="{property: 'uid'}"/></dt>
-                <dd>
-                    <a class="u-uid" href="{object.uid}">{object.uid}</a>
-                </dd>
+            <!-- UID -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'uid'}"/>
+            </dt>
+            <dd>
+                <a class="u-uid" href="{object.uid}">{object.uid}</a>
+            </dd>
 
-                <!-- Location -->
-                <dt><f:render partial="Property" arguments="{property: 'location'}"/></dt>
-                <dd>
-                    <f:if condition="{object.location}">
-                        <f:then><span class="p-location">{object.location}</span></f:then>
-                        <f:else>---</f:else>
-                    </f:if>
-                </dd>
+            <!-- Location -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'location'}"/>
+            </dt>
+            <dd>
+                <f:if condition="{object.location}">
+                    <f:then><span class="p-location">{object.location}</span></f:then>
+                    <f:else>---</f:else>
+                </f:if>
+            </dd>
 
-                <!-- Syndication -->
-                <dt><f:render partial="Property" arguments="{property: 'syndication'}"/></dt>
-                <dd>
-                    <f:if condition="{object.syndication}">
-                        <f:then>
-                            <ul>
-                                <f:for each="{object.syndication}" as="syndication">
-                                    <li><a class="u-syndication" href="{syndication}">{syndication}</a></li>
-                                </f:for>
-                            </ul>
-                        </f:then>
-                        <f:else>---</f:else>
-                    </f:if>
-                </dd>
+            <!-- Syndication -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'syndication'}"/>
+            </dt>
+            <dd>
+                <f:if condition="{object.syndication}">
+                    <f:then>
+                        <ul>
+                            <f:for each="{object.syndication}" as="syndication">
+                                <li><a class="u-syndication" href="{syndication}">{syndication}</a></li>
+                            </f:for>
+                        </ul>
+                    </f:then>
+                    <f:else>---</f:else>
+                </f:if>
+            </dd>
 
-                <!-- Featured -->
-                <dt><f:render partial="Property" arguments="{property: 'featured'}"/></dt>
-                <dd>
-                    <f:if condition="{object.featured}">
-                        <f:then>
-                            <img class="u-featured" src="{object.featured}" alt="{object.nae}" height="150"/>
-                        </f:then>
-                        <f:else>---</f:else>
-                    </f:if>
-                </dd>
-            </dl>
+            <!-- Featured -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'featured'}"/>
+            </dt>
+            <dd>
+                <f:if condition="{object.featured}">
+                    <f:then>
+                        <img class="u-featured" src="{object.featured}" alt="{object.nae}" height="150"/>
+                    </f:then>
+                    <f:else>---</f:else>
+                </f:if>
+            </dd>
+        </dl>
 
-            <main>
-                <f:render partial="Property" arguments="{property: 'content'}"/>
-                <div class="e-content">
-                    <as:commonMark.html>{object.content}</as:commonMark.html>
-                </div>
-            </main>
-        </article>
-        <!-- Object template (end) -->
+        <main>
+            <f:render partial="Property" arguments="{property: 'content'}"/>
+            <div class="e-content">
+                <as:commonMark.html>{object.content}</as:commonMark.html>
+            </div>
+        </main>
+    </article>
+    <!-- Object template (end) -->
 
-    </f:section>
+</f:section>
 </html>

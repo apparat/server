@@ -97,41 +97,6 @@ class Server extends \Apparat\Server\Domain\Model\Server
     }
 
     /**
-     * Prepare and return a route action
-     *
-     * @param ServerRequestInterface $request Request
-     * @param AbstractActionRoute $route Route
-     * @return ActionInterface|Callable $action Action
-     */
-    public function getRouteAction(ServerRequestInterface $request, AbstractActionRoute $route)
-    {
-        return $this->routerContainer->getRouteAction($request, $route);
-    }
-
-    /**
-     * Return view resources
-     *
-     * @param string|null $name Optional: view resource name
-     * @return array View resources
-     */
-    public function getViewResources($name = null)
-    {
-        return ($name === null) ?
-            $this->viewResources :
-            (array_key_exists($name, $this->viewResources) ? $this->viewResources[$name] : null);
-    }
-
-    /**
-     * Set the view resources
-     *
-     * @param array $viewResources View resources
-     */
-    public function setViewResources(array $viewResources)
-    {
-        $this->viewResources = $viewResources;
-    }
-
-    /**
      * Return the enabled object action classes
      *
      * @param int $enable Enable / disable default actions
@@ -166,5 +131,40 @@ class Server extends \Apparat\Server\Domain\Model\Server
             ],
             6 - $datePrecision
         );
+    }
+
+    /**
+     * Prepare and return a route action
+     *
+     * @param ServerRequestInterface $request Request
+     * @param AbstractActionRoute $route Route
+     * @return ActionInterface|Callable $action Action
+     */
+    public function getRouteAction(ServerRequestInterface $request, AbstractActionRoute $route)
+    {
+        return $this->routerContainer->getRouteAction($request, $route);
+    }
+
+    /**
+     * Return view resources
+     *
+     * @param string|null $name Optional: view resource name
+     * @return array View resources
+     */
+    public function getViewResources($name = null)
+    {
+        return ($name === null) ?
+            $this->viewResources :
+            (array_key_exists($name, $this->viewResources) ? $this->viewResources[$name] : null);
+    }
+
+    /**
+     * Set the view resources
+     *
+     * @param array $viewResources View resources
+     */
+    public function setViewResources(array $viewResources)
+    {
+        $this->viewResources = $viewResources;
     }
 }

@@ -43,7 +43,7 @@ use Apparat\Server\Ports\Types\ObjectRoute;
  * Hour action
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Infrastructure
  */
 class HourAction extends AbstractListAction
 {

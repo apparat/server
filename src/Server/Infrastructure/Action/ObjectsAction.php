@@ -38,13 +38,12 @@ namespace Apparat\Server\Infrastructure\Action;
 
 use Apparat\Server\Ports\Action\AbstractListAction;
 use Apparat\Server\Ports\Types\ObjectRoute;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Objects action
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Infrastructure
  */
 class ObjectsAction extends AbstractListAction
 {

@@ -42,7 +42,7 @@ use Apparat\Server\Ports\Responder\AbstractObjectResponder;
  * Object responder
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Ports
+ * @subpackage Apparat\Server\Infrastructure
  */
 class ObjectResponder extends AbstractObjectResponder
 {
