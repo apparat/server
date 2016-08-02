@@ -8,6 +8,14 @@
     <!-- Object template (begin) -->
     <article class="h-entry">
         <dl>
+            <!-- Type -->
+            <dt>
+                <f:render partial="Property" arguments="{property: 'type'}"/>
+            </dt>
+            <dd>
+                <f:format.htmlspecialchars>{object.type}</f:format.htmlspecialchars>
+            </dd>
+
             <!-- Name -->
             <dt>
                 <f:render partial="Property" arguments="{property: 'name'}"/>
