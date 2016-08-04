@@ -37,6 +37,7 @@
 namespace Apparat\Server\Tests;
 
 use Apparat\Dev\Tests\AbstractTest;
+use Apparat\Server\Module;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
@@ -76,5 +77,15 @@ class ViewHelperTest extends AbstractTest
         );
         $view->assign('commonMark', '# Headline');
         $this->assertEquals('<h1>Headline</h1>', trim($view->render()));
+    }
+
+    /**
+     * Test an invalid Fluid cache directory
+     *
+     * @expectedException \RuntimeException
+     * @expectedExceptionCode 1470500567
+     */
+    public function testInvalidCacheDirectory() {
+        Module::validateFluidCacheDirectory(md5(rand()));
     }
 }

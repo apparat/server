@@ -36,7 +36,10 @@
 
 namespace Apparat\Server\Ports\View;
 
+use Apparat\Kernel\Tests\Kernel;
 use Apparat\Server\Ports\Facade\ServerFacade;
+use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
+use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -78,6 +81,14 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
 
         $this->setTemplatePaths();
         $this->registerNamespaces();
+
+        // Enable the cache
+        $fluidCacheDirectory = trim(getenv('FLUID_CACHE_DIRECTORY'));
+        if (strlen($fluidCacheDirectory)) {
+            /** @var FluidCacheInterface $fluidCache */
+            $fluidCache = Kernel::create(SimpleFileCache::class, [$fluidCacheDirectory]);
+            $this->setCache($fluidCache);
+        }
     }
 
     /**

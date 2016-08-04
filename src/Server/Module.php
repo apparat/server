@@ -78,10 +78,36 @@ class Module extends AbstractModule
      * Validate the environment
      *
      * @param Dotenv $environment Environment
+     * @return Dotenv Environment
      */
     protected static function validateEnvironment(Dotenv $environment)
     {
         parent::validateEnvironment($environment);
+
+        // Validate the Fluid cache directory (if given)
+        putenv('FLUID_CACHE_DIRECTORY='.self::validateFluidCacheDirectory(getenv('FLUID_CACHE_DIRECTORY')));
+
+        return $environment;
+    }
+
+    /**
+     * Validate the Fluid cache directory (if given)
+     *
+     * @param string $fluidCacheDirectory Fluid cache directory
+     * @return string Validated fluid cache directory
+     */
+    public static function validateFluidCacheDirectory($fluidCacheDirectory)
+    {
+        $fluidCacheDirectory = trim($fluidCacheDirectory);
+        if (strlen($fluidCacheDirectory)) {
+            if (!is_dir($fluidCacheDirectory)) {
+                throw new \RuntimeException(
+                    sprintf('Invalid Fluid cache directory "%s"', $fluidCacheDirectory),
+                    1470500567
+                );
+            }
+        }
+        return $fluidCacheDirectory;
     }
 
     /**
