@@ -58,10 +58,17 @@ abstract class AbstractActionRoute extends Route implements ActionRouteInterface
     /**
      * Get the action handler
      *
-     * @return string|array|\Callable|\Closure
+     * @param mixed $parameters Handler parameters
+     * @return array|Callable|\Closure|string Action handler
      */
-    public function getHandler()
+    public function getHandler(&$parameters)
     {
+        if (is_array($this->handler)) {
+            reset($this->handler);
+            $parameters = ['action' => key($this->handler)];
+            return current($this->handler);
+        }
+
         return $this->handler;
     }
 }

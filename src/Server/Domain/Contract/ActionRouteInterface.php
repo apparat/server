@@ -54,7 +54,8 @@ interface ActionRouteInterface
     /**
      * Get the action handler
      *
-     * @return string|array|\Callable|\Closure
+     * @param mixed $parameters Handler parameters
+     * @return array|Callable|\Closure|string Action handler
      */
-    public function getHandler();
+    public function getHandler(&$parameters);
 }

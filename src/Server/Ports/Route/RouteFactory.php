@@ -5,9 +5,9 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Infrastructure
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage  Apparat\Server\Ports
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,39 +34,33 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Infrastructure\Route;
+namespace Apparat\Server\Ports\Route;
 
-use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
-use Apparat\Server\Ports\Route\InvalidArgumentException;
+use Apparat\Kernel\Ports\Kernel;
+use Apparat\Server\Infrastructure\Action\StaticAction;
 
 /**
- * Aura default route
+ * Route factory
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Infrastructure
+ * @subpackage Apparat\Server\Ports
  */
-class AuraObjectRoute extends AuraRoute implements ObjectActionRouteInterface
+class RouteFactory
 {
     /**
-     * Get the action handler
+     * Create a basic static route
      *
-     * @param mixed $parameters Handler parameters
-     * @return array|Callable|\Closure|string Action handler
-     * @throws InvalidArgumentException If the route action doesn't match
+     * @param string $path Route path
+     * @param string $viewAction View action
+     * @param string|array $verbs Optional: Allowed HTTP verbs
+     * @param string $name Optional: Route name
+     * @return Route Static route
      */
-    public function getHandler(&$parameters)
+    public static function createStaticRoute($path, $viewAction, $verbs = Route::GET, $name = null)
     {
-        // Run through all registered handler classes
-        foreach ($this->handler as $actionClass) {
-            // If the request matches the handler class requirements
-            if (call_user_func([$actionClass, 'matches'], $this->attributes)) {
-                return $actionClass;
-            }
-        }
-
-        throw new InvalidArgumentException(
-            "Route action doesn't match",
-            InvalidArgumentException::ROUTE_ACTION_DOESNT_MATCH
+        return Kernel::create(
+            Route::class,
+            [$verbs, $name ?: trim($path, '/'), $path, [$viewAction => StaticAction::class]]
         );
     }
 }

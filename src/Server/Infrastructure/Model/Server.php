@@ -93,6 +93,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
 
         $route = new Route(Route::GET, $routeName, $selectorRegex, $objectRouteActions);
         $route->setAccepts(ObjectRoute::$accept);
+        $route->setObject(true);
         $this->registerRoute($route);
     }
 

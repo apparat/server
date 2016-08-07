@@ -152,7 +152,8 @@ class AuraRouterAdapter implements RouterContainerInterface
         }
 
         /** @var AbstractActionRoute $route */
-        $handler = $route->getHandler();
+        $handlerParameter = null;
+        $handler = $route->getHandler($handlerParameter);
 
         // If the handler is a callable
         if (is_callable($handler)) {
@@ -163,6 +164,8 @@ class AuraRouterAdapter implements RouterContainerInterface
             };
         }
 
-        return Kernel::create($handler, [$request]);
+        /** @var ActionInterface $action */
+        $action = Kernel::create($handler, [$request]);
+        return $action->setParams((array)$handlerParameter);
     }
 }

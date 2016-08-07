@@ -6,8 +6,8 @@
  * @category    Apparat
  * @package     Apparat\Server
  * @subpackage  Apparat\Server\Infrastructure
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,39 +34,42 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Infrastructure\Route;
+namespace Apparat\Server\Infrastructure\Action;
 
-use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
-use Apparat\Server\Ports\Route\InvalidArgumentException;
+use Apparat\Server\Infrastructure\Responder\StaticResponder;
+use Apparat\Server\Infrastructure\Service\StaticService;
+use Apparat\Server\Ports\Action\AbstractAction;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Aura default route
+ * Static action
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
  */
-class AuraObjectRoute extends AuraRoute implements ObjectActionRouteInterface
+class StaticAction extends AbstractAction
 {
     /**
-     * Get the action handler
+     * Domain service
      *
-     * @param mixed $parameters Handler parameters
-     * @return array|Callable|\Closure|string Action handler
-     * @throws InvalidArgumentException If the route action doesn't match
+     * @var StaticService
      */
-    public function getHandler(&$parameters)
-    {
-        // Run through all registered handler classes
-        foreach ($this->handler as $actionClass) {
-            // If the request matches the handler class requirements
-            if (call_user_func([$actionClass, 'matches'], $this->attributes)) {
-                return $actionClass;
-            }
-        }
+    protected $domain;
+    /**
+     * Responder
+     *
+     * @var StaticResponder
+     */
+    protected $responder;
 
-        throw new InvalidArgumentException(
-            "Route action doesn't match",
-            InvalidArgumentException::ROUTE_ACTION_DOESNT_MATCH
-        );
+    /**
+     * Run the action
+     *
+     * @return ResponseInterface Response
+     */
+    public function __invoke()
+    {
+        $payload = $this->domain->payload($this->params);
+        return $this->responder->__invoke($payload);
     }
 }

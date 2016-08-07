@@ -186,9 +186,6 @@ class Route implements RouteInterface
      */
     public function __construct($verbs, $name, $path, $action)
     {
-        // Set whether this is an object route
-        $this->object = is_array($action);
-
         // Set and validate the allowed HTTP verbs
         $this->setAndValidateVerbs($verbs);
 
@@ -276,7 +273,7 @@ class Route implements RouteInterface
      */
     protected function setAndValidateActionList($actions)
     {
-        $actionList = array_map([$this, 'setAndValidateAction'], (array)$actions);
+        $actionList = array_map([$this, 'validateAction'], (array)$actions);
         $this->action = is_array($actions) ? $actionList : current($actionList);
     }
 
@@ -521,14 +518,27 @@ class Route implements RouteInterface
     }
 
     /**
-     * Set and validate the route action
+     * Set whether this is an object route
+     *
+     * @param boolean $object Object route
+     * @return Route Self reference
+     */
+    public function setObject($object)
+    {
+        $this->object = !!$object;
+        return $this;
+    }
+
+    /**
+     * Validate the route action
      *
      * @param string|\Callable|\Closure $action Route action
+     * @return string|\Callable|\Closure Validated route action
      * @throws InvalidArgumentException If the route action is empty
      * @throws InvalidArgumentException If the route action is not a class name
      * @throws InvalidArgumentException If the route action is neither a callable nor an ActionInterface
      */
-    protected function setAndValidateAction($action)
+    protected function validateAction($action)
     {
         // If the action is given as string
         if (is_string($action)) {

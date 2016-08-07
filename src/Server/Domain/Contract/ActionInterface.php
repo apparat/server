@@ -62,6 +62,14 @@ interface ActionInterface
     );
 
     /**
+     * Set action parameters
+     *
+     * @param array $params Action Parameters
+     * @return ActionInterface Self reference
+     */
+    public function setParams(array $params);
+
+    /**
      * Run the action
      *
      * @return ResponseInterface Response

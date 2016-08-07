@@ -66,6 +66,12 @@ abstract class AbstractAction implements ActionInterface
      * @var ResponderInterface
      */
     protected $responder;
+    /**
+     * Action parameters
+     *
+     * @var array
+     */
+    protected $params;
 
     /**
      * Constructor
@@ -82,5 +88,17 @@ abstract class AbstractAction implements ActionInterface
         $this->request = $request;
         $this->domain = $domain;
         $this->responder = $responder;
+    }
+
+    /**
+     * Set action parameters
+     *
+     * @param array $params Action Parameters
+     * @return ActionInterface Self reference
+     */
+    public function setParams(array $params)
+    {
+        $this->params = $params;
+        return $this;
     }
 }

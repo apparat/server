@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\Infrastructure
+ * @subpackage  Apparat\Server\Application
  * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,39 +34,17 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Infrastructure\Route;
+namespace Apparat\Server\Application\Payload;
 
-use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
-use Apparat\Server\Ports\Route\InvalidArgumentException;
+use Apparat\Server\Domain\Payload\AbstractPayload;
 
 /**
- * Aura default route
+ * Action payload
  *
  * @package Apparat\Server
- * @subpackage Apparat\Server\Infrastructure
+ * @subpackage Apparat\Server\Application
  */
-class AuraObjectRoute extends AuraRoute implements ObjectActionRouteInterface
+class Action extends AbstractPayload
 {
-    /**
-     * Get the action handler
-     *
-     * @param mixed $parameters Handler parameters
-     * @return array|Callable|\Closure|string Action handler
-     * @throws InvalidArgumentException If the route action doesn't match
-     */
-    public function getHandler(&$parameters)
-    {
-        // Run through all registered handler classes
-        foreach ($this->handler as $actionClass) {
-            // If the request matches the handler class requirements
-            if (call_user_func([$actionClass, 'matches'], $this->attributes)) {
-                return $actionClass;
-            }
-        }
 
-        throw new InvalidArgumentException(
-            "Route action doesn't match",
-            InvalidArgumentException::ROUTE_ACTION_DOESNT_MATCH
-        );
-    }
 }

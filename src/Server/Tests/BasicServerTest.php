@@ -44,6 +44,7 @@ use Apparat\Server\Infrastructure\Model\Server;
 use Apparat\Server\Infrastructure\Model\Server as InfrastructureServer;
 use Apparat\Server\Ports\Facade\ServerFacade;
 use Apparat\Server\Ports\Route\Route;
+use Apparat\Server\Ports\Route\RouteFactory;
 use Apparat\Server\Ports\Types\ObjectRoute;
 use Apparat\Server\Ports\View\TYPO3FluidView;
 use Apparat\Server\Tests\Adr\TestAction;
@@ -80,6 +81,14 @@ class BasicServerTest extends AbstractTest
 
         // Enable the default routes
         ServerFacade::enableObjectRoute('repo');
+
+        // Register custom view resources
+        $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
+        ServerFacade::setViewResources([
+            TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::TEMPLATES => $noneRepoPath.'Templates'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::PARTIALS => $noneRepoPath.'Partials'.DIRECTORY_SEPARATOR,
+        ]);
     }
 
     /**
@@ -148,6 +157,20 @@ class BasicServerTest extends AbstractTest
     }
 
     /**
+     * Test adding and matching a static route
+     */
+    public function testStaticRoute() {
+        ServerFacade::registerRoute(RouteFactory::createStaticRoute('/about', 'Test/About'));
+
+        $uri = new Uri('http://apparat/blog/about');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri);
+        $response = ServerFacade::dispatchRequest($request);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals('[(about)]', trim($response->getBody()));
+    }
+
+    /**
      * Test a handler mismatch
      *
      * @expectedException \Apparat\Server\Ports\Route\InvalidArgumentException
@@ -167,6 +190,7 @@ class BasicServerTest extends AbstractTest
             '/invalid-handler',
             [ObjectRoute::OBJECT_STR => TestObjectAction::class]
         );
+        $route->setObject(true);
         $server->registerRoute($route);
 
         $route = $server->dispatchRequestToRoute($request);
@@ -178,13 +202,6 @@ class BasicServerTest extends AbstractTest
      */
     public function testCustomTemplateResources()
     {
-        $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
-        ServerFacade::setViewResources([
-            TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
-            TYPO3FluidView::TEMPLATES => $noneRepoPath.'Templates'.DIRECTORY_SEPARATOR,
-            TYPO3FluidView::PARTIALS => $noneRepoPath.'Partials'.DIRECTORY_SEPARATOR,
-        ]);
-
         // Enable the default routes for a repository "repo"
         $uri = new Uri('http://apparat/blog/repo/2016/06/20/2');
         $request = new ServerRequest();

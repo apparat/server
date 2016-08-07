@@ -39,58 +39,45 @@ namespace Apparat\Server\Infrastructure\Traits;
 use Apparat\Kernel\Ports\Contract\DependencyInjectionContainerInterface;
 use Apparat\Server\Domain\Contract\ResponderInterface;
 use Apparat\Server\Domain\Service\ServiceInterface;
-use Apparat\Server\Infrastructure\Action\ObjectAction;
-use Apparat\Server\Infrastructure\Action\ObjectsAction;
-use Apparat\Server\Infrastructure\Action\TypeAction;
-use Apparat\Server\Infrastructure\Responder\ObjectResponder;
-use Apparat\Server\Infrastructure\Responder\ObjectsResponder;
-use Apparat\Server\Infrastructure\Responder\TypeResponder;
-use Apparat\Server\Infrastructure\Service\ObjectService;
-use Apparat\Server\Infrastructure\Service\ObjectsService;
-use Apparat\Server\Infrastructure\Service\TypeService;
+use Apparat\Server\Infrastructure\Action\ErrorAction;
+use Apparat\Server\Infrastructure\Action\StaticAction;
+use Apparat\Server\Infrastructure\Responder\ErrorResponder;
+use Apparat\Server\Infrastructure\Responder\StaticResponder;
+use Apparat\Server\Infrastructure\Service\ErrorService;
+use Apparat\Server\Infrastructure\Service\StaticService;
 
 /**
- * Object actions trait
+ * Basic actions trait
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
  */
-trait ObjectActionsTrait
+trait BasicActionsTrait
 {
     /**
-     * Configure the object action dependencies
+     * Configure the basic action dependencies
      *
      * @param DependencyInjectionContainerInterface $diContainer Dependency injection container
      */
-    protected function configureObjectActionDependencies(DependencyInjectionContainerInterface $diContainer)
+    protected function configureBasicActionDependencies(DependencyInjectionContainerInterface $diContainer)
     {
-        $diContainer->register(ObjectAction::class, [
+        $diContainer->register(ErrorAction::class, [
             'substitutions' => [
                 ServiceInterface::class => [
-                    'instance' => ObjectService::class,
+                    'instance' => ErrorService::class,
                 ],
                 ResponderInterface::class => [
-                    'instance' => ObjectResponder::class,
+                    'instance' => ErrorResponder::class,
                 ]
             ]
         ]);
-        $diContainer->register(ObjectsAction::class, [
+        $diContainer->register(StaticAction::class, [
             'substitutions' => [
                 ServiceInterface::class => [
-                    'instance' => ObjectsService::class,
+                    'instance' => StaticService::class,
                 ],
                 ResponderInterface::class => [
-                    'instance' => ObjectsResponder::class,
-                ]
-            ]
-        ]);
-        $diContainer->register(TypeAction::class, [
-            'substitutions' => [
-                ServiceInterface::class => [
-                    'instance' => TypeService::class,
-                ],
-                ResponderInterface::class => [
-                    'instance' => TypeResponder::class,
+                    'instance' => StaticResponder::class,
                 ]
             ]
         ]);

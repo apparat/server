@@ -37,6 +37,7 @@
 namespace Apparat\Server\Application\Factory;
 
 use Apparat\Kernel\Ports\Kernel;
+use Apparat\Server\Application\Payload\Action;
 use Apparat\Server\Application\Payload\Error;
 use Apparat\Server\Application\Payload\Found;
 use Apparat\Server\Domain\Contract\PayloadFactoryInterface;
@@ -78,5 +79,16 @@ class PayloadFactory implements PayloadFactoryInterface
                 'header' => $header
             ]]
         );
+    }
+
+    /**
+     * Create a new Action payload
+     *
+     * @param string $action View Action
+     * @return Action Action payload
+     */
+    public function action($action)
+    {
+        return Kernel::create(Action::class, [['action' => $action]]);
     }
 }

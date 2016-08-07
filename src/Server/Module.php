@@ -44,6 +44,7 @@ use Apparat\Server\Domain\Contract\RouterContainerInterface;
 use Apparat\Server\Domain\Model\Server;
 use Apparat\Server\Domain\Service\AbstractService;
 use Apparat\Server\Infrastructure\Route\AuraRouterAdapter;
+use Apparat\Server\Infrastructure\Traits\BasicActionsTrait;
 use Apparat\Server\Infrastructure\Traits\DateActionsTrait;
 use Apparat\Server\Infrastructure\Traits\ObjectActionsTrait;
 use Apparat\Server\Ports\Responder\AbstractResponder;
@@ -66,7 +67,7 @@ class Module extends AbstractModule
     /**
      * Use external dependency configurations
      */
-    use DateActionsTrait, ObjectActionsTrait;
+    use BasicActionsTrait, DateActionsTrait, ObjectActionsTrait;
     /**
      * Module name
      *
@@ -162,6 +163,9 @@ class Module extends AbstractModule
         $diContainer->register(AbstractTemplateView::class, [
             'constructParams' => [null]
         ]);
+
+        // Configure the basic action dependencies
+        $this->configureBasicActionDependencies($diContainer);
 
         // Configure the date action dependencies
         $this->configureDateActionDependencies($diContainer);

@@ -6,8 +6,8 @@
  * @category    Apparat
  * @package     Apparat\Server
  * @subpackage  Apparat\Server\Infrastructure
- * @author      Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright   Copyright © 2016 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
@@ -34,39 +34,31 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Infrastructure\Route;
+namespace Apparat\Server\Infrastructure\Responder;
 
-use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
-use Apparat\Server\Ports\Route\InvalidArgumentException;
+use Apparat\Server\Application\Payload\Action;
+use Apparat\Server\Ports\Responder\AbstractResponder;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Aura default route
+ * Static responder
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
  */
-class AuraObjectRoute extends AuraRoute implements ObjectActionRouteInterface
+class StaticResponder extends AbstractResponder
 {
     /**
-     * Get the action handler
+     * Process a found object
      *
-     * @param mixed $parameters Handler parameters
-     * @return array|Callable|\Closure|string Action handler
-     * @throws InvalidArgumentException If the route action doesn't match
+     * @param Action $payload Domain payload
+     * @return ResponseInterface Response
      */
-    public function getHandler(&$parameters)
+    public function action(Action $payload)
     {
-        // Run through all registered handler classes
-        foreach ($this->handler as $actionClass) {
-            // If the request matches the handler class requirements
-            if (call_user_func([$actionClass, 'matches'], $this->attributes)) {
-                return $actionClass;
-            }
-        }
-
-        throw new InvalidArgumentException(
-            "Route action doesn't match",
-            InvalidArgumentException::ROUTE_ACTION_DOESNT_MATCH
-        );
+        $this->view->setAction($payload->get('action'));
+        $this->view->assignMultiple($payload->get());
+        $this->response->getBody()->write($this->view->render());
+        return $this->response;
     }
 }
