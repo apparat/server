@@ -51,5 +51,5 @@ class TypeResponder extends AbstractListResponder
      *
      * @var string
      */
-    const ACTION = 'Type';
+    const ACTION = 'Object/Type';
 }

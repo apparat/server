@@ -51,5 +51,5 @@ class SecondResponder extends AbstractListResponder
      *
      * @var string
      */
-    const ACTION = 'Second';
+    const ACTION = 'Object/Second';
 }

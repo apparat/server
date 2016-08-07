@@ -51,5 +51,5 @@ class HourResponder extends AbstractListResponder
      *
      * @var string
      */
-    const ACTION = 'Hour';
+    const ACTION = 'Object/Hour';
 }

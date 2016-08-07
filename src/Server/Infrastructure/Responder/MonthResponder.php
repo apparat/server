@@ -51,5 +51,5 @@ class MonthResponder extends AbstractListResponder
      *
      * @var string
      */
-    const ACTION = 'Month';
+    const ACTION = 'Object/Month';
 }

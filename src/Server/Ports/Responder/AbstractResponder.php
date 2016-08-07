@@ -55,7 +55,7 @@ abstract class AbstractResponder implements ResponderInterface
      *
      * @var string
      */
-    const ACTION = 'Abstract';
+    const ACTION = 'Default/Abstract';
     /**
      * View
      *
@@ -114,7 +114,7 @@ abstract class AbstractResponder implements ResponderInterface
     protected function error(PayloadInterface $payload)
     {
         // Ensure the error template is used
-        $this->view->setAction((new \ReflectionClass($payload))->getShortName());
+        $this->view->setAction('Error/'.(new \ReflectionClass($payload))->getShortName());
 
         // Set the HTTP status code
         $this->response = $this->response->withStatus($payload->get('status'), $payload->get('description'));

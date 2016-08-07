@@ -51,5 +51,5 @@ class ObjectsResponder extends AbstractListResponder
      *
      * @var string
      */
-    const ACTION = 'Objects';
+    const ACTION = 'Object/Objects';
 }

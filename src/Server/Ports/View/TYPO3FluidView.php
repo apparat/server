@@ -133,7 +133,15 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
      */
     public function setAction($action)
     {
-        $this->getRenderingContext()->setControllerAction($action);
+        $controllerAction = explode('/', $action);
+
+        // If only an action is given, use the "Default" controller
+        if (count($controllerAction) < 2) {
+            array_unshift($controllerAction, 'Default');
+        }
+
+        $this->getRenderingContext()->setControllerName($controllerAction[0]);
+        $this->getRenderingContext()->setControllerAction($controllerAction[1]);
         return $this;
     }
 }

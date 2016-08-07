@@ -51,5 +51,5 @@ class DayResponder extends AbstractListResponder
      *
      * @var string
      */
-    const ACTION = 'Day';
+    const ACTION = 'Object/Day';
 }

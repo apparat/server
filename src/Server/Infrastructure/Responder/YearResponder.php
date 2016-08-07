@@ -51,5 +51,5 @@ class YearResponder extends AbstractListResponder
      *
      * @var string
      */
-    const ACTION = 'Year';
+    const ACTION = 'Object/Year';
 }

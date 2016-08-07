@@ -51,5 +51,5 @@ class MinuteResponder extends AbstractListResponder
      *
      * @var string
      */
-    const ACTION = 'Minute';
+    const ACTION = 'Object/Minute';
 }

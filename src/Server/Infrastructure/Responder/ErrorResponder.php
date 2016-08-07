@@ -53,7 +53,7 @@ class ErrorResponder extends AbstractResponder
      *
      * @var string
      */
-    const ACTION = 'Error';
+    const ACTION = 'Error/Error';
 
     /**
      * Run the responder

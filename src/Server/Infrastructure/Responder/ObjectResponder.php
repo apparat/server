@@ -51,5 +51,5 @@ class ObjectResponder extends AbstractObjectResponder
      *
      * @var string
      */
-    const ACTION = 'Object';
+    const ACTION = 'Object/Object';
 }
