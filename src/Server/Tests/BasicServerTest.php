@@ -81,14 +81,6 @@ class BasicServerTest extends AbstractTest
 
         // Enable the default routes
         ServerFacade::enableObjectRoute('repo');
-
-        // Register custom view resources
-        $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
-        ServerFacade::setViewResources([
-            TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
-            TYPO3FluidView::TEMPLATES => $noneRepoPath.'Templates'.DIRECTORY_SEPARATOR,
-            TYPO3FluidView::PARTIALS => $noneRepoPath.'Partials'.DIRECTORY_SEPARATOR,
-        ]);
     }
 
     /**
@@ -100,6 +92,20 @@ class BasicServerTest extends AbstractTest
 
         // Reset the server
         ServerFacade::reset();
+    }
+
+    /**
+     * Enable custom view resources
+     */
+    protected static function enableCustomViewResources()
+    {
+        // Register custom view resources
+        $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
+        ServerFacade::setViewResources([
+            TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::TEMPLATES => $noneRepoPath.'Templates'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::PARTIALS => $noneRepoPath.'Partials'.DIRECTORY_SEPARATOR,
+        ]);
     }
 
     /**
@@ -116,6 +122,8 @@ class BasicServerTest extends AbstractTest
      */
     public function testRegisterDispatchRoute()
     {
+        self::enableCustomViewResources();
+
         $route = new Route(Route::GET, 'default', '/default/{id}{format}', TestAction::class);
         $route->setTokens([
             'id' => '\d+',
@@ -159,7 +167,11 @@ class BasicServerTest extends AbstractTest
     /**
      * Test adding and matching a static route
      */
-    public function testStaticRoute() {
+    public function testStaticRoute()
+    {
+        self::enableCustomViewResources();
+
+        //  Register a static route
         ServerFacade::registerRoute(RouteFactory::createStaticRoute('/about', 'Test/About'));
 
         $uri = new Uri('http://apparat/blog/about');

@@ -44,6 +44,8 @@ use Apparat\Server\Ports\Route\InvalidArgumentException;
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
+ * @property-read array $attributes Attribute values added by the rules
+ * @property-read Callable|\Closure|string $handler Action handler
  */
 class AuraObjectRoute extends AuraRoute implements ObjectActionRouteInterface
 {
@@ -51,7 +53,7 @@ class AuraObjectRoute extends AuraRoute implements ObjectActionRouteInterface
      * Get the action handler
      *
      * @param mixed $parameters Handler parameters
-     * @return array|Callable|\Closure|string Action handler
+     * @return Callable|\Closure|string Action handler
      * @throws InvalidArgumentException If the route action doesn't match
      */
     public function getHandler(&$parameters)

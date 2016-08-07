@@ -41,8 +41,8 @@ namespace Apparat\Server\Domain\Contract;
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Domain
- * @property array $attributes Attributes
- * @property-read mixed $handler Action handler
+ * @property-read array $attributes Attribute values added by the rules
+ * @property-read Callable|\Closure|string $handler Action handler
  */
 interface ActionRouteInterface
 {
@@ -55,7 +55,7 @@ interface ActionRouteInterface
      * Get the action handler
      *
      * @param mixed $parameters Handler parameters
-     * @return array|Callable|\Closure|string Action handler
+     * @return Callable|\Closure|string Action handler
      */
     public function getHandler(&$parameters);
 }

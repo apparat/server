@@ -45,6 +45,7 @@ use Aura\Router\Route;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
  * @property-read array $attributes Attribute values added by the rules
+ * @property-read Callable|\Closure|string $handler Action handler
  */
 abstract class AbstractActionRoute extends Route implements ActionRouteInterface
 {
@@ -59,7 +60,7 @@ abstract class AbstractActionRoute extends Route implements ActionRouteInterface
      * Get the action handler
      *
      * @param mixed $parameters Handler parameters
-     * @return array|Callable|\Closure|string Action handler
+     * @return Callable|\Closure|string Action handler
      */
     public function getHandler(&$parameters)
     {
