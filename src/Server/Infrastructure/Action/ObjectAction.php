@@ -86,6 +86,7 @@ class ObjectAction extends AbstractSelectorAction
      */
     public function __invoke()
     {
+//        print_r($this->request->getAttributes());
         $selector = SelectorFactory::createFromParams($this->request->getAttributes());
         $payload = $this->domain->findObject(strval($this->request->getAttribute('repository')), $selector);
         return $this->responder->__invoke($payload);

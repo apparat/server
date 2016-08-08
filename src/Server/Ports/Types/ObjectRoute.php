@@ -171,6 +171,12 @@ class ObjectRoute
      */
     const TYPE_STR = 'type';
     /**
+     * Slug
+     *
+     * @var string
+     */
+    const SLUG_STR = 'slug';
+    /**
      * Wildcard
      *
      * @var string

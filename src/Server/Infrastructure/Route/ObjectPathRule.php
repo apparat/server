@@ -47,7 +47,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
  */
-class ObjectPath extends Path
+class ObjectPathRule extends Path
 {
     /**
      *
@@ -86,7 +86,11 @@ class ObjectPath extends Path
             return false;
         }
 
-        $route->attributes($this->getAttributes($matches, $route->wildcard));
+        $attributes = $this->getAttributes($matches, $route->wildcard);
+        if ($route->wildcard) {
+            $attributes[$route->wildcard] = implode('/', $attributes[$route->wildcard]);
+        }
+        $route->attributes($attributes);
         return true;
     }
 }

@@ -45,7 +45,7 @@ use Aura\Router\Route;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
  * @property-read array $attributes Attribute values added by the rules
- * @property-read Callable|\Closure|string $handler Action handler
+ * @property-read array|Callable|\Closure|string $handler Action handler
  */
 abstract class AbstractActionRoute extends Route implements ActionRouteInterface
 {

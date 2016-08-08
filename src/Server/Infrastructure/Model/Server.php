@@ -78,6 +78,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
         $routeName = ObjectRoute::OBJECT_STR;
         $datePrecision = intval(getenv('OBJECT_DATE_PRECISION'));
         $selectorRegex = SelectorFactory::getSelectorRegex($datePrecision);
+        $selectorRegex .= '(?:/(?P<slug>[a-z][a-z\d\-]*))?';
         $objectRouteActions = array_filter(
             array_merge(
                 self::getEnabledObjectActionClasses($enable),
@@ -92,6 +93,7 @@ class Server extends \Apparat\Server\Domain\Model\Server
         }
 
         $route = new Route(Route::GET, $routeName, $selectorRegex, $objectRouteActions);
+        $route->setWildcard('slug');
         $route->setAccepts(ObjectRoute::$accept);
         $route->setObject(true);
         $this->registerRoute($route);

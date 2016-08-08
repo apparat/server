@@ -38,7 +38,7 @@ namespace Apparat\Server\Infrastructure\Service;
 
 use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
 use Apparat\Server\Domain\Payload\PayloadInterface;
-use Apparat\Server\Infrastructure\Route\ObjectPath;
+use Apparat\Server\Infrastructure\Route\ObjectPathRule;
 use Apparat\Server\Ports\Service\AbstractService;
 use Aura\Router\Rule\Accepts;
 use Aura\Router\Rule\Allows;
@@ -62,7 +62,7 @@ class ErrorService extends AbstractService
         // Which matching rule failed?
         switch ($attributes['failedRule']) {
             // Invalid path
-            case ObjectPath::class:
+            case ObjectPathRule::class:
                 // If an object route failed
                 $failedRoute = new \ReflectionClass($attributes['failedRoute']);
                 if ($failedRoute->implementsInterface(ObjectActionRouteInterface::class)) {

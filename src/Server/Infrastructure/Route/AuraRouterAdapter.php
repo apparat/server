@@ -78,7 +78,7 @@ class AuraRouterAdapter implements RouterContainerInterface
             new Rule\Host(),
             new Rule\Allows(),
             new Rule\Accepts(),
-            new ObjectPath(rtrim(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH), '/') ?: null)
+            new ObjectPathRule(rtrim(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH), '/') ?: null)
         ]);
     }
 
