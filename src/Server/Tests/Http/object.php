@@ -34,6 +34,6 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-$requestUri = 'http://apparat/blog/2016/06/20/2/bla';
+$requestUri = 'http://apparat/blog/2016/06/20/2/test-slug';
 
 require __DIR__.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'common.inc.php';

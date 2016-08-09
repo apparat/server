@@ -78,7 +78,9 @@ class Server extends \Apparat\Server\Domain\Model\Server
         $routeName = ObjectRoute::OBJECT_STR;
         $datePrecision = intval(getenv('OBJECT_DATE_PRECISION'));
         $selectorRegex = SelectorFactory::getSelectorRegex($datePrecision);
-        $selectorRegex .= '(?:/(?P<slug>[a-z][a-z\d\-]*))?';
+
+        $selectorRegex .= '(?('.($datePrecision + 3).')(?:/(?P<slug>[a-z][a-z\d\-]*))?)';
+
         $objectRouteActions = array_filter(
             array_merge(
                 self::getEnabledObjectActionClasses($enable),
