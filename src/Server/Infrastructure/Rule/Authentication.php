@@ -5,7 +5,7 @@
  *
  * @category    Apparat
  * @package     Apparat\Server
- * @subpackage  Apparat\Server\<Layer>
+ * @subpackage  Apparat\Server\Infrastructure
  * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,63 +34,30 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Apparat\Server\Infrastructure\Route;
+namespace Apparat\Server\Infrastructure\Rule;
 
-use Apparat\Server\Domain\Contract\ObjectActionRouteInterface;
 use Aura\Router\Route;
-use Aura\Router\Rule\Path;
+use Aura\Router\Rule\RuleInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Object path rule
+ * Authentication rule
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Infrastructure
  */
-class ObjectPathRule extends Path
+class Authentication implements RuleInterface
 {
+
     /**
+     * Check if the request matches the required authentication state
      *
-     * Check if the Request matches the Route.
-     *
-     * @param ServerRequestInterface $request The HTTP request.
-     * @param Route $route The route.
-     * @return bool True on success, false on failure.
+     * @param ServerRequestInterface $request HTTP request
+     * @param Route $route Route
+     * @return boolean The request matches the required authentication state
      */
     public function __invoke(ServerRequestInterface $request, Route $route)
     {
-        if ($route instanceof ObjectActionRouteInterface) {
-            return $this->matchObjectSelector($request, $route);
-        }
-
-        return parent::__invoke($request, $route);
-    }
-
-    /**
-     * Check if the request matches the object route
-     *
-     * @param ServerRequestInterface $request Request
-     * @param Route $route Object route
-     * @return bool True on success, false on failure
-     */
-    protected function matchObjectSelector(ServerRequestInterface $request, Route $route)
-    {
-        // Try to match the object selector
-        $match = preg_match(
-            '%^'.$this->basepath.$route->path.'$%',
-            rawurldecode($request->getUri()->getPath()),
-            $matches
-        );
-
-        if (!$match) {
-            return false;
-        }
-
-        $attributes = $this->getAttributes($matches, $route->wildcard);
-        if ($route->wildcard) {
-            $attributes[$route->wildcard] = implode('/', $attributes[$route->wildcard]);
-        }
-        $route->attributes($attributes);
         return true;
     }
 }

@@ -40,6 +40,8 @@ use Apparat\Kernel\Ports\Kernel;
 use Apparat\Server\Domain\Contract\ActionRouteInterface;
 use Apparat\Server\Domain\Contract\RouteInterface;
 use Apparat\Server\Domain\Contract\RouterContainerInterface;
+use Apparat\Server\Infrastructure\Rule\Authentication;
+use Apparat\Server\Infrastructure\Rule\ObjectPath;
 use Apparat\Server\Ports\Action\ActionInterface;
 use Aura\Router\RouterContainer;
 use Aura\Router\Rule;
@@ -74,11 +76,15 @@ class AuraRouterAdapter implements RouterContainerInterface
         /** @var Rule\RuleIterator $ruleIterator */
         $ruleIterator = $routerContainer->getRuleIterator();
         $ruleIterator->set([
-            new Rule\Secure(),
-            new Rule\Host(),
-            new Rule\Allows(),
-            new Rule\Accepts(),
-            new ObjectPathRule(rtrim(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH), '/') ?: null)
+            Kernel::create(Rule\Secure::class),
+            Kernel::create(Rule\Host::class),
+            Kernel::create(Rule\Allows::class),
+            Kernel::create(Rule\Accepts::class),
+            Kernel::create(Authentication::class),
+            Kernel::create(
+                ObjectPath::class,
+                [rtrim(parse_url(getenv('APPARAT_BASE_URL'), PHP_URL_PATH), '/') ?: null]
+            ),
         ]);
     }
 
