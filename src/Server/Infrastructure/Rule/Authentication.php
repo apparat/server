@@ -36,6 +36,8 @@
 
 namespace Apparat\Server\Infrastructure\Rule;
 
+use Apparat\Server\Ports\Authenticator\AuthenticatorInterface;
+use Apparat\Server\Ports\Authenticator\InvalidArgumentException;
 use Aura\Router\Route;
 use Aura\Router\Rule\RuleInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,6 +50,27 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class Authentication implements RuleInterface
 {
+    /**
+     * Basic authentication
+     *
+     * @var string
+     */
+    const BASIC = 'basic';
+    /**
+     * OAuth2 Bearer authentication
+     *
+     * @var string
+     */
+    const BEARER = 'bearer';
+    /**
+     * Supported authentication types
+     *
+     * @var array
+     */
+    protected static $authenticationTypes = [
+        self::BASIC => true,
+        self::BEARER => true,
+    ];
 
     /**
      * Check if the request matches the required authentication state
@@ -55,9 +78,33 @@ class Authentication implements RuleInterface
      * @param ServerRequestInterface $request HTTP request
      * @param Route $route Route
      * @return boolean The request matches the required authentication state
+     * @throw InvalidArgumentException If the provided authenticator is invalid
      */
     public function __invoke(ServerRequestInterface $request, Route $route)
     {
-        return true;
+        // If no authentication is required for this route
+        $auth = $route->auth;
+        if (!is_array($auth) || !count($auth = array_intersect_key($auth, self::$authenticationTypes))) {
+            return true;
+        }
+
+        // Run through all authentication possibilities
+        foreach ($auth as $type => $authenticator) {
+            // If the provided authenticator is invalid
+            if (!($authenticator instanceof AuthenticatorInterface)) {
+                throw new InvalidArgumentException(
+                    sprintf('Invalid authenticator for type "%s"', $type),
+                    InvalidArgumentException::INVALID_AUTHENTICATOR
+                );
+            }
+
+            // Try to authenticate the request
+            if ($authenticator->authenticate($request) === true) {
+                return true;
+            }
+        }
+
+        // Request is not authenticated
+        return false;
     }
 }
