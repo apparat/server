@@ -60,6 +60,7 @@ class Authentication implements RuleInterface
      * OAuth2 Bearer authentication
      *
      * @var string
+     * @see https://tools.ietf.org/html/rfc6750#section-2
      */
     const BEARER = 'bearer';
     /**
