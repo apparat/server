@@ -1,10 +1,11 @@
 <?php
 
 /**
- * apparat-object
+ * apparat-server
  *
  * @category    Apparat
- * @package     Apparat\Object
+ * @package     Apparat\Server
+ * @subpackage  Apparat\Server\Tests
  * @author      Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright   Copyright © 2016 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license     http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -33,25 +34,15 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-// Start the built-in web server
-chdir(__DIR__);
-$command = sprintf('php -S %s:%d -t %s', WEB_SERVER_HOST, WEB_SERVER_PORT, WEB_SERVER_DOCROOT);
-$process = proc_open($command, [['pipe', 'r']], $pipes);
-$pstatus = proc_get_status($process);
-$pid = $pstatus['pid'];
-echo sprintf('%s - Web server started on %s:%d with PID %d', date('r'), WEB_SERVER_HOST, WEB_SERVER_PORT, $pid).PHP_EOL;
+require_once dirname(dirname(dirname(dirname(__DIR__)))).DIRECTORY_SEPARATOR.
+    'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
-// Register shutdown function to stop the built-in webserver
-register_shutdown_function(function () use ($pid) {
-    echo sprintf('%s - Killing process with ID %d', date('r'), $pid).PHP_EOL;
-    (stripos(php_uname('s'), 'win') > -1) ? exec("taskkill /F /T /PID $pid") : exec("kill -9 $pid");
-});
+//$uri = new \Zend\Diactoros\Uri($requestUri);
+//$request = new \Zend\Diactoros\ServerRequest($_SERVER);
+//print_r($request);
+//$request = $request->withUri($uri);
+//$response = ServerFacade::dispatchRequest($request);
+//$emitter = new \Zend\Diactoros\Response\SapiEmitter();
+//$emitter->emit($response);
 
-error_reporting(E_ALL);
-$autoloader = __DIR__.'/vendor/autoload.php';
-if (!file_exists($autoloader)) {
-    echo "Composer autoloader not found: $autoloader".PHP_EOL;
-    echo "Please issue 'composer install' and try again.".PHP_EOL;
-    exit(1);
-}
-require $autoloader;
+?>

@@ -7,6 +7,9 @@
 
     <php>
         <env name="REPOSITORY_URL" value="repo"/>
+        <const name="WEB_SERVER_HOST" value="localhost" />
+        <const name="WEB_SERVER_PORT" value="1349" />
+        <const name="WEB_SERVER_DOCROOT" value="./src/Server/Tests/Http" />
     </php>
 
     <logging>
