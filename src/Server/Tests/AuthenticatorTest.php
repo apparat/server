@@ -37,8 +37,13 @@
 namespace Apparat\Server\Tests;
 
 use Apparat\Dev\Tests\AbstractTest;
-use Apparat\Kernel\Ports\Kernel;
-use GuzzleHttp\Client;
+use Apparat\Server\Ports\Authenticator\Bearer;
+use Apparat\Server\Ports\Facade\ServerFacade;
+use Apparat\Server\Ports\Route\RouteFactory;
+use Apparat\Server\Ports\View\TYPO3FluidView;
+use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 /**
  * Authenticator test
@@ -49,24 +54,58 @@ use GuzzleHttp\Client;
 class AuthenticatorTest extends AbstractTest
 {
     /**
+     * This method is called before the first test of this test class is run.
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        // Register custom view resources
+        $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
+        ServerFacade::setViewResources([
+            TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::TEMPLATES => $noneRepoPath.'Templates'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::PARTIALS => $noneRepoPath.'Partials'.DIRECTORY_SEPARATOR,
+        ]);
+    }
+
+    /**
      * Test the bearer token
      */
     public function testBearerToken()
     {
-        $bearerTestUrl = 'http://'.WEB_SERVER_HOST.':'.WEB_SERVER_PORT.'/bearer.php';
-        $bearerToken = md5($bearerTestUrl);
-        /** @var Client $httpClient */
-        $httpClient = Kernel::create(Client::class);
-        $result = $httpClient->request(
-            'GET',
-            $bearerTestUrl,
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$bearerToken,
-                ]
-            ]
-        );
-        $this->assertEquals(200, $result->getStatusCode());
-        echo $result->getBody();
+        $bearerToken = md5(microtime(true));
+        $bearerAuthenticator = new Bearer(function ($currentToken) use ($bearerToken) {
+            return $currentToken === $bearerToken;
+        });
+
+        //  Register a static route and add the bearer token authenticator
+        $bearerRoute = RouteFactory::createStaticRoute('/bearer', 'Test/Bearer');
+        $bearerRoute->setAuth([$bearerAuthenticator]);
+        ServerFacade::registerRoute($bearerRoute);
+
+        // Test authorization header
+        $uri = new Uri('http://apparat/blog/bearer');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri)->withAddedHeader('Authorization', 'Bearer '.$bearerToken);
+        $response = ServerFacade::dispatchRequest($request);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals('[(bearer)]', trim($response->getBody()));
+
+        // Test "access_token" body parameter
+        $uri = new Uri('http://apparat/blog/bearer');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri)->withParsedBody(['access_token' => $bearerToken]);
+        $response = ServerFacade::dispatchRequest($request);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals('[(bearer)]', trim($response->getBody()));
+
+        // Test "access_token" query parameter
+        $uri = new Uri('http://apparat/blog/bearer');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri)->withQueryParams(['access_token' => $bearerToken]);
+        $response = ServerFacade::dispatchRequest($request);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals('[(bearer)]', trim($response->getBody()));
     }
 }

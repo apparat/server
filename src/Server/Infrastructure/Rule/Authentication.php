@@ -51,29 +51,6 @@ use Psr\Http\Message\ServerRequestInterface;
 class Authentication implements RuleInterface
 {
     /**
-     * Basic authentication
-     *
-     * @var string
-     */
-    const BASIC = 'basic';
-    /**
-     * OAuth2 Bearer authentication
-     *
-     * @var string
-     * @see https://tools.ietf.org/html/rfc6750#section-2
-     */
-    const BEARER = 'bearer';
-    /**
-     * Supported authentication types
-     *
-     * @var array
-     */
-    protected static $authenticationTypes = [
-        self::BASIC => true,
-        self::BEARER => true,
-    ];
-
-    /**
      * Check if the request matches the required authentication state
      *
      * @param ServerRequestInterface $request HTTP request
@@ -85,16 +62,16 @@ class Authentication implements RuleInterface
     {
         // If no authentication is required for this route
         $auth = $route->auth;
-        if (!is_array($auth) || !count($auth = array_intersect_key($auth, self::$authenticationTypes))) {
+        if (!is_array($auth)) {
             return true;
         }
 
         // Run through all authentication possibilities
-        foreach ($auth as $type => $authenticator) {
+        foreach (array_values($auth) as $index => $authenticator) {
             // If the provided authenticator is invalid
             if (!($authenticator instanceof AuthenticatorInterface)) {
                 throw new InvalidArgumentException(
-                    sprintf('Invalid authenticator for type "%s"', $type),
+                    sprintf('Invalid authenticator at index %s', $index),
                     InvalidArgumentException::INVALID_AUTHENTICATOR
                 );
             }

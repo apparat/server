@@ -42,7 +42,7 @@ namespace Apparat\Server\Ports\Authenticator;
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-class IndieAuth extends Bearer
+class IndieAuth extends AbstractBearer
 {
     /**
      * Verify the validity of the bearer token

@@ -36,52 +36,29 @@
 
 namespace Apparat\Server\Ports\Authenticator;
 
-use Psr\Http\Message\ServerRequestInterface;
-
 /**
- * Abstract bearer authenticator
+ * Generic bearer authenticator
  *
  * @package Apparat\Server
  * @subpackage Apparat\Server\Ports
  */
-abstract class Bearer implements AuthenticatorInterface
+class Bearer extends AbstractBearer
 {
     /**
-     * Authenticate a request
+     * Bearer token verifier callback
      *
-     * @param ServerRequestInterface $request Request
-     * @return boolean Request is authenticated
-     * @see https://quill.p3k.io/creating-a-micropub-endpoint#verifying-access-tokens
+     * @var Callable
      */
-    public function authenticate(ServerRequestInterface $request)
-    {
-        return $this->authenticateHeader($request)
-        || $this->authenticateBody($request)
-        || $this->authenticateQuery($request);
-    }
+    protected $verifier;
 
     /**
-     * Authenticate with an "Authorization" header
+     * Bearer constructor
      *
-     * @param ServerRequestInterface $request Request
-     * @return bool Request is valid
+     * @param Callable $verifier
      */
-    protected function authenticateHeader(ServerRequestInterface $request)
+    public function __construct(Callable $verifier)
     {
-        // Run through all "Authorization" headers
-        foreach ($request->getHeader('Authorization') as $authHeader) {
-            // If this is supposed to be a bearer token
-            if (!strncmp(strtolower($authHeader), 'bearer', 6)) {
-                $bearerToken = preg_split('%\s+%', $authHeader);
-
-                // If there is really a bearer token
-                if (count($bearerToken) > 1) {
-                    return $this->verifyToken($bearerToken[1]);
-                }
-            }
-        }
-
-        return false;
+        $this->verifier = $verifier;
     }
 
     /**
@@ -90,31 +67,8 @@ abstract class Bearer implements AuthenticatorInterface
      * @param string $token Bearer token
      * @return boolean The bearer token is valid
      */
-    abstract protected function verifyToken($token);
-
-    /**
-     * Authenticate with an "access_token" body parameter
-     *
-     * @param ServerRequestInterface $request Request
-     * @return bool Request is valid
-     */
-    protected function authenticateBody(ServerRequestInterface $request)
+    protected function verifyToken($token)
     {
-        $bodyParameters = (array)$request->getParsedBody();
-        return array_key_exists('access_token', $bodyParameters) ?
-            $this->verifyToken($bodyParameters['access_token']) : false;
-    }
-
-    /**
-     * Authenticate with an "access_token" query parameter
-     *
-     * @param ServerRequestInterface $request Request
-     * @return bool Request is valid
-     */
-    protected function authenticateQuery(ServerRequestInterface $request)
-    {
-        $queryParameters = (array)$request->getQueryParams();
-        return array_key_exists('access_token', $queryParameters) ?
-            $this->verifyToken($queryParameters['access_token']) : false;
+        return boolval(call_user_func($this->verifier, $token));
     }
 }
