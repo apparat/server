@@ -71,6 +71,7 @@ abstract class AbstractBearer implements AuthenticatorInterface
     {
         // Run through all "Authorization" headers
         foreach ($request->getHeader('Authorization') as $authHeader) {
+
             // If this is supposed to be a bearer token
             if (!strncmp(strtolower($authHeader), 'bearer', 6)) {
                 $bearerToken = preg_split('%\s+%', $authHeader);

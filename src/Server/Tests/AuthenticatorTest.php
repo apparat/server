@@ -54,19 +54,33 @@ use Zend\Diactoros\Uri;
 class AuthenticatorTest extends AbstractTest
 {
     /**
-     * This method is called before the first test of this test class is run.
+     * Test an invalid authenticator
+     *
+     * @expectedException \Apparat\Server\Ports\Authenticator\InvalidArgumentException
+     * @expectedExceptionCode 1471206157
      */
-    public static function setUpBeforeClass()
+    public static function testInvalidAuthenticator()
     {
-        parent::setUpBeforeClass();
+        //  Register a static route and add the bearer token authenticator
+        $bearerRoute = RouteFactory::createStaticRoute('/bearer', 'Test/Bearer');
+        $bearerRoute->setAuth([new \stdClass()]);
+        ServerFacade::registerRoute($bearerRoute);
 
-        // Register custom view resources
-        $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
-        ServerFacade::setViewResources([
-            TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
-            TYPO3FluidView::TEMPLATES => $noneRepoPath.'Templates'.DIRECTORY_SEPARATOR,
-            TYPO3FluidView::PARTIALS => $noneRepoPath.'Partials'.DIRECTORY_SEPARATOR,
-        ]);
+        // Test authorization header
+        $uri = new Uri('http://apparat/blog/bearer');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri)->withAddedHeader('Authorization', 'Bearer');
+        ServerFacade::dispatchRequest($request);
+    }
+
+    /**
+     * Tears down the fixture
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        ServerFacade::reset();
     }
 
     /**
@@ -74,6 +88,14 @@ class AuthenticatorTest extends AbstractTest
      */
     public function testBearerToken()
     {
+        // Register custom view resources
+        $noneRepoPath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'non-repo'.DIRECTORY_SEPARATOR;
+        ServerFacade::setViewResources([
+            TYPO3FluidView::LAYOUTS => $noneRepoPath.'Layouts'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::TEMPLATES => $noneRepoPath.'Templates'.DIRECTORY_SEPARATOR,
+            TYPO3FluidView::PARTIALS => $noneRepoPath.'Partials'.DIRECTORY_SEPARATOR,
+        ]);
+
         $bearerToken = md5(microtime(true));
         $bearerAuthenticator = new Bearer(function ($currentToken) use ($bearerToken) {
             return $currentToken === $bearerToken;
@@ -107,5 +129,21 @@ class AuthenticatorTest extends AbstractTest
         $response = ServerFacade::dispatchRequest($request);
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals('[(bearer)]', trim($response->getBody()));
+
+        // Test invalid authorization header
+        $uri = new Uri('http://apparat/blog/bearer');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri)->withAddedHeader('Authorization', 'Bearer');
+        $response = ServerFacade::dispatchRequest($request);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(404, $response->getStatusCode());
+
+        // Test with basic authorization header
+        $uri = new Uri('http://apparat/blog/bearer');
+        $request = new ServerRequest();
+        $request = $request->withUri($uri)->withAddedHeader('Authorization', 'Basic '.base64_encode("user:pass"));
+        $response = ServerFacade::dispatchRequest($request);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }
