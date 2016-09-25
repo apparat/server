@@ -99,20 +99,20 @@ class TYPO3FluidView extends TemplateView implements ViewInterface
         $paths = $this->getTemplatePaths();
         $paths->setLayoutRootPaths(
             array_merge(
-                (array)ServerFacade::getViewResources(self::LAYOUTS),
-                [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Layouts']
+                [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Layouts'],
+                (array)ServerFacade::getViewResources(self::LAYOUTS)
             )
         );
         $paths->setTemplateRootPaths(
             array_merge(
-                (array)ServerFacade::getViewResources(self::TEMPLATES),
-                [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Templates']
+                [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Templates'],
+                (array)ServerFacade::getViewResources(self::TEMPLATES)
             )
         );
         $paths->setPartialRootPaths(
             array_merge(
-                (array)ServerFacade::getViewResources(self::PARTIALS),
-                [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Partials']
+                [__DIR__.DIRECTORY_SEPARATOR.'TYPO3Fluid'.DIRECTORY_SEPARATOR.'Partials'],
+                (array)ServerFacade::getViewResources(self::PARTIALS)
             )
         );
     }
