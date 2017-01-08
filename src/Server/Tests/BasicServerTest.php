@@ -167,6 +167,7 @@ class BasicServerTest extends AbstractTest
      */
     public function testStaticRoute()
     {
+        // Enable a set of custom templates
         self::enableCustomViewResources();
 
         //  Register a static route
@@ -212,9 +213,6 @@ class BasicServerTest extends AbstractTest
      */
     public function testCustomTemplateResources()
     {
-        // Enable a custom set of templates
-        self::enableCustomViewResources();
-
         // Enable the default routes for a repository "repo"
         $uri = new Uri('http://apparat/blog/repo/2016/06/20/2');
         $request = new ServerRequest();
