@@ -36,49 +36,49 @@
 <polygon fill="#1a2833" stroke="#1a2833" points="760.509,-531.61 769.51,-526.021 758.988,-524.777 760.509,-531.61"/>
 <text text-anchor="middle" x="708.5" y="-547" font-family="Times New Roman,serif" font-size="10.00" fill="#767676">dev&#45;master</text>
 </g>
-<!-- dominicsayers/isemail -->
-<g id="node4" class="node"><title>dominicsayers/isemail</title>
-<path fill="#eeeeee" stroke="black" d="M1334,-418C1334,-418 1152,-418 1152,-418 1146,-418 1140,-412 1140,-406 1140,-406 1140,-394 1140,-394 1140,-388 1146,-382 1152,-382 1152,-382 1334,-382 1334,-382 1340,-382 1346,-388 1346,-394 1346,-394 1346,-406 1346,-406 1346,-412 1340,-418 1334,-418"/>
-<text text-anchor="middle" x="1243" y="-396.3" font-family="Times New Roman,serif" font-size="14.00" fill="#314b5f">dominicsayers/isemail: dev&#45;master</text>
-</g>
-<!-- apparat/server&#45;&gt;dominicsayers/isemail -->
-<g id="edge3" class="edge"><title>apparat/server&#45;&gt;dominicsayers/isemail</title>
-<path fill="none" stroke="#1a2833" d="M529.572,-583.493C580.431,-576.519 663.43,-565.088 735,-555 951.115,-524.538 1054.49,-615.421 1219,-472 1231.55,-461.06 1237.55,-443.321 1240.41,-428.311"/>
-<polygon fill="#1a2833" stroke="#1a2833" points="1243.94,-428.415 1241.99,-418 1237.02,-427.355 1243.94,-428.415"/>
-<text text-anchor="middle" x="1214.5" y="-505.5" font-family="Times New Roman,serif" font-size="10.00" fill="#767676">dev&#45;master</text>
-</g>
 <!-- aura/router -->
-<g id="node5" class="node"><title>aura/router</title>
+<g id="node4" class="node"><title>aura/router</title>
 <path fill="#eeeeee" stroke="black" d="M368.5,-335C368.5,-335 281.5,-335 281.5,-335 275.5,-335 269.5,-329 269.5,-323 269.5,-323 269.5,-311 269.5,-311 269.5,-305 275.5,-299 281.5,-299 281.5,-299 368.5,-299 368.5,-299 374.5,-299 380.5,-305 380.5,-311 380.5,-311 380.5,-323 380.5,-323 380.5,-329 374.5,-335 368.5,-335"/>
 <text text-anchor="middle" x="325" y="-313.3" font-family="Times New Roman,serif" font-size="14.00" fill="#314b5f">aura/router: 3.0.1</text>
 </g>
 <!-- apparat/server&#45;&gt;aura/router -->
-<g id="edge4" class="edge"><title>apparat/server&#45;&gt;aura/router</title>
+<g id="edge3" class="edge"><title>apparat/server&#45;&gt;aura/router</title>
 <path fill="none" stroke="#1a2833" d="M440.166,-572.834C401.282,-554.341 345.757,-520.838 321,-472 300.575,-431.707 308.844,-377.544 316.834,-345.354"/>
 <polygon fill="#1a2833" stroke="#1a2833" points="320.312,-345.895 319.491,-335.332 313.545,-344.101 320.312,-345.895"/>
 <text text-anchor="middle" x="329" y="-451.5" font-family="Times New Roman,serif" font-size="10.00" fill="#767676">^3.0</text>
 </g>
 <!-- zendframework/zend&#45;diactoros -->
-<g id="node6" class="node"><title>zendframework/zend&#45;diactoros</title>
+<g id="node5" class="node"><title>zendframework/zend&#45;diactoros</title>
 <path fill="#eeeeee" stroke="black" d="M240,-227C240,-227 40,-227 40,-227 34,-227 28,-221 28,-215 28,-215 28,-203 28,-203 28,-197 34,-191 40,-191 40,-191 240,-191 240,-191 246,-191 252,-197 252,-203 252,-203 252,-215 252,-215 252,-221 246,-227 240,-227"/>
 <text text-anchor="middle" x="140" y="-205.3" font-family="Times New Roman,serif" font-size="14.00" fill="#314b5f">zendframework/zend&#45;diactoros: 1.3.8</text>
 </g>
 <!-- apparat/server&#45;&gt;zendframework/zend&#45;diactoros -->
-<g id="edge5" class="edge"><title>apparat/server&#45;&gt;zendframework/zend&#45;diactoros</title>
+<g id="edge4" class="edge"><title>apparat/server&#45;&gt;zendframework/zend&#45;diactoros</title>
 <path fill="none" stroke="#1a2833" d="M434.344,-587.205C348.563,-580.86 177,-561.595 177,-509 177,-509 177,-509 177,-316 177,-287.603 165.017,-257.197 154.69,-236.266"/>
 <polygon fill="#1a2833" stroke="#1a2833" points="157.795,-234.651 150.11,-227.357 151.569,-237.851 157.795,-234.651"/>
 <text text-anchor="middle" x="185" y="-397.5" font-family="Times New Roman,serif" font-size="10.00" fill="#767676">^1.3</text>
 </g>
 <!-- typo3fluid/fluid -->
-<g id="node7" class="node"><title>typo3fluid/fluid</title>
+<g id="node6" class="node"><title>typo3fluid/fluid</title>
 <path fill="#eeeeee" stroke="black" d="M471.5,-472C471.5,-472 358.5,-472 358.5,-472 352.5,-472 346.5,-466 346.5,-460 346.5,-460 346.5,-448 346.5,-448 346.5,-442 352.5,-436 358.5,-436 358.5,-436 471.5,-436 471.5,-436 477.5,-436 483.5,-442 483.5,-448 483.5,-448 483.5,-460 483.5,-460 483.5,-466 477.5,-472 471.5,-472"/>
 <text text-anchor="middle" x="415" y="-450.3" font-family="Times New Roman,serif" font-size="14.00" fill="#314b5f">typo3fluid/fluid: 1.1.2</text>
 </g>
 <!-- apparat/server&#45;&gt;typo3fluid/fluid -->
-<g id="edge6" class="edge"><title>apparat/server&#45;&gt;typo3fluid/fluid</title>
+<g id="edge5" class="edge"><title>apparat/server&#45;&gt;typo3fluid/fluid</title>
 <path fill="none" stroke="#1a2833" d="M473.514,-572.902C462.099,-549.901 441.68,-508.759 428.236,-481.67"/>
 <polygon fill="#1a2833" stroke="#1a2833" points="431.209,-479.787 423.628,-472.385 424.939,-482.899 431.209,-479.787"/>
 <text text-anchor="middle" x="475.5" y="-547" font-family="Times New Roman,serif" font-size="10.00" fill="#767676">^1.0.7</text>
+</g>
+<!-- dominicsayers/isemail -->
+<g id="node7" class="node"><title>dominicsayers/isemail</title>
+<path fill="#eeeeee" stroke="black" d="M1334,-418C1334,-418 1152,-418 1152,-418 1146,-418 1140,-412 1140,-406 1140,-406 1140,-394 1140,-394 1140,-388 1146,-382 1152,-382 1152,-382 1334,-382 1334,-382 1340,-382 1346,-388 1346,-394 1346,-394 1346,-406 1346,-406 1346,-412 1340,-418 1334,-418"/>
+<text text-anchor="middle" x="1243" y="-396.3" font-family="Times New Roman,serif" font-size="14.00" fill="#314b5f">dominicsayers/isemail: dev&#45;master</text>
+</g>
+<!-- apparat/server&#45;&gt;dominicsayers/isemail -->
+<g id="edge6" class="edge"><title>apparat/server&#45;&gt;dominicsayers/isemail</title>
+<path fill="none" stroke="#1a2833" stroke-dasharray="5,2" d="M529.572,-583.493C580.431,-576.519 663.43,-565.088 735,-555 951.115,-524.538 1054.49,-615.421 1219,-472 1231.55,-461.06 1237.55,-443.321 1240.41,-428.311"/>
+<polygon fill="#1a2833" stroke="#1a2833" points="1243.94,-428.415 1241.99,-418 1237.02,-427.355 1243.94,-428.415"/>
+<text text-anchor="middle" x="1204.5" y="-505.5" font-family="Times New Roman,serif" font-size="10.00" fill="#767676">@dev</text>
 </g>
 <!-- apparat/resource -->
 <g id="node8" class="node"><title>apparat/resource</title>
